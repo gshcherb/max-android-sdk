@@ -1,10 +1,11 @@
-package io.maxads.maxads_sample;
+package io.maxads.maxads_sample.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import io.maxads.ads.banner.view.BannerAdView;
+import io.maxads.maxads_sample.R;
 
 public class MainActivity extends AppCompatActivity implements BannerAdView.BannerAdListener {
 

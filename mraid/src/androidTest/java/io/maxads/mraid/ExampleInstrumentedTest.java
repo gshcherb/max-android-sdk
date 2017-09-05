@@ -1,4 +1,4 @@
-package io.maxads.nexage_mraid;
+package io.maxads.mraid;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

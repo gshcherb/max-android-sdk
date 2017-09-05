@@ -1,4 +1,4 @@
-package io.maxads.nexage_mraid;
+package io.maxads.mraid;
 
 import org.junit.Test;
 
