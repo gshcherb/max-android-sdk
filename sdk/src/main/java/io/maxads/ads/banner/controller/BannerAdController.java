@@ -29,12 +29,12 @@ public class BannerAdController {
     mBannerAdListener = bannerAdListener;
   }
 
-  public void load(@NonNull String adUnitId) {
+  public void load(@NonNull String adUnitId, @NonNull final BannerAdView bannerAdView) {
     final AdRequest adRequest = new AdRequest.Builder(adUnitId, "1").build();
     mApiManager.getAd(adRequest).subscribe(new Consumer<Ad>() {
       @Override
       public void accept(@NonNull Ad ad) throws Exception {
-        showAd(ad);
+        showAd(ad, bannerAdView);
       }
     }, new Consumer<Throwable>() {
       @Override
@@ -43,8 +43,8 @@ public class BannerAdController {
     });
   }
 
-  private void showAd(@NonNull Ad ad) {
-    final BannerPresenter bannerPresenter = mBannerPresenterFactory.getBannerPresenter(ad, mBannerAdListener);
+  private void showAd(@NonNull Ad ad, @NonNull BannerAdView bannerAdView) {
+    final BannerPresenter bannerPresenter = mBannerPresenterFactory.getBannerPresenter(ad, bannerAdView, mBannerAdListener);
 
     // I think it's fine to destroy the existing ad here since we already have the next one ready to display
     destroyBannerPresenter();

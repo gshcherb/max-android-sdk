@@ -14,7 +14,9 @@ public class BannerPresenterFactory {
     mContext = context;
   }
 
-  public BannerPresenter getBannerPresenter(@NonNull Ad ad, @Nullable BannerAdView.BannerAdListener bannerAdListener) {
-    return new HtmlBannerPresenter(mContext, ad, bannerAdListener);
+  public BannerPresenter getBannerPresenter(@NonNull Ad ad, @NonNull BannerAdView bannerAdView,
+                                            @Nullable BannerAdView.BannerAdListener bannerAdListener) {
+//    return new HtmlBannerPresenter(mContext, ad, bannerAdView, bannerAdListener);
+    return new MraidBannerPresenter(mContext, ad, bannerAdView, bannerAdListener);
   }
 }

@@ -40,7 +40,7 @@ public class BannerAdView extends FrameLayout {
       return;
     }
 
-    mBannerAdController.load(adUnitId);
+    mBannerAdController.load(adUnitId, this);
   }
 
   public void destroy() {

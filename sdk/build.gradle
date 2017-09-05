@@ -24,6 +24,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':mraid')
 
     // Android
     compile 'com.android.support:support-v4:26.0.2'
