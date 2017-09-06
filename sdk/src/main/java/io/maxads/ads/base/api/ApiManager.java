@@ -3,6 +3,8 @@ package io.maxads.ads.base.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.concurrent.TimeUnit;
+
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.model.Winner;
@@ -42,6 +44,7 @@ public class ApiManager {
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 10))
       .map(new Function<AdResponse, Ad>() {
         @Override
         public Ad apply(AdResponse adResponse) throws Exception {
