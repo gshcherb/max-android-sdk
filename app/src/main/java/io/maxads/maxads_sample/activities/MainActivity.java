@@ -3,12 +3,15 @@ package io.maxads.maxads_sample.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.maxads_sample.R;
 
-public class MainActivity extends AppCompatActivity implements BannerAdView.BannerAdListener {
+public class MainActivity extends AppCompatActivity implements BannerAdView.BannerAdListener, View.OnClickListener {
 
+  private Button mLoadAdButton;
   private BannerAdView mBannerAdView;
 
   @Override
@@ -16,15 +19,21 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.Bann
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    mLoadAdButton = findViewById(R.id.load_ad);
+    mLoadAdButton.setOnClickListener(this);
     mBannerAdView = findViewById(R.id.ad);
     mBannerAdView.setBannerAdListener(this);
-    mBannerAdView.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
     mBannerAdView.destroy();
+  }
+
+  @Override
+  public void onClick(View view) {
+    mBannerAdView.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
   }
 
   @Override

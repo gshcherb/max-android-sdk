@@ -2,31 +2,37 @@ package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
 
-public class AdRequest {
-  @NonNull private transient final String adUnitId;
-  @NonNull private final String v;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-  private AdRequest(@NonNull String adUnitId, @NonNull String v) {
-    this.adUnitId = adUnitId;
-    this.v = v;
+public class AdRequest {
+  @NonNull private transient final String mAdUnitId;
+
+  @SerializedName("v")
+  @Expose
+  @NonNull private final String mVersion;
+
+  private AdRequest(@NonNull String adUnitId, @NonNull String version) {
+    mAdUnitId = adUnitId;
+    mVersion = version;
   }
 
   @NonNull
   public String getAdUnitId() {
-    return adUnitId;
+    return mAdUnitId;
   }
 
   public static class Builder {
-    @NonNull private final String adUnitId;
-    @NonNull private final String v;
+    @NonNull private final String mAdUnitId;
+    @NonNull private final String mVersion;
 
-    public Builder(@NonNull String adUnitId, @NonNull String v) {
-      this.adUnitId = adUnitId;
-      this.v = v;
+    public Builder(@NonNull String adUnitId, @NonNull String version) {
+      mAdUnitId = adUnitId;
+      mVersion = version;
     }
 
     public AdRequest build() {
-      return new AdRequest(adUnitId, v);
+      return new AdRequest(mAdUnitId, mVersion);
     }
   }
 }

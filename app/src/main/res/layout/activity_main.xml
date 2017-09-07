@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context="io.maxads.maxads_sample.activities.MainActivity">
 
+    <Button
+        android:id="@+id/load_ad"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:text="Load Ad" />
+
     <io.maxads.ads.banner.view.BannerAdView
         android:id="@+id/ad"
         android:layout_width="match_parent"
