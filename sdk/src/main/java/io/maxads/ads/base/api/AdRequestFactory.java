@@ -18,12 +18,26 @@ public class AdRequestFactory {
 
   @NonNull
   public Observable<AdRequest> createAdRequest(@NonNull final String adUnitId) {
-    return mDeviceInfo.getAdvertisingInfo().map(new Function<AdvertisingIdClient.Info, AdRequest>() {
-      @Override
-      public AdRequest apply(AdvertisingIdClient.Info info) throws Exception {
-        return new AdRequest.Builder(adUnitId, MaxAds.API_VERSION, info.getId(), info.isLimitAdTrackingEnabled(), "",
-          "", "", "", 1, 1, "", "", "", "").build();
-      }
-    });
+    return mDeviceInfo.getAdvertisingInfo()
+      .map(new Function<AdvertisingIdClient.Info, AdRequest>() {
+        @Override
+        public AdRequest apply(AdvertisingIdClient.Info info) throws Exception {
+          return new AdRequest.Builder(
+            adUnitId,
+            MaxAds.API_VERSION,
+            info.getId(),
+            info.isLimitAdTrackingEnabled(),
+            "",
+            "",
+            mDeviceInfo.getLocale().toString(),
+            mDeviceInfo.getOrientation().toString(),
+            1,
+            1,
+            "",
+            "",
+            "",
+            "").build();
+        }
+      });
   }
 }
