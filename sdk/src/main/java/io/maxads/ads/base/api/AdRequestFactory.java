@@ -38,7 +38,8 @@ public class AdRequestFactory {
             "",
             "",
             mDeviceInfo.getConnectivity().toString(),
-            "").build();
+            mDeviceInfo.getCarrierName())
+            .build();
         }
       });
   }

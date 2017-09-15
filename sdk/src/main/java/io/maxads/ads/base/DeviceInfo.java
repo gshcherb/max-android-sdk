@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
@@ -64,10 +65,13 @@ public class DeviceInfo {
 
   @NonNull private final Context mContext;
   @Nullable private final ConnectivityManager mConnectivityManager;
+  @Nullable private final TelephonyManager mTelephonyManager;
+
 
   public DeviceInfo(@NonNull Context context) {
     mContext = context;
     mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
   }
 
   /**
@@ -156,5 +160,19 @@ public class DeviceInfo {
       default:
         return Connectivity.NONE;
     }
+  }
+
+  @NonNull
+  public String getCarrierName() {
+    if (mTelephonyManager == null) {
+      return "";
+    }
+
+    try {
+      return mTelephonyManager.getNetworkOperatorName();
+    } catch (Exception ignored) {
+    }
+
+    return "";
   }
 }
