@@ -7,11 +7,15 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
@@ -64,12 +68,22 @@ public class DeviceInfo {
   }
 
   @NonNull private final Context mContext;
+  @NonNull private final String mUserAgent;
   @Nullable private final ConnectivityManager mConnectivityManager;
   @Nullable private final TelephonyManager mTelephonyManager;
 
-
   public DeviceInfo(@NonNull Context context) {
     mContext = context;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      mUserAgent = WebSettings.getDefaultUserAgent(context);
+    } else if (Looper.myLooper() == Looper.getMainLooper()) {
+      // Can only create WebViews on the main thread
+      mUserAgent = new WebView(mContext).getSettings().getUserAgentString();
+    } else {
+      mUserAgent = System.getProperty("http.agent");
+    }
+
     mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
   }
@@ -131,6 +145,16 @@ public class DeviceInfo {
 
   public int getScreenHeightPx() {
     return mContext.getResources().getDisplayMetrics().heightPixels;
+  }
+
+  @NonNull
+  public String getBrowserAgent() {
+    return mUserAgent;
+  }
+
+  @NonNull
+  public String getModel() {
+    return Build.MODEL;
   }
 
   @NonNull

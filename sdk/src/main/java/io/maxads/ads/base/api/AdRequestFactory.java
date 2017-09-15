@@ -35,8 +35,8 @@ public class AdRequestFactory {
             mDeviceInfo.getOrientation().toString(),
             mDeviceInfo.getScreenWidthPx(),
             mDeviceInfo.getScreenHeightPx(),
-            "",
-            "",
+            mDeviceInfo.getBrowserAgent(),
+            mDeviceInfo.getModel(),
             mDeviceInfo.getConnectivity().toString(),
             mDeviceInfo.getCarrierName())
             .build();
