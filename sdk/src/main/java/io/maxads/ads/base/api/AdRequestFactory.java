@@ -37,7 +37,7 @@ public class AdRequestFactory {
             mDeviceInfo.getScreenHeightPx(),
             "",
             "",
-            "",
+            mDeviceInfo.getConnectivity().toString(),
             "").build();
         }
       });

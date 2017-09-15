@@ -1,11 +1,16 @@
 package io.maxads.ads.base;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.util.TypedValue;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
@@ -38,11 +43,31 @@ public class DeviceInfo {
     }
   }
 
-  @NonNull
-  private final Context mContext;
+  public enum Connectivity {
+    ETHERNET("ethernet"),
+    WIFI("wifi"),
+    WWAN("wwan"),
+    NONE("none");
+
+    @NonNull
+    private final String mConnectivity;
+
+    Connectivity(@NonNull String connectivity) {
+      mConnectivity = connectivity;
+    }
+
+    @Override
+    public String toString() {
+      return mConnectivity;
+    }
+  }
+
+  @NonNull private final Context mContext;
+  @Nullable private final ConnectivityManager mConnectivityManager;
 
   public DeviceInfo(@NonNull Context context) {
     mContext = context;
+    mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
   /**
@@ -102,5 +127,34 @@ public class DeviceInfo {
 
   public int getScreenHeightPx() {
     return mContext.getResources().getDisplayMetrics().heightPixels;
+  }
+
+  @NonNull
+  public Connectivity getConnectivity() {
+    if (mConnectivityManager == null ||
+      ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_NETWORK_STATE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return Connectivity.NONE;
+    }
+
+    final NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+    if (activeNetworkInfo == null) {
+      return Connectivity.NONE;
+    }
+
+    switch (activeNetworkInfo.getType()) {
+      case ConnectivityManager.TYPE_ETHERNET:
+        return Connectivity.ETHERNET;
+      case ConnectivityManager.TYPE_WIFI:
+        return Connectivity.WIFI;
+      case ConnectivityManager.TYPE_MOBILE:
+      case ConnectivityManager.TYPE_MOBILE_DUN:
+      case ConnectivityManager.TYPE_MOBILE_HIPRI:
+      case ConnectivityManager.TYPE_MOBILE_MMS:
+      case ConnectivityManager.TYPE_MOBILE_SUPL:
+        return Connectivity.WWAN;
+      default:
+        return Connectivity.NONE;
+    }
   }
 }
