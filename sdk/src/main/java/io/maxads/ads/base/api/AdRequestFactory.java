@@ -27,6 +27,7 @@ public class AdRequestFactory {
           return new AdRequest.Builder(
             adUnitId,
             MaxAds.API_VERSION,
+            MaxAds.SDK_VERSION,
             info.getId(),
             info.isLimitAdTrackingEnabled(),
             "",

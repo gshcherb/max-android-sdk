@@ -9,6 +9,7 @@ public class MaxAds {
   @NonNull private static ApiManager sApiManager;
   @NonNull private static DeviceInfo sDeviceInfo;
   @NonNull public static final String API_VERSION = "1";
+  @NonNull public static final String SDK_VERSION = "0.5.0";
   @NonNull public static final String HOST = "ads.maxads.io";
 
   public static void initialize(@NonNull Context context) {
