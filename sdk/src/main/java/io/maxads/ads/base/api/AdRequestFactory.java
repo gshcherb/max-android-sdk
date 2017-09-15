@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
+import java.util.TimeZone;
+
 import io.maxads.ads.base.DeviceInfo;
 import io.maxads.ads.base.MaxAds;
 import io.reactivex.Observable;
@@ -28,11 +30,11 @@ public class AdRequestFactory {
             info.getId(),
             info.isLimitAdTrackingEnabled(),
             "",
-            "",
+            mDeviceInfo.getTimeZone().getDisplayName(false, TimeZone.SHORT),
             mDeviceInfo.getLocale().toString(),
             mDeviceInfo.getOrientation().toString(),
-            1,
-            1,
+            mDeviceInfo.getScreenWidthPx(),
+            mDeviceInfo.getScreenHeightPx(),
             "",
             "",
             "",

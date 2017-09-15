@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.util.TypedValue;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -75,6 +77,11 @@ public class DeviceInfo {
   }
 
   @NonNull
+  public TimeZone getTimeZone() {
+    return TimeZone.getDefault();
+  }
+
+  @NonNull
   public Orientation getOrientation() {
     switch (mContext.getResources().getConfiguration().orientation) {
       case Configuration.ORIENTATION_PORTRAIT: {
@@ -87,5 +94,13 @@ public class DeviceInfo {
         return Orientation.NONE;
       }
     }
+  }
+
+  public int getScreenWidthPx() {
+    return mContext.getResources().getDisplayMetrics().widthPixels;
+  }
+
+  public int getScreenHeightPx() {
+    return mContext.getResources().getDisplayMetrics().heightPixels;
   }
 }
