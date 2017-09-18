@@ -55,7 +55,7 @@ public class BannerAdController {
   }
 
   private void showAd(@NonNull Ad ad, @NonNull BannerAdView bannerAdView) {
-    final BannerPresenter bannerPresenter = mBannerPresenterFactory.getBannerPresenter(ad, bannerAdView, mBannerAdListener);
+    final BannerPresenter bannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, bannerAdView, mBannerAdListener);
 
     // I think it's fine to destroy the existing ad here since we already have the next one ready to display
     destroyBannerPresenter();
