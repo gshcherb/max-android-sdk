@@ -15,15 +15,15 @@ public class MraidBannerPresenter implements BannerPresenter, MraidBannerViewMod
   @NonNull private final Ad mAd;
   @NonNull private final MraidBannerViewModule mMraidBannerViewModule;
   @NonNull private final String[] mSupportedNativeFeatures;
-  @Nullable private final BannerAdView.BannerAdListener mBannerAdListener;
+  @Nullable private final BannerAdView.Listener mListener;
 
   public MraidBannerPresenter(@NonNull Context context, @NonNull Ad ad,
                               @NonNull MraidBannerViewModule mraidBannerViewModule,
-                              @Nullable BannerAdView.BannerAdListener bannerAdListener) {
+                              @Nullable BannerAdView.Listener listener) {
     mContext = context;
     mAd = ad;
     mMraidBannerViewModule = mraidBannerViewModule;
-    mBannerAdListener = bannerAdListener;
+    mListener = listener;
     mSupportedNativeFeatures = new String[]{
       MRAIDNativeFeature.CALENDAR,
       MRAIDNativeFeature.INLINE_VIDEO,
@@ -45,15 +45,15 @@ public class MraidBannerPresenter implements BannerPresenter, MraidBannerViewMod
 
   @Override
   public void onLoaded(@NonNull BannerAdView bannerAdView) {
-    if (mBannerAdListener != null) {
-      mBannerAdListener.onAdLoaded(bannerAdView);
+    if (mListener != null) {
+      mListener.onBannerLoaded(bannerAdView);
     }
   }
 
   @Override
   public void onExpanded(@NonNull BannerAdView bannerAdView) {
-    if (mBannerAdListener != null) {
-      mBannerAdListener.onAdClicked(bannerAdView);
+    if (mListener != null) {
+      mListener.onBannerClicked(bannerAdView);
     }
   }
 }

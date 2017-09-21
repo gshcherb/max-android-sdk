@@ -14,22 +14,22 @@ import io.maxads.ads.base.api.ApiManager;
 import io.maxads.ads.base.model.Ad;
 import io.reactivex.functions.Consumer;
 
-public class BannerAdController {
+public class BannerController {
 
   @NonNull private final ApiManager mApiManager;
   @NonNull private final AdRequestFactory mAdRequestFactory;
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
-  @Nullable private BannerAdView.BannerAdListener mBannerAdListener;
+  @Nullable private BannerAdView.Listener mListener;
   @Nullable private BannerPresenter mBannerPresenter;
 
-  public BannerAdController(@NonNull Context context) {
+  public BannerController(@NonNull Context context) {
     mApiManager = MaxAds.getApiManager();
     mAdRequestFactory = new AdRequestFactory();
     mBannerPresenterFactory = new BannerPresenterFactory(context);
   }
 
-  public void setBannerAdListener(@Nullable BannerAdView.BannerAdListener bannerAdListener) {
-    mBannerAdListener = bannerAdListener;
+  public void setListener(@Nullable BannerAdView.Listener listener) {
+    mListener = listener;
   }
 
   public void load(@NonNull String adUnitId, @NonNull final BannerAdView bannerAdView) {
@@ -55,7 +55,7 @@ public class BannerAdController {
   }
 
   private void showAd(@NonNull Ad ad, @NonNull BannerAdView bannerAdView) {
-    final BannerPresenter bannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, bannerAdView, mBannerAdListener);
+    final BannerPresenter bannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, bannerAdView, mListener);
 
     // I think it's fine to destroy the existing ad here since we already have the next one ready to display
     destroyBannerPresenter();

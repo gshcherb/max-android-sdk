@@ -6,17 +6,17 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import io.maxads.ads.banner.controller.BannerAdController;
+import io.maxads.ads.banner.controller.BannerController;
 
 public class BannerAdView extends FrameLayout {
-  public interface BannerAdListener {
-    void onAdLoaded(@NonNull BannerAdView bannerAdView);
-    void onAdClicked(@NonNull BannerAdView bannerAdView);
-    void onAdImpressed(@NonNull BannerAdView bannerAdView);
-    void onAdError(@NonNull BannerAdView bannerAdView);
+  public interface Listener {
+    void onBannerLoaded(@NonNull BannerAdView bannerAdView);
+    void onBannerClicked(@NonNull BannerAdView bannerAdView);
+    void onBannerImpressed(@NonNull BannerAdView bannerAdView);
+    void onBannerError(@NonNull BannerAdView bannerAdView);
   }
 
-  @NonNull private final BannerAdController mBannerAdController;
+  @NonNull private final BannerController mBannerController;
 
   public BannerAdView(@NonNull Context context) {
     this(context, null);
@@ -25,14 +25,14 @@ public class BannerAdView extends FrameLayout {
   public BannerAdView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
 
-    mBannerAdController = new BannerAdController(context);
+    mBannerController = new BannerController(context);
 
     setHorizontalScrollBarEnabled(false);
     setVerticalScrollBarEnabled(false);
   }
 
-  public void setBannerAdListener(@Nullable BannerAdListener bannerAdListener) {
-    mBannerAdController.setBannerAdListener(bannerAdListener);
+  public void setListener(@Nullable Listener listener) {
+    mBannerController.setListener(listener);
   }
 
   public void load(@Nullable String adUnitId) {
@@ -40,11 +40,11 @@ public class BannerAdView extends FrameLayout {
       return;
     }
 
-    mBannerAdController.load(adUnitId, this);
+    mBannerController.load(adUnitId, this);
   }
 
   public void destroy() {
     removeAllViews();
-    mBannerAdController.destroy();
+    mBannerController.destroy();
   }
 }

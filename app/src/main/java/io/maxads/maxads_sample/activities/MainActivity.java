@@ -9,7 +9,7 @@ import android.widget.Button;
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.maxads_sample.R;
 
-public class MainActivity extends AppCompatActivity implements BannerAdView.BannerAdListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements BannerAdView.Listener, View.OnClickListener {
 
   private Button mLoadAdButton;
   private BannerAdView mBannerAdView;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.Bann
     mLoadAdButton = findViewById(R.id.load_ad);
     mLoadAdButton.setOnClickListener(this);
     mBannerAdView = findViewById(R.id.ad);
-    mBannerAdView.setBannerAdListener(this);
+    mBannerAdView.setListener(this);
   }
 
   @Override
@@ -37,18 +37,18 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.Bann
   }
 
   @Override
-  public void onAdLoaded(@NonNull BannerAdView bannerAdView) {
+  public void onBannerLoaded(@NonNull BannerAdView bannerAdView) {
   }
 
   @Override
-  public void onAdClicked(@NonNull BannerAdView bannerAdView) {
+  public void onBannerClicked(@NonNull BannerAdView bannerAdView) {
   }
 
   @Override
-  public void onAdImpressed(@NonNull BannerAdView bannerAdView) {
+  public void onBannerImpressed(@NonNull BannerAdView bannerAdView) {
   }
 
   @Override
-  public void onAdError(@NonNull BannerAdView bannerAdView) {
+  public void onBannerError(@NonNull BannerAdView bannerAdView) {
   }
 }

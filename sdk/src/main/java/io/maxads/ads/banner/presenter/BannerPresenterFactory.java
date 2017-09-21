@@ -17,10 +17,10 @@ public class BannerPresenterFactory {
   }
 
   public BannerPresenter createBannerPresenter(@NonNull Ad ad, @NonNull BannerAdView bannerAdView,
-                                               @Nullable BannerAdView.BannerAdListener bannerAdListener) {
+                                               @Nullable BannerAdView.Listener listener) {
     final MraidBannerViewModule mraidBannerViewModule = new MraidBannerViewModuleImpl(mContext, bannerAdView);
     final MraidBannerPresenter mraidBannerPresenter
-      = new MraidBannerPresenter(mContext, ad, mraidBannerViewModule, bannerAdListener);
+      = new MraidBannerPresenter(mContext, ad, mraidBannerViewModule, listener);
     mraidBannerViewModule.setListener(mraidBannerPresenter);
     return mraidBannerPresenter;
   }

@@ -15,9 +15,8 @@ public class Ad {
   @NonNull private final Winner mWinner;
 
   public Ad(@NonNull String creative, @NonNull String prebidKeywords, @NonNull Integer refresh,
-            @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls,
-            @NonNull List<String> selectUrls, @NonNull List<String> errorUrls,
-            @NonNull Winner winner) {
+            @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls, @NonNull List<String> selectUrls,
+            @NonNull List<String> errorUrls, @NonNull Winner winner) {
     mCreative = creative;
     mPrebidKeywords = prebidKeywords;
     mRefresh = refresh;
