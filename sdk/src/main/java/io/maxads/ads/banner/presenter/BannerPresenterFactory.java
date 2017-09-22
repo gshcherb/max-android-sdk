@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.banner.view.MraidBannerViewModule;
-import io.maxads.ads.banner.view.MraidBannerViewModuleImpl;
 import io.maxads.ads.base.model.Ad;
 
 public class BannerPresenterFactory {
@@ -16,12 +15,15 @@ public class BannerPresenterFactory {
     mContext = context;
   }
 
-  public BannerPresenter createBannerPresenter(@NonNull Ad ad, @NonNull BannerAdView bannerAdView,
-                                               @Nullable BannerAdView.Listener listener) {
-    final MraidBannerViewModule mraidBannerViewModule = new MraidBannerViewModuleImpl(mContext, bannerAdView);
-    final MraidBannerPresenter mraidBannerPresenter
-      = new MraidBannerPresenter(mContext, ad, mraidBannerViewModule, listener);
-    mraidBannerViewModule.setListener(mraidBannerPresenter);
-    return mraidBannerPresenter;
+  public BannerPresenter createBannerPresenter(@NonNull BannerAdView bannerAdView, @NonNull Ad ad,
+                                               @NonNull BannerPresenter.Listener bannerPresenterListener,
+                                               @Nullable BannerAdView.Listener bannerAdViewListener) {
+    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
+    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(mraidBannerPresenter,
+      bannerAdView, ad, bannerPresenterListener, bannerAdViewListener);
+
+    mraidBannerPresenter.setListener(bannerPresenterDecorator);
+
+    return bannerPresenterDecorator;
   }
 }

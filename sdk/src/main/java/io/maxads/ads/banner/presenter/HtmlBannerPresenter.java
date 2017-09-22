@@ -29,6 +29,10 @@ public class HtmlBannerPresenter implements BannerPresenter {
   }
 
   @Override
+  public void setListener(@Nullable Listener listener) {
+  }
+
+  @Override
   public void load() {
     mHtmlWebView.loadDataWithBaseURL("http://" + MaxAds.HOST + "/", mAd.getCreative(), "text/html", "utf-8", null);
     mBannerAdView.addView(mHtmlWebView);

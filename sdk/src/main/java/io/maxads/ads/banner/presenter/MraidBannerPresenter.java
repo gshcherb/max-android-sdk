@@ -6,24 +6,25 @@ import android.support.annotation.Nullable;
 
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.banner.view.MraidBannerViewModule;
+import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.mraid.MRAIDNativeFeature;
+import io.maxads.mraid.MRAIDNativeFeatureListener;
+import io.maxads.mraid.MRAIDView;
+import io.maxads.mraid.MRAIDViewListener;
 
-public class MraidBannerPresenter implements BannerPresenter, MraidBannerViewModule.Listener {
+public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener, MRAIDNativeFeatureListener {
 
   @NonNull private final Context mContext;
   @NonNull private final Ad mAd;
-  @NonNull private final MraidBannerViewModule mMraidBannerViewModule;
   @NonNull private final String[] mSupportedNativeFeatures;
-  @Nullable private final BannerAdView.Listener mListener;
 
-  public MraidBannerPresenter(@NonNull Context context, @NonNull Ad ad,
-                              @NonNull MraidBannerViewModule mraidBannerViewModule,
-                              @Nullable BannerAdView.Listener listener) {
+  @Nullable private BannerPresenter.Listener mListener;
+  @Nullable private MRAIDView mMraidView;
+
+  public MraidBannerPresenter(@NonNull Context context, @NonNull Ad ad) {
     mContext = context;
     mAd = ad;
-    mMraidBannerViewModule = mraidBannerViewModule;
-    mListener = listener;
     mSupportedNativeFeatures = new String[]{
       MRAIDNativeFeature.CALENDAR,
       MRAIDNativeFeature.INLINE_VIDEO,
@@ -34,26 +35,72 @@ public class MraidBannerPresenter implements BannerPresenter, MraidBannerViewMod
   }
 
   @Override
+  public void setListener(@Nullable Listener listener) {
+    mListener = listener;
+  }
+
+  @Override
   public void load() {
-    mMraidBannerViewModule.show(mAd.getCreative(), mSupportedNativeFeatures);
+    mMraidView = new MRAIDView(mContext, "http://" + MaxAds.HOST + "/", mAd.getCreative(), mSupportedNativeFeatures,
+      this, this, false);
   }
 
   @Override
   public void destroy() {
-    mMraidBannerViewModule.destroy();
-  }
-
-  @Override
-  public void onLoaded(@NonNull BannerAdView bannerAdView) {
-    if (mListener != null) {
-      mListener.onBannerLoaded(bannerAdView);
+    if (mMraidView != null) {
+      mMraidView.destroy();
     }
   }
 
   @Override
-  public void onExpanded(@NonNull BannerAdView bannerAdView) {
+  public void mraidViewLoaded(MRAIDView mraidView) {
     if (mListener != null) {
-      mListener.onBannerClicked(bannerAdView);
+      mListener.onBannerLoaded(mraidView);
     }
+  }
+
+  @Override
+  public void mraidViewExpand(MRAIDView mraidView) {
+
+  }
+
+  @Override
+  public void mraidViewClose(MRAIDView mraidView) {
+
+  }
+
+  @Override
+  public boolean mraidViewResize(MRAIDView mraidView, int width, int height, int offsetX, int offsetY) {
+    return false;
+  }
+
+  @Override
+  public void mraidNativeFeatureCallTel(String url) {
+
+  }
+
+  @Override
+  public void mraidNativeFeatureCreateCalendarEvent(String eventJSON) {
+
+  }
+
+  @Override
+  public void mraidNativeFeaturePlayVideo(String url) {
+
+  }
+
+  @Override
+  public void mraidNativeFeatureOpenBrowser(String url) {
+
+  }
+
+  @Override
+  public void mraidNativeFeatureStorePicture(String url) {
+
+  }
+
+  @Override
+  public void mraidNativeFeatureSendSms(String url) {
+
   }
 }

@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
   }
 
   @Override
-  public void onBannerImpressed(@NonNull BannerAdView bannerAdView) {
-  }
-
-  @Override
   public void onBannerError(@NonNull BannerAdView bannerAdView) {
   }
 }

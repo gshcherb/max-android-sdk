@@ -12,7 +12,6 @@ public class BannerAdView extends FrameLayout {
   public interface Listener {
     void onBannerLoaded(@NonNull BannerAdView bannerAdView);
     void onBannerClicked(@NonNull BannerAdView bannerAdView);
-    void onBannerImpressed(@NonNull BannerAdView bannerAdView);
     void onBannerError(@NonNull BannerAdView bannerAdView);
   }
 

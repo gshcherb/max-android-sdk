@@ -3,6 +3,7 @@ package io.maxads.ads.banner.controller;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import io.maxads.ads.banner.presenter.BannerPresenter;
 import io.maxads.ads.banner.presenter.BannerPresenterFactory;
@@ -14,13 +15,14 @@ import io.maxads.ads.base.api.ApiManager;
 import io.maxads.ads.base.model.Ad;
 import io.reactivex.functions.Consumer;
 
-public class BannerController {
+public class BannerController implements BannerPresenter.Listener {
 
   @NonNull private final ApiManager mApiManager;
   @NonNull private final AdRequestFactory mAdRequestFactory;
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
   @Nullable private BannerAdView.Listener mListener;
-  @Nullable private BannerPresenter mBannerPresenter;
+  @Nullable private BannerPresenter mCurrentBannerPresenter;
+  @Nullable private BannerPresenter mNextBannerPresenter;
 
   public BannerController(@NonNull Context context) {
     mApiManager = MaxAds.getApiManager();
@@ -55,22 +57,34 @@ public class BannerController {
   }
 
   private void showAd(@NonNull Ad ad, @NonNull BannerAdView bannerAdView) {
-    final BannerPresenter bannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, bannerAdView, mListener);
-
-    // I think it's fine to destroy the existing ad here since we already have the next one ready to display
-    destroyBannerPresenter();
-
-    bannerPresenter.load();
-    mBannerPresenter = bannerPresenter;
+    mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(bannerAdView, ad, this, mListener);
+    mNextBannerPresenter.load();
   }
 
   public void destroy() {
-    destroyBannerPresenter();
+    destroyBannerPresenter(mCurrentBannerPresenter);
+    destroyBannerPresenter(mNextBannerPresenter);
   }
 
-  private void destroyBannerPresenter() {
-    if (mBannerPresenter != null) {
-      mBannerPresenter.destroy();
+  private void destroyBannerPresenter(@Nullable BannerPresenter bannerPresenter) {
+    if (mCurrentBannerPresenter != null) {
+      mCurrentBannerPresenter.destroy();
     }
+  }
+
+  @Override
+  public void onBannerLoaded(@NonNull View banner) {
+    destroyBannerPresenter(mCurrentBannerPresenter);
+    mCurrentBannerPresenter = mNextBannerPresenter;
+    mNextBannerPresenter = null;
+  }
+
+  @Override
+  public void onBannerClicked() {
+  }
+
+  @Override
+  public void onBannerError() {
+    // Load new ad
   }
 }

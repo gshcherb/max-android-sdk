@@ -3,13 +3,10 @@ package io.maxads.ads.banner.view;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public interface MraidBannerViewModule {
-  interface Listener {
-    void onLoaded(@NonNull BannerAdView bannerAdView);
-    void onExpanded(@NonNull BannerAdView bannerAdView);
-  }
+import io.maxads.ads.banner.presenter.BannerPresenter;
 
-  void setListener(@Nullable Listener listener);
-  void show(@NonNull String html, @NonNull String[] supportedNativeFeatures);
+public interface MraidBannerViewModule {
+  void setListener(@Nullable BannerPresenter.Listener listener);
+  void load(@NonNull String html, @NonNull String[] supportedNativeFeatures);
   void destroy();
 }
