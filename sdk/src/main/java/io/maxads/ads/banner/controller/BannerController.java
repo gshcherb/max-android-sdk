@@ -67,8 +67,8 @@ public class BannerController implements BannerPresenter.Listener {
   }
 
   private void destroyBannerPresenter(@Nullable BannerPresenter bannerPresenter) {
-    if (mCurrentBannerPresenter != null) {
-      mCurrentBannerPresenter.destroy();
+    if (bannerPresenter != null) {
+      bannerPresenter.destroy();
     }
   }
 
