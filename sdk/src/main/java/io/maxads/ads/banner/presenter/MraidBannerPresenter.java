@@ -39,6 +39,12 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
     mListener = listener;
   }
 
+  @NonNull
+  @Override
+  public Ad getAd() {
+    return mAd;
+  }
+
   @Override
   public void load() {
     mMraidView = new MRAIDView(mContext, "http://" + MaxAds.HOST + "/", mAd.getCreative(), mSupportedNativeFeatures,
@@ -55,7 +61,7 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
   @Override
   public void mraidViewLoaded(MRAIDView mraidView) {
     if (mListener != null) {
-      mListener.onBannerLoaded(mraidView);
+      mListener.onBannerLoaded(this, mraidView);
     }
   }
 

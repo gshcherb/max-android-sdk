@@ -36,6 +36,12 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     // We set the listener in the constructor instead
   }
 
+  @NonNull
+  @Override
+  public Ad getAd() {
+    return mBannerPresenter.getAd();
+  }
+
   @Override
   public void load() {
     mBannerPresenter.load();
@@ -47,7 +53,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
   }
 
   @Override
-  public void onBannerLoaded(@NonNull View banner) {
+  public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
     // load view
     mBannerAdView.removeAllViews();
     banner.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -57,26 +63,26 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     // track impression
     mAdTrackingDelegate.trackImpression();
 
-    mBannerPresenterListener.onBannerLoaded(banner);
+    mBannerPresenterListener.onBannerLoaded(bannerPresenter, banner);
     if (mBannerAdViewListener != null) {
       mBannerAdViewListener.onBannerLoaded(mBannerAdView);
     }
   }
 
   @Override
-  public void onBannerClicked() {
+  public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
     // track click and open click url if needed
     mAdTrackingDelegate.trackClick();
 
-    mBannerPresenterListener.onBannerClicked();
+    mBannerPresenterListener.onBannerClicked(bannerPresenter);
     if (mBannerAdViewListener != null) {
       mBannerAdViewListener.onBannerClicked(mBannerAdView);
     }
   }
 
   @Override
-  public void onBannerError() {
-    mBannerPresenterListener.onBannerError();
+  public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
+    mBannerPresenterListener.onBannerError(bannerPresenter);
     if (mBannerAdViewListener != null) {
       mBannerAdViewListener.onBannerError(mBannerAdView);
     }

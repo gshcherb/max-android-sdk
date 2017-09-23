@@ -7,19 +7,19 @@ import java.util.List;
 public class Ad {
   @NonNull private final String mCreative;
   @NonNull private final String mPrebidKeywords;
-  @NonNull private final Integer mRefresh;
+  @NonNull private final Integer mRefreshTimeSeconds;
   @NonNull private final List<String> mImpressionUrls;
   @NonNull private final List<String> mClickUrls;
   @NonNull private final List<String> mSelectUrls;
   @NonNull private final List<String> mErrorUrls;
   @NonNull private final Winner mWinner;
 
-  public Ad(@NonNull String creative, @NonNull String prebidKeywords, @NonNull Integer refresh,
+  public Ad(@NonNull String creative, @NonNull String prebidKeywords, @NonNull Integer refreshTimeSeconds,
             @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls, @NonNull List<String> selectUrls,
             @NonNull List<String> errorUrls, @NonNull Winner winner) {
     mCreative = creative;
     mPrebidKeywords = prebidKeywords;
-    mRefresh = refresh;
+    mRefreshTimeSeconds = refreshTimeSeconds;
     mImpressionUrls = impressionUrls;
     mClickUrls = clickUrls;
     mSelectUrls = selectUrls;
@@ -30,6 +30,11 @@ public class Ad {
   @NonNull
   public String getCreative() {
     return mCreative;
+  }
+
+  @NonNull
+  public Integer getRefreshTimeSeconds() {
+    return mRefreshTimeSeconds;
   }
 
   @NonNull

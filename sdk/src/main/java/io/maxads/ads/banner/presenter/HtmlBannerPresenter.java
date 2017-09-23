@@ -15,21 +15,26 @@ public class HtmlBannerPresenter implements BannerPresenter {
   @NonNull private final HtmlWebView mHtmlWebView;
   @NonNull private final Ad mAd;
   @NonNull private final BannerAdView mBannerAdView;
-  @Nullable private final BannerAdView.Listener mListener;
+  @Nullable private BannerPresenter.Listener mListener;
 
   public HtmlBannerPresenter(@NonNull Context context,
                              @NonNull Ad ad,
-                             @NonNull BannerAdView bannerAdView,
-                             @Nullable BannerAdView.Listener listener) {
+                             @NonNull BannerAdView bannerAdView) {
     mAd = ad;
     mBannerAdView = bannerAdView;
-    mListener = listener;
     mHtmlWebView = new HtmlWebView(context);
     mHtmlWebView.setWebViewClient(new HtmlWebViewClient(context));
   }
 
   @Override
   public void setListener(@Nullable Listener listener) {
+    mListener = listener;
+  }
+
+  @NonNull
+  @Override
+  public Ad getAd() {
+    return mAd;
   }
 
   @Override
