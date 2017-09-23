@@ -31,4 +31,14 @@ public class Ad {
   public String getCreative() {
     return mCreative;
   }
+
+  @NonNull
+  public List<String> getImpressionUrls() {
+    return mImpressionUrls;
+  }
+
+  @NonNull
+  public List<String> getClickUrls() {
+    return mClickUrls;
+  }
 }

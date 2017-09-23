@@ -57,7 +57,7 @@ public class BannerController implements BannerPresenter.Listener {
   }
 
   private void showAd(@NonNull Ad ad, @NonNull BannerAdView bannerAdView) {
-    mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(bannerAdView, ad, this, mListener);
+    mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(mApiManager, bannerAdView, ad, this, mListener);
     mNextBannerPresenter.load();
   }
 

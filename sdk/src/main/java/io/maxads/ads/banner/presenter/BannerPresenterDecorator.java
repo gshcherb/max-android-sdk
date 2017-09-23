@@ -8,21 +8,25 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import io.maxads.ads.banner.view.BannerAdView;
+import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
 
 public class BannerPresenterDecorator implements BannerPresenter, BannerPresenter.Listener {
   @NonNull private final BannerPresenter mBannerPresenter;
   @NonNull private final BannerAdView mBannerAdView;
   @NonNull private final Ad mAd;
+  @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
   @NonNull private final BannerPresenter.Listener mBannerPresenterListener;
   @Nullable private final BannerAdView.Listener mBannerAdViewListener;
 
   public BannerPresenterDecorator(@NonNull BannerPresenter bannerPresenter, @NonNull BannerAdView bannerAdView,
-                                  @NonNull Ad ad, @NonNull BannerPresenter.Listener bannerPresenterListener,
+                                  @NonNull Ad ad, @NonNull AdTrackingDelegate adTrackingDelegate,
+                                  @NonNull BannerPresenter.Listener bannerPresenterListener,
                                   @Nullable BannerAdView.Listener bannerAdViewListener) {
     mBannerPresenter = bannerPresenter;
     mBannerAdView = bannerAdView;
     mAd = ad;
+    mAdTrackingDelegate = adTrackingDelegate;
     mBannerPresenterListener = bannerPresenterListener;
     mBannerAdViewListener = bannerAdViewListener;
   }
@@ -51,6 +55,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     mBannerAdView.addView(banner);
 
     // track impression
+    mAdTrackingDelegate.trackImpression();
 
     mBannerPresenterListener.onBannerLoaded(banner);
     if (mBannerAdViewListener != null) {
@@ -61,6 +66,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
   @Override
   public void onBannerClicked() {
     // track click and open click url if needed
+    mAdTrackingDelegate.trackClick();
 
     mBannerPresenterListener.onBannerClicked();
     if (mBannerAdViewListener != null) {

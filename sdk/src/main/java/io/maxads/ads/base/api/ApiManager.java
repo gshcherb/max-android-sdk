@@ -40,7 +40,7 @@ public class ApiManager {
     mApiService = retrofit.create(ApiService.class);
   }
 
-  public Observable<Ad> getAd(@NonNull final AdRequest adRequest) {
+  public Observable<Ad> getAd(@NonNull AdRequest adRequest) {
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
@@ -53,5 +53,12 @@ public class ApiManager {
             adResponse.errorUrls, new Winner(adResponse.winner.creativeType));
         }
       });
+  }
+
+  public Observable<Void> trackUrl(@NonNull String url) {
+    return mApiService.trackUrl(url)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 10));
   }
 }
