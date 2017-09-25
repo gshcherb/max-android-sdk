@@ -42,6 +42,10 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.google.code.gson:gson:2.8.0'
 
+    // Misc
+    compile 'com.jenzz.appstate:appstate:3.0.1'
+    compile 'com.jenzz.appstate:adapter-rxjava2:3.0.1'
+
     // Testing
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.4.2'
