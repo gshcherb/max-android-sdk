@@ -41,7 +41,7 @@ public class ApiManager {
   }
 
   public Observable<Ad> getAd(@NonNull AdRequest adRequest) {
-    MaxAds.getsSessionDepthManager().incrementSessionDepth();
+    MaxAds.getSessionDepthManager().incrementSessionDepth();
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())

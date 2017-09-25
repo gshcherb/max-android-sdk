@@ -17,8 +17,8 @@ public class AdRequestFactory {
   @NonNull private final SessionDepthManager mSessionDepthManager;
 
   public AdRequestFactory() {
-    mDeviceInfo = MaxAds.getsDeviceInfo();
-    mSessionDepthManager = MaxAds.getsSessionDepthManager();
+    mDeviceInfo = MaxAds.getDeviceInfo();
+    mSessionDepthManager = MaxAds.getSessionDepthManager();
   }
 
   @NonNull

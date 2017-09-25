@@ -27,12 +27,12 @@ public class MaxAds {
   }
 
   @NonNull
-  public static DeviceInfo getsDeviceInfo() {
+  public static DeviceInfo getDeviceInfo() {
     return sDeviceInfo;
   }
 
   @NonNull
-  public static SessionDepthManager getsSessionDepthManager() {
+  public static SessionDepthManager getSessionDepthManager() {
     return sSessionDepthManager;
   }
 }
