@@ -139,7 +139,7 @@ public class AdRequest {
                    @NonNull Boolean lmt, @NonNull String vendorId, @NonNull String timeZone, @NonNull String locale,
                    @NonNull String orientation, @NonNull Integer widthPx, @NonNull Integer heightPx,
                    @NonNull String browserAgent, @NonNull String model, @NonNull String connectivity,
-                   @NonNull String carrier) {
+                   @NonNull String carrier, @NonNull Integer sessionDepth) {
       mAdUnitId = adUnitId;
       mVersion = version;
       mSdkVersion = sdkVersion;
@@ -155,11 +155,7 @@ public class AdRequest {
       mModel = model;
       mConnectivity = connectivity;
       mCarrier = carrier;
-    }
-
-    public AdRequest.Builder withSessionDepth(@Nullable Integer sessionDepth) {
       mSessionDepth = sessionDepth;
-      return this;
     }
 
     public AdRequest.Builder withLatitude(@Nullable Integer latitude) {

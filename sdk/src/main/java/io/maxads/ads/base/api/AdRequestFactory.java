@@ -8,14 +8,17 @@ import java.util.TimeZone;
 
 import io.maxads.ads.base.DeviceInfo;
 import io.maxads.ads.base.MaxAds;
+import io.maxads.ads.base.SessionDepthManager;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 
 public class AdRequestFactory {
   @NonNull private final DeviceInfo mDeviceInfo;
+  @NonNull private final SessionDepthManager mSessionDepthManager;
 
   public AdRequestFactory() {
     mDeviceInfo = MaxAds.getsDeviceInfo();
+    mSessionDepthManager = MaxAds.getsSessionDepthManager();
   }
 
   @NonNull
@@ -39,7 +42,8 @@ public class AdRequestFactory {
             mDeviceInfo.getBrowserAgent(),
             mDeviceInfo.getModel(),
             mDeviceInfo.getConnectivity().toString(),
-            mDeviceInfo.getCarrierName())
+            mDeviceInfo.getCarrierName(),
+            mSessionDepthManager.getSessionDepth())
             .build();
         }
       });
