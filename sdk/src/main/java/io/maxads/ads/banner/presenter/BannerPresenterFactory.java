@@ -21,13 +21,15 @@ public class BannerPresenterFactory {
                                                @NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener,
                                                @Nullable BannerAdView.Listener bannerAdViewListener) {
-    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
+//    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
+    final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
 
-    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(mraidBannerPresenter,
+    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(htmlBannerPresenter,
       bannerAdView, ad, new AdTrackingDelegate(apiManager, ad.getImpressionUrls(), ad.getClickUrls()),
       bannerPresenterListener, bannerAdViewListener);
 
-    mraidBannerPresenter.setListener(bannerPresenterDecorator);
+//    mraidBannerPresenter.setListener(bannerPresenterDecorator);
+    htmlBannerPresenter.setListener(bannerPresenterDecorator);
 
     return bannerPresenterDecorator;
   }
