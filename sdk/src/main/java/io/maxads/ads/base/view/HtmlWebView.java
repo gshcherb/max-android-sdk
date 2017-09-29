@@ -15,18 +15,21 @@ public class HtmlWebView extends MaxAdsWebView {
   public HtmlWebView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
-    disableScrollingAndZoom();
+    // Disable scrolling and zoom
+    setHorizontalScrollBarEnabled(false);
+    setHorizontalScrollbarOverlay(false);
+    setVerticalScrollBarEnabled(false);
+    setVerticalScrollbarOverlay(false);
+    getSettings().setSupportZoom(false);
+
     getSettings().setJavaScriptEnabled(true);
 
     enablePlugins(true);
     setBackgroundColor(Color.TRANSPARENT);
   }
 
-  private void disableScrollingAndZoom() {
-    setHorizontalScrollBarEnabled(false);
-    setHorizontalScrollbarOverlay(false);
-    setVerticalScrollBarEnabled(false);
-    setVerticalScrollbarOverlay(false);
-    getSettings().setSupportZoom(false);
+  @Override
+  public boolean performClick() {
+    return super.performClick();
   }
 }
