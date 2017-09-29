@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 public class Ad {
+  @NonNull private final String mAdUnitId;
   @NonNull private final String mCreative;
   @NonNull private final String mPrebidKeywords;
   @NonNull private final Integer mRefreshTimeSeconds;
@@ -14,9 +15,11 @@ public class Ad {
   @NonNull private final List<String> mErrorUrls;
   @NonNull private final Winner mWinner;
 
-  public Ad(@NonNull String creative, @NonNull String prebidKeywords, @NonNull Integer refreshTimeSeconds,
-            @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls, @NonNull List<String> selectUrls,
-            @NonNull List<String> errorUrls, @NonNull Winner winner) {
+  public Ad(@NonNull String adUnitId, @NonNull String creative, @NonNull String prebidKeywords,
+            @NonNull Integer refreshTimeSeconds, @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls,
+            @NonNull List<String> selectUrls, @NonNull List<String> errorUrls, @NonNull Winner winner) {
+
+    mAdUnitId = adUnitId;
     mCreative = creative;
     mPrebidKeywords = prebidKeywords;
     mRefreshTimeSeconds = refreshTimeSeconds;
@@ -25,6 +28,11 @@ public class Ad {
     mSelectUrls = selectUrls;
     mErrorUrls = errorUrls;
     mWinner = winner;
+  }
+
+  @NonNull
+  public String getAdUnitId() {
+    return mAdUnitId;
   }
 
   @NonNull

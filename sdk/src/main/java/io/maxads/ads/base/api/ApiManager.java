@@ -40,7 +40,7 @@ public class ApiManager {
     mApiService = retrofit.create(ApiService.class);
   }
 
-  public Observable<Ad> getAd(@NonNull AdRequest adRequest) {
+  public Observable<Ad> getAd(@NonNull final AdRequest adRequest) {
     MaxAds.getSessionDepthManager().incrementSessionDepth();
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
@@ -49,7 +49,7 @@ public class ApiManager {
       .map(new Function<AdResponse, Ad>() {
         @Override
         public Ad apply(AdResponse adResponse) throws Exception {
-          return new Ad(adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
+          return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
             adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectUrls,
             adResponse.errorUrls, new Winner(adResponse.winner.creativeType));
         }
