@@ -14,7 +14,12 @@ public class UrlHandlerDelegate {
     mIntentHandlerDelegate = new IntentHandlerDelegate(context);
   }
 
+  /**
+   * https://developer.android.com/distribute/marketing-tools/linking-to-google-play.html
+   */
   public void handleUrl(@NonNull String url) {
+    // TODO (steffan): follow redirects first before handling url
+
     final Uri uri = Uri.parse(url);
     final String scheme = uri.getScheme();
     final String host = uri.getHost();
