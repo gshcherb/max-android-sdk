@@ -2,11 +2,8 @@ package io.maxads.ads.banner.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.base.api.AdTrackingDelegate;
-import io.maxads.ads.base.api.ApiClient;
 import io.maxads.ads.base.model.Ad;
 
 public class BannerPresenterFactory {
@@ -16,14 +13,13 @@ public class BannerPresenterFactory {
     mContext = context;
   }
 
-  public BannerPresenter createBannerPresenter(@NonNull BannerAdView bannerAdView,
-                                               @NonNull Ad ad,
+  public BannerPresenter createBannerPresenter(@NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener) {
 //    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
     final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
 
     final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(htmlBannerPresenter,
-      bannerAdView, new AdTrackingDelegate(ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
+      new AdTrackingDelegate(ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
 
 //    mraidBannerPresenter.setListener(bannerPresenterDecorator);
     htmlBannerPresenter.setListener(bannerPresenterDecorator);
