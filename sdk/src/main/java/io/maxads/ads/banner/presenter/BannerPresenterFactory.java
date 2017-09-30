@@ -18,14 +18,12 @@ public class BannerPresenterFactory {
 
   public BannerPresenter createBannerPresenter(@NonNull BannerAdView bannerAdView,
                                                @NonNull Ad ad,
-                                               @NonNull BannerPresenter.Listener bannerPresenterListener,
-                                               @Nullable BannerAdView.Listener bannerAdViewListener) {
+                                               @NonNull BannerPresenter.Listener bannerPresenterListener) {
 //    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
     final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
 
     final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(htmlBannerPresenter,
-      bannerAdView, ad, new AdTrackingDelegate(ad.getImpressionUrls(), ad.getClickUrls()),
-      bannerPresenterListener, bannerAdViewListener);
+      bannerAdView, new AdTrackingDelegate(ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
 
 //    mraidBannerPresenter.setListener(bannerPresenterDecorator);
     htmlBannerPresenter.setListener(bannerPresenterDecorator);

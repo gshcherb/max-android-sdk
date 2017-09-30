@@ -82,5 +82,7 @@ public class RequestManager {
 
   public void destroy() {
     mRefreshTimer.stop();
+    mRequestListener = null;
+    mTimerListener = null;
   }
 }

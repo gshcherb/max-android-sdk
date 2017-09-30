@@ -14,21 +14,17 @@ import io.maxads.ads.base.model.Ad;
 public class BannerPresenterDecorator implements BannerPresenter, BannerPresenter.Listener {
   @NonNull private final BannerPresenter mBannerPresenter;
   @NonNull private final BannerAdView mBannerAdView;
-  @NonNull private final Ad mAd;
   @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
   @NonNull private final BannerPresenter.Listener mBannerPresenterListener;
-  @Nullable private final BannerAdView.Listener mBannerAdViewListener;
 
-  public BannerPresenterDecorator(@NonNull BannerPresenter bannerPresenter, @NonNull BannerAdView bannerAdView,
-                                  @NonNull Ad ad, @NonNull AdTrackingDelegate adTrackingDelegate,
-                                  @NonNull BannerPresenter.Listener bannerPresenterListener,
-                                  @Nullable BannerAdView.Listener bannerAdViewListener) {
+  public BannerPresenterDecorator(@NonNull BannerPresenter bannerPresenter,
+                                  @NonNull BannerAdView bannerAdView,
+                                  @NonNull AdTrackingDelegate adTrackingDelegate,
+                                  @NonNull BannerPresenter.Listener bannerPresenterListener) {
     mBannerPresenter = bannerPresenter;
     mBannerAdView = bannerAdView;
-    mAd = ad;
     mAdTrackingDelegate = adTrackingDelegate;
     mBannerPresenterListener = bannerPresenterListener;
-    mBannerAdViewListener = bannerAdViewListener;
   }
 
   @Override
@@ -64,9 +60,6 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     mAdTrackingDelegate.trackImpression();
 
     mBannerPresenterListener.onBannerLoaded(bannerPresenter, banner);
-    if (mBannerAdViewListener != null) {
-      mBannerAdViewListener.onBannerLoaded(mBannerAdView);
-    }
   }
 
   @Override
@@ -75,16 +68,10 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     mAdTrackingDelegate.trackClick();
 
     mBannerPresenterListener.onBannerClicked(bannerPresenter);
-    if (mBannerAdViewListener != null) {
-      mBannerAdViewListener.onBannerClicked(mBannerAdView);
-    }
   }
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
     mBannerPresenterListener.onBannerError(bannerPresenter);
-    if (mBannerAdViewListener != null) {
-      mBannerAdViewListener.onBannerError(mBannerAdView);
-    }
   }
 }

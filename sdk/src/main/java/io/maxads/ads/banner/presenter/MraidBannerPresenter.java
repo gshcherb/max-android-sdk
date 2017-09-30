@@ -56,6 +56,7 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
     if (mMraidView != null) {
       mMraidView.destroy();
     }
+    mListener = null;
   }
 
   @Override

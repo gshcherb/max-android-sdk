@@ -37,7 +37,10 @@ public class HtmlBannerPresenter implements BannerPresenter, View.OnClickListene
 
   @Override
   public void load() {
-    mHtmlWebView.loadDataWithBaseURL("http://" + MaxAds.HOST + "/", mAd.getCreative(), "text/html", "utf-8", null);
+    final String derp = "<a href=\"http://play.google.com/store/apps/details?id=com.mopub.simpleadsdemo\">\n" +
+      "    <img width=\"320\" height=\"50\" src=\"https://storage.googleapis.com/maxads-156519.appspot.com/max320x50.png\" />\n" +
+      "</a>\n";
+    mHtmlWebView.loadDataWithBaseURL("http://" + MaxAds.HOST + "/", derp, "text/html", "utf-8", null);
     if (mListener != null) {
       mListener.onBannerLoaded(this, mHtmlWebView);
     }
@@ -46,6 +49,7 @@ public class HtmlBannerPresenter implements BannerPresenter, View.OnClickListene
   @Override
   public void destroy() {
     mHtmlWebView.destroy();
+    mListener = null;
   }
 
   @Override

@@ -8,7 +8,6 @@ import android.view.View;
 import io.maxads.ads.banner.presenter.BannerPresenter;
 import io.maxads.ads.banner.presenter.BannerPresenterFactory;
 import io.maxads.ads.banner.view.BannerAdView;
-import io.maxads.ads.base.RefreshTimer;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
 
@@ -51,15 +50,20 @@ public class BannerController implements RequestManager.RequestListener, Request
       return;
     }
 
-    mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(mBannerAdView, ad, this, mListener);
+    mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(mBannerAdView, ad, this);
     mNextBannerPresenter.load();
   }
 
   public void destroy() {
     // TODO (steffan): null out values here
-    destroyBannerPresenter(mCurrentBannerPresenter);
-    destroyBannerPresenter(mNextBannerPresenter);
     mRequestManager.destroy();
+    mAdUnitId = null;
+    mBannerAdView = null;
+    destroyBannerPresenter(mCurrentBannerPresenter);
+    mCurrentBannerPresenter = null;
+    destroyBannerPresenter(mNextBannerPresenter);
+    mNextBannerPresenter = null;
+    mListener = null;
   }
 
   private void destroyBannerPresenter(@Nullable BannerPresenter bannerPresenter) {
@@ -94,14 +98,24 @@ public class BannerController implements RequestManager.RequestListener, Request
 
     final long refreshTimeSeconds = bannerPresenter.getAd().getRefreshTimeSeconds();
     mRequestManager.startTimer(refreshTimeSeconds > 0 ? refreshTimeSeconds : DEFAULT_REFRESH_TIME_SECONDS);
+
+    if (mListener != null && mBannerAdView != null) {
+      mListener.onBannerLoaded(mBannerAdView);
+    }
   }
 
   @Override
   public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
+    if (mListener != null && mBannerAdView != null) {
+      mListener.onBannerClicked(mBannerAdView);
+    }
   }
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
     // TODO (steffan): start request timer here?
+    if (mListener != null && mBannerAdView != null) {
+      mListener.onBannerError(mBannerAdView);
+    }
   }
 }
