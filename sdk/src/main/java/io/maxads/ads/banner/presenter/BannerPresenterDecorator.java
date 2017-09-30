@@ -10,14 +10,14 @@ import io.maxads.ads.base.model.Ad;
 public class BannerPresenterDecorator implements BannerPresenter, BannerPresenter.Listener {
   @NonNull private final BannerPresenter mBannerPresenter;
   @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
-  @NonNull private final BannerPresenter.Listener mBannerPresenterListener;
+  @NonNull private final BannerPresenter.Listener mListener;
 
   public BannerPresenterDecorator(@NonNull BannerPresenter bannerPresenter,
                                   @NonNull AdTrackingDelegate adTrackingDelegate,
-                                  @NonNull BannerPresenter.Listener bannerPresenterListener) {
+                                  @NonNull BannerPresenter.Listener listener) {
     mBannerPresenter = bannerPresenter;
     mAdTrackingDelegate = adTrackingDelegate;
-    mBannerPresenterListener = bannerPresenterListener;
+    mListener = listener;
   }
 
   @Override
@@ -46,7 +46,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     // track impression
     mAdTrackingDelegate.trackImpression();
 
-    mBannerPresenterListener.onBannerLoaded(bannerPresenter, banner);
+    mListener.onBannerLoaded(bannerPresenter, banner);
   }
 
   @Override
@@ -54,11 +54,11 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     // track click and open click url if needed
     mAdTrackingDelegate.trackClick();
 
-    mBannerPresenterListener.onBannerClicked(bannerPresenter);
+    mListener.onBannerClicked(bannerPresenter);
   }
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
-    mBannerPresenterListener.onBannerError(bannerPresenter);
+    mListener.onBannerError(bannerPresenter);
   }
 }

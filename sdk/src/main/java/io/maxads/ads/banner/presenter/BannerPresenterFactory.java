@@ -13,6 +13,7 @@ public class BannerPresenterFactory {
     mContext = context;
   }
 
+  @NonNull
   public BannerPresenter createBannerPresenter(@NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener) {
 //    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
