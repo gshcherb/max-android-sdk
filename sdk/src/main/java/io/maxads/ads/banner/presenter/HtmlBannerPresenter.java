@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import io.maxads.ads.base.MaxAds;
-import io.maxads.ads.base.WebViewClickDetector;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.view.HtmlWebView;
 import io.maxads.ads.base.view.HtmlWebViewClient;
@@ -22,7 +21,6 @@ public class HtmlBannerPresenter implements BannerPresenter, View.OnClickListene
     mAd = ad;
     mHtmlWebView = new HtmlWebView(context);
     mHtmlWebView.setWebViewClient(new HtmlWebViewClient(context));
-    mHtmlWebView.setOnTouchListener(new WebViewClickDetector(mHtmlWebView));
     mHtmlWebView.setOnClickListener(this);
   }
 

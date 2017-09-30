@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
+import io.maxads.ads.base.WebViewClickDetector;
+
 public class HtmlWebView extends MaxAdsWebView {
   public HtmlWebView(@NonNull Context context) {
     this(context, null);
@@ -26,6 +28,8 @@ public class HtmlWebView extends MaxAdsWebView {
 
     enablePlugins(true);
     setBackgroundColor(Color.TRANSPARENT);
+
+    setOnTouchListener(new WebViewClickDetector(this));
   }
 
   @Override
