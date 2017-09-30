@@ -4,19 +4,19 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import io.maxads.ads.base.MaxAds;
 import io.reactivex.functions.Consumer;
 
 public class AdTrackingDelegate {
-  @NonNull private final ApiManager mApiManager;
+  @NonNull private final ApiClient mApiClient;
   @NonNull private final List<String> mImpressionUrls;
   @NonNull private final List<String> mClickUrls;
   private boolean mImpressionTracked;
   private boolean mClickTracked;
 
-  public AdTrackingDelegate(@NonNull ApiManager apiManager,
-                            @NonNull List<String> impressionUrls,
+  public AdTrackingDelegate(@NonNull List<String> impressionUrls,
                             @NonNull List<String> clickUrls) {
-    mApiManager = apiManager;
+    mApiClient = MaxAds.getApiManager();
     mImpressionUrls = impressionUrls;
     mClickUrls = clickUrls;
   }
@@ -41,7 +41,7 @@ public class AdTrackingDelegate {
 
   private void trackUrls(@NonNull List<String> urls) {
     for (String url : urls) {
-      mApiManager.trackUrl(url)
+      mApiClient.trackUrl(url)
         .subscribe(
           new Consumer<Void>() {
             @Override
