@@ -30,6 +30,11 @@ public class InterstitialActivityViewModuleImpl implements InterstitialActivityV
   }
 
   @Override
+  public void destroy() {
+    mHtmlWebView.destroy();
+  }
+
+  @Override
   public void onClick(View view) {
     if (mListener == null) {
       return;

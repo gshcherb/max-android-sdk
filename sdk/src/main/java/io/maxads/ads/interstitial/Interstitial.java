@@ -56,7 +56,9 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   public void destroy() {
     mRequestManager.destroy();
-    mInterstitialPresenter.destroy();
+    if (mInterstitialPresenter != null) {
+      mInterstitialPresenter.destroy();
+    }
     mInterstitialPresenter = null;
     mListener = null;
   }

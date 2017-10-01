@@ -11,4 +11,5 @@ public interface InterstitialActivityViewModule {
 
   void setListener(@Nullable Listener listener);
   void show(@NonNull String html);
+  void destroy();
 }

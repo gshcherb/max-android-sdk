@@ -30,6 +30,10 @@ public class InterstitialActivityPresenter implements InterstitialActivityViewMo
     broadcastAction(InterstitialBroadcastReceiver.INTERSTITIAL_SHOW);
   }
 
+  public void destroy() {
+    mInterstitialActivityViewModule.destroy();
+  }
+
   public void handleBackPressed() {
     broadcastAction(InterstitialBroadcastReceiver.INTERSTITIAL_DISMISS);
   }
