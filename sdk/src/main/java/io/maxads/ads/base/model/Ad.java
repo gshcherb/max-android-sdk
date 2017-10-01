@@ -11,13 +11,13 @@ public class Ad {
   @NonNull private final Integer mRefreshTimeSeconds;
   @NonNull private final List<String> mImpressionUrls;
   @NonNull private final List<String> mClickUrls;
-  @NonNull private final List<String> mSelectUrls;
+  @NonNull private final List<String> mSelectedUrls;
   @NonNull private final List<String> mErrorUrls;
   @NonNull private final Winner mWinner;
 
   public Ad(@NonNull String adUnitId, @NonNull String creative, @NonNull String prebidKeywords,
             @NonNull Integer refreshTimeSeconds, @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls,
-            @NonNull List<String> selectUrls, @NonNull List<String> errorUrls, @NonNull Winner winner) {
+            @NonNull List<String> selectedUrls, @NonNull List<String> errorUrls, @NonNull Winner winner) {
 
     mAdUnitId = adUnitId;
     mCreative = creative;
@@ -25,7 +25,7 @@ public class Ad {
     mRefreshTimeSeconds = refreshTimeSeconds;
     mImpressionUrls = impressionUrls;
     mClickUrls = clickUrls;
-    mSelectUrls = selectUrls;
+    mSelectedUrls = selectedUrls;
     mErrorUrls = errorUrls;
     mWinner = winner;
   }
@@ -53,5 +53,10 @@ public class Ad {
   @NonNull
   public List<String> getClickUrls() {
     return mClickUrls;
+  }
+
+  @NonNull
+  public List<String> getSelectedUrls() {
+    return mSelectedUrls;
   }
 }

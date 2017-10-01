@@ -26,9 +26,9 @@ public class AdResponse {
   @Expose
   public List<String> clickUrls;
 
-  @SerializedName("select_urls")
+  @SerializedName("selected_urls")
   @Expose
-  public List<String> selectUrls;
+  public List<String> selectedUrls;
 
   @SerializedName("error_urls")
   @Expose

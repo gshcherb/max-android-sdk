@@ -20,8 +20,8 @@ public class InterstitialPresenterFactory {
     final HtmlInterstitialPresenter htmlBannerPresenter = new HtmlInterstitialPresenter(mContext, ad);
 
     final InterstitialPresenterDecorator interstitialPresenterDecorator =
-      new InterstitialPresenterDecorator(htmlBannerPresenter, new AdTrackingDelegate(ad.getImpressionUrls(),
-        ad.getClickUrls()), interstitialPresenterListener);
+      new InterstitialPresenterDecorator(htmlBannerPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
+        ad.getImpressionUrls(), ad.getClickUrls()), interstitialPresenterListener);
 
     htmlBannerPresenter.setListener(interstitialPresenterDecorator);
 

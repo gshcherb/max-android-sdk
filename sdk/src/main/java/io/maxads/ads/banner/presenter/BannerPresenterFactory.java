@@ -20,7 +20,7 @@ public class BannerPresenterFactory {
     final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
 
     final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(htmlBannerPresenter,
-      new AdTrackingDelegate(ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
+      new AdTrackingDelegate(ad.getSelectedUrls(), ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
 
 //    mraidBannerPresenter.setListener(bannerPresenterDecorator);
     htmlBannerPresenter.setListener(bannerPresenterDecorator);

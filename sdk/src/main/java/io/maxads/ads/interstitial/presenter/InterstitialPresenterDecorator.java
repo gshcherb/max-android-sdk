@@ -32,6 +32,8 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
 
   @Override
   public void load() {
+    mAdTrackingDelegate.trackSelected();
+
     mInterstitialPresenter.load();
   }
 

@@ -33,6 +33,8 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void load() {
+    mAdTrackingDelegate.trackSelected();
+
     mBannerPresenter.load();
   }
 
@@ -43,7 +45,6 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
-    // track impression
     mAdTrackingDelegate.trackImpression();
 
     mListener.onBannerLoaded(bannerPresenter, banner);
@@ -51,7 +52,6 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
-    // track click and open click url if needed
     mAdTrackingDelegate.trackClick();
 
     mListener.onBannerClicked(bannerPresenter);

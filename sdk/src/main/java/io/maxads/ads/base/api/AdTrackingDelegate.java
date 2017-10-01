@@ -9,16 +9,29 @@ import io.reactivex.functions.Consumer;
 
 public class AdTrackingDelegate {
   @NonNull private final ApiClient mApiClient;
+  @NonNull private final List<String> mSelectedUrls;
   @NonNull private final List<String> mImpressionUrls;
   @NonNull private final List<String> mClickUrls;
+  private boolean mSelectedTracked;
   private boolean mImpressionTracked;
   private boolean mClickTracked;
 
-  public AdTrackingDelegate(@NonNull List<String> impressionUrls,
+  public AdTrackingDelegate(@NonNull List<String> selectedUrls,
+                            @NonNull List<String> impressionUrls,
                             @NonNull List<String> clickUrls) {
     mApiClient = MaxAds.getApiManager();
+    mSelectedUrls = selectedUrls;
     mImpressionUrls = impressionUrls;
     mClickUrls = clickUrls;
+  }
+
+  public void trackSelected() {
+    if (mSelectedTracked) {
+      return;
+    }
+
+    trackUrls(mSelectedUrls);
+    mSelectedTracked = true;
   }
 
   public void trackImpression() {
