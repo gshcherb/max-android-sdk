@@ -1,6 +1,7 @@
 package io.maxads.ads.interstitial.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import java.util.Random;
 
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.interstitial.InterstitialBroadcastReceiver;
+import io.maxads.ads.interstitial.activity.InterstitialActivity;
 
 public class HtmlInterstitialPresenter implements InterstitialPresenter {
   @NonNull private final Context mContext;
@@ -47,10 +49,19 @@ public class HtmlInterstitialPresenter implements InterstitialPresenter {
     intentFilter.addAction(InterstitialBroadcastReceiver.INTERSTITIAL_ERROR);
 
     mInterstitialBroadcastReceiver.register(intentFilter);
+
+    if (mListener != null) {
+      mListener.onInterstitialLoaded(this);
+    }
   }
 
   @Override
   public void show() {
+    final Intent intent = new Intent(mContext, InterstitialActivity.class);
+    intent.putExtra(InterstitialActivity.HTML_KEY, mAd.getCreative());
+    intent.putExtra(InterstitialActivity.BROADCAST_ID_KEY, mBroadcastId);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    mContext.startActivity(intent);
   }
 
   @Override

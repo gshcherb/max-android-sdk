@@ -7,11 +7,18 @@
     tools:context="io.maxads.maxads_sample.activities.MainActivity">
 
     <Button
-        android:id="@+id/load_ad"
+        android:id="@+id/load_banner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:text="Load Ad" />
+        android:text="Load Banner" />
+
+    <Button
+        android:id="@+id/load_interstitial"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/load_banner"
+        android:text="Load Interstitial" />
 
     <io.maxads.ads.banner.view.BannerAdView
         android:id="@+id/ad"

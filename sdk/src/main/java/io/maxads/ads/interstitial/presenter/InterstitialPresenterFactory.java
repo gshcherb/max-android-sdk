@@ -23,7 +23,7 @@ public class InterstitialPresenterFactory {
       new InterstitialPresenterDecorator(htmlBannerPresenter, new AdTrackingDelegate(ad.getImpressionUrls(),
         ad.getClickUrls()), interstitialPresenterListener);
 
-    htmlBannerPresenter.setListener(interstitialPresenterListener);
+    htmlBannerPresenter.setListener(interstitialPresenterDecorator);
 
     return interstitialPresenterDecorator;
   }

@@ -1,2 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.maxads.ads"/>
+          package="io.maxads.ads">
+    <application>
+        <activity android:name="io.maxads.ads.interstitial.activity.InterstitialActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"/>
+    </application>
+</manifest>

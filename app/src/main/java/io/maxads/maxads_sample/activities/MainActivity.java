@@ -7,33 +7,45 @@ import android.view.View;
 import android.widget.Button;
 
 import io.maxads.ads.banner.view.BannerAdView;
+import io.maxads.ads.interstitial.Interstitial;
 import io.maxads.maxads_sample.R;
 
-public class MainActivity extends AppCompatActivity implements BannerAdView.Listener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements BannerAdView.Listener, View.OnClickListener, Interstitial.Listener {
 
-  private Button mLoadAdButton;
+  private Button mLoadBannerButton;
+  private Button mLoadInterstitialButton;
   private BannerAdView mBannerAdView;
+  private Interstitial mInterstitial;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mLoadAdButton = findViewById(R.id.load_ad);
-    mLoadAdButton.setOnClickListener(this);
+    mLoadBannerButton = findViewById(R.id.load_banner);
+    mLoadBannerButton.setOnClickListener(this);
+    mLoadInterstitialButton = findViewById(R.id.load_interstitial);
+    mLoadInterstitialButton.setOnClickListener(this);
     mBannerAdView = findViewById(R.id.ad);
     mBannerAdView.setListener(this);
+    mInterstitial = new Interstitial(this);
+    mInterstitial.setListener(this);
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
     mBannerAdView.destroy();
+    mInterstitial.destroy();
   }
 
   @Override
   public void onClick(View view) {
-    mBannerAdView.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
+    if (view == mLoadBannerButton) {
+      mBannerAdView.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
+    } else if (view == mLoadInterstitialButton) {
+      mInterstitial.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
+    }
   }
 
   @Override
@@ -46,5 +58,30 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
 
   @Override
   public void onBannerError(@NonNull BannerAdView bannerAdView) {
+  }
+
+  @Override
+  public void onInterstitialLoaded(@NonNull Interstitial interstitial) {
+    mInterstitial.show();
+  }
+
+  @Override
+  public void onInterstitialShown(@NonNull Interstitial interstitial) {
+
+  }
+
+  @Override
+  public void onInterstitialClicked(@NonNull Interstitial interstitial) {
+
+  }
+
+  @Override
+  public void onInterstitialDismissed(@NonNull Interstitial interstitial) {
+
+  }
+
+  @Override
+  public void onInterstitialError(@NonNull Interstitial interstitial) {
+
   }
 }
