@@ -25,6 +25,8 @@ public class UrlHandlerDelegate {
     final String host = uri.getHost();
     final String uriLower = uri.toString().toLowerCase();
 
+    // NOTE: currently these all handle the same, but we might want different behavior in the future
+
     // Play store deep links
     if ("play.google.com".equalsIgnoreCase(host)
       || "market.android.com".equalsIgnoreCase(host)
@@ -34,9 +36,9 @@ public class UrlHandlerDelegate {
       mIntentHandlerDelegate.handleDeepLink(uri);
     }
 
-    // In app browser
+    // Device browser
     else if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
-      // open browser
+      mIntentHandlerDelegate.handleDeepLink(uri);
     }
 
     // App deep links
