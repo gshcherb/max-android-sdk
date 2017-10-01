@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.RefreshTimer;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
 public class RequestManager {
@@ -48,12 +49,14 @@ public class RequestManager {
       });
   }
 
-  private void requestAdFromApi(@NonNull AdRequest adRequest) {
+  private void requestAdFromApi(@NonNull final AdRequest adRequest) {
+    MaxAdsLog.d("Requesting ad for ad unit id: " + adRequest.getAdUnitId());
     mApiClient.getAd(adRequest)
       .subscribe(new Consumer<Ad>() {
         @Override
         public void accept(Ad ad) throws Exception {
           // TODO (steffan): cache ad here
+          MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
           if (mRequestListener != null) {
             mRequestListener.onRequestSuccess(ad);
           }
@@ -61,6 +64,7 @@ public class RequestManager {
       }, new Consumer<Throwable>() {
         @Override
         public void accept(Throwable throwable) throws Exception {
+          MaxAdsLog.w("Failed to receive ad response for ad unit id: " + adRequest.getAdUnitId(), throwable);
           if (mRequestListener != null) {
             mRequestListener.onRequestFail(throwable);
           }

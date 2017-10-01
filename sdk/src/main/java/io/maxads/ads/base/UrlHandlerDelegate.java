@@ -3,8 +3,10 @@ package io.maxads.ads.base;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import io.maxads.ads.base.util.IntentHandlerDelegate;
+import io.maxads.ads.base.util.MaxAdsLog;
 
 public class UrlHandlerDelegate {
 
@@ -17,8 +19,13 @@ public class UrlHandlerDelegate {
   /**
    * https://developer.android.com/distribute/marketing-tools/linking-to-google-play.html
    */
-  public void handleUrl(@NonNull String url) {
+  public void handleUrl(@Nullable String url) {
+    if (url == null) {
+      return;
+    }
+
     // TODO (steffan): follow redirects first before handling url
+    MaxAdsLog.d("Handling url: " + url);
 
     final Uri uri = Uri.parse(url);
     final String scheme = uri.getScheme();
