@@ -45,7 +45,7 @@ public class ApiClient {
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 10))
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5))
       .map(new Function<AdResponse, Ad>() {
         @Override
         public Ad apply(AdResponse adResponse) throws Exception {
@@ -60,6 +60,6 @@ public class ApiClient {
     return mApiService.trackUrl(url)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 10));
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5));
   }
 }

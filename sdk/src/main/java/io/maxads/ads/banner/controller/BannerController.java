@@ -58,7 +58,6 @@ public class BannerController implements RequestManager.RequestListener, Request
   }
 
   public void destroy() {
-    // TODO (steffan): null out values here
     mRequestManager.destroy();
     mAdUnitId = null;
     mBannerAdView = null;
