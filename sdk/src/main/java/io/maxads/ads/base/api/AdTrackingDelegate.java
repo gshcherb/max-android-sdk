@@ -5,9 +5,28 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.maxads.ads.base.MaxAds;
+import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
 public class AdTrackingDelegate {
+  private enum Type {
+    SELECTED("selected"),
+    IMPRESSION("impression"),
+    CLICK("click");
+
+    @NonNull private final String mType;
+
+    Type(@NonNull String type) {
+      mType = type;
+    }
+
+
+    @Override
+    public String toString() {
+      return mType;
+    }
+  }
+
   @NonNull private final ApiClient mApiClient;
   @NonNull private final List<String> mSelectedUrls;
   @NonNull private final List<String> mImpressionUrls;
@@ -30,7 +49,7 @@ public class AdTrackingDelegate {
       return;
     }
 
-    trackUrls(mSelectedUrls);
+    trackUrls(mSelectedUrls, Type.SELECTED);
     mSelectedTracked = true;
   }
 
@@ -39,7 +58,7 @@ public class AdTrackingDelegate {
       return;
     }
 
-    trackUrls(mImpressionUrls);
+    trackUrls(mImpressionUrls, Type.IMPRESSION);
     mImpressionTracked = true;
   }
 
@@ -48,24 +67,25 @@ public class AdTrackingDelegate {
       return;
     }
 
-    trackUrls(mClickUrls);
+    trackUrls(mClickUrls, Type.CLICK);
     mClickTracked = true;
   }
 
-  private void trackUrls(@NonNull List<String> urls) {
-    for (String url : urls) {
+  private void trackUrls(@NonNull List<String> urls, @NonNull final Type type) {
+    for (final String url : urls) {
+      MaxAdsLog.d("Tracking " + type.toString() + " url: " + url);
       mApiClient.trackUrl(url)
         .subscribe(
           new Consumer<Void>() {
             @Override
             public void accept(Void aVoid) throws Exception {
-              // Log success
+              MaxAdsLog.d("Successfully tracked " + type.toString() + " url: " + url);
             }
           },
           new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
-              // Log fail
+              MaxAdsLog.d("Failed to track " + type.toString() + " url: " + url, throwable);
             }
           }
         );
