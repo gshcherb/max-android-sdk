@@ -7,5 +7,6 @@ licenses:
 
 components:
   - android-26
+  - build-tools-26.0.2
 
 # configuration options: https://docs.travis-ci.com/user/languages/android/
