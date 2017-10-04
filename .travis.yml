@@ -6,7 +6,8 @@ licenses:
   - 'google-gdk-license-.+'
 
 components:
-  - android-26
+  - tools
   - build-tools-26.0.2
+  - android-26
 
 # configuration options: https://docs.travis-ci.com/user/languages/android/
