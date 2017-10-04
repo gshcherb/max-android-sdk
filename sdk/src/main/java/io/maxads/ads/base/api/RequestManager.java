@@ -55,8 +55,8 @@ public class RequestManager {
       .subscribe(new Consumer<Ad>() {
         @Override
         public void accept(Ad ad) throws Exception {
-          // TODO (steffan): cache ad here
           MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
+          MaxAds.getAdCache().put(adRequest.getAdUnitId(), ad);
           if (mRequestListener != null) {
             mRequestListener.onRequestSuccess(ad);
           }

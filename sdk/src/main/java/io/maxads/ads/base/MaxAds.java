@@ -13,11 +13,13 @@ public class MaxAds {
   @NonNull private static ApiClient sApiClient;
   @NonNull private static DeviceInfo sDeviceInfo;
   @NonNull private static SessionDepthManager sSessionDepthManager;
+  @NonNull private static AdCache sAdCache;
 
   public static void initialize(@NonNull Application application) {
     sApiClient = new ApiClient();
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());
     sSessionDepthManager = new SessionDepthManager(application);
+    sAdCache = new AdCache();
   }
 
   @NonNull
@@ -33,5 +35,10 @@ public class MaxAds {
   @NonNull
   public static SessionDepthManager getSessionDepthManager() {
     return sSessionDepthManager;
+  }
+
+  @NonNull
+  public static AdCache getAdCache() {
+    return sAdCache;
   }
 }
