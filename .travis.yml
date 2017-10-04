@@ -1,13 +1,13 @@
 language: android
 
-licenses:
-  - 'android-sdk-preview-license-.+'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
-
-components:
-  - tools
-  - build-tools-26.0.2
-  - android-26
+android: 
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+  components:
+    - tools
+    - build-tools-26.0.2
+    - android-26
 
 # configuration options: https://docs.travis-ci.com/user/languages/android/
