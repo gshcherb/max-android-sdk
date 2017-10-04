@@ -1,3 +1,8 @@
 language: android
 
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
 # configuration options: https://docs.travis-ci.com/user/languages/android/
