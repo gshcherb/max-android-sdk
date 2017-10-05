@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
+import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.BiFunction;
@@ -33,12 +34,15 @@ public class ExponentialBackoff implements Function<Observable<? extends Throwab
       .zipWith(Observable.range(1, mRetries), new BiFunction<Throwable, Integer, Integer>() {
           @Override
           public Integer apply(Throwable throwable, @NonNull Integer retryCount) throws Exception {
+            MaxAdsLog.e("Request failed, retry count: " + retryCount, throwable);
             return retryCount;
           }
         }).flatMap(new Function<Integer, ObservableSource<Long>>() {
         @Override
         public ObservableSource<Long> apply(Integer attemptNumber) throws Exception {
-          return Observable.timer(getNewInterval(attemptNumber), mTimeUnit);
+          long newInterval = getNewInterval(attemptNumber);
+          MaxAdsLog.d("Retrying request in " + newInterval + " " + mTimeUnit.toString().toLowerCase());
+          return Observable.timer(newInterval, mTimeUnit);
         }
       });
   }
