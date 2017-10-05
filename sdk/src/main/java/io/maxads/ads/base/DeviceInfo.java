@@ -75,7 +75,7 @@ public class DeviceInfo {
   @Nullable private final TelephonyManager mTelephonyManager;
 
   public DeviceInfo(@NonNull Context context) {
-    mContext = context;
+    mContext = context.getApplicationContext();
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       mUserAgent = WebSettings.getDefaultUserAgent(context);

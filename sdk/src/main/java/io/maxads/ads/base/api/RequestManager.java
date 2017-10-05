@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.RefreshTimer;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
@@ -39,7 +40,16 @@ public class RequestManager {
     mTimerListener = timerListener;
   }
 
-  public void requestAd(@NonNull String adUnitId) {
+  public void requestAd(@Nullable String adUnitId) {
+    if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
+      "Please call MaxAds#initialize in your application's onCreate method.")) {
+      return;
+    }
+
+    if (!Checks.NoThrow.checkNotNull(adUnitId, "adUnitId cannot be null")) {
+      return;
+    }
+
     mAdRequestFactory.createAdRequest(adUnitId)
       .subscribe(new Consumer<AdRequest>() {
         @Override

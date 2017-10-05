@@ -1,9 +1,12 @@
 package io.maxads.ads.base;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
+import io.maxads.ads.BuildConfig;
 import io.maxads.ads.base.api.ApiClient;
+import io.maxads.ads.base.util.Checks;
 
 public class MaxAds {
   @NonNull public static final String API_VERSION = "1";
@@ -11,15 +14,19 @@ public class MaxAds {
   @NonNull public static final String HOST = "ads.maxads.io";
 
   @NonNull private static ApiClient sApiClient;
+  @SuppressLint("StaticFieldLeak")
   @NonNull private static DeviceInfo sDeviceInfo;
   @NonNull private static SessionDepthManager sSessionDepthManager;
   @NonNull private static AdCache sAdCache;
+  private static boolean sInitialized;
 
   public static void initialize(@NonNull Application application) {
     sApiClient = new ApiClient();
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());
     sSessionDepthManager = new SessionDepthManager(application);
+    Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);
     sAdCache = new AdCache();
+    sInitialized = true;
   }
 
   @NonNull
@@ -40,5 +47,9 @@ public class MaxAds {
   @NonNull
   public static AdCache getAdCache() {
     return sAdCache;
+  }
+  
+  public static boolean isInitialized() {
+    return sInitialized;
   }
 }

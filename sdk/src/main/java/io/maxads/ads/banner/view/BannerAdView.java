@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import io.maxads.ads.banner.controller.BannerController;
+import io.maxads.ads.base.MaxAds;
+import io.maxads.ads.base.util.Checks;
 
 public class BannerAdView extends FrameLayout {
   public interface Listener {
@@ -35,7 +37,12 @@ public class BannerAdView extends FrameLayout {
   }
 
   public void load(@Nullable String adUnitId) {
-    if (adUnitId == null) {
+    if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
+      "Please call MaxAds#initialize in your application's onCreate method.")) {
+      return;
+    }
+
+    if (!Checks.NoThrow.checkNotNull(adUnitId, "adUnitId cannot be null")) {
       return;
     }
 

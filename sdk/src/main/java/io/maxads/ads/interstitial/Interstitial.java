@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenter;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenterFactory;
 
@@ -34,7 +36,12 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
   }
 
   public void load(@Nullable String adUnitId) {
-    if (adUnitId == null) {
+    if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
+      "Please call MaxAds#initialize in your application's onCreate method.")) {
+      return;
+    }
+
+    if (!Checks.NoThrow.checkNotNull(adUnitId, "adUnitId cannot be null")) {
       return;
     }
 
