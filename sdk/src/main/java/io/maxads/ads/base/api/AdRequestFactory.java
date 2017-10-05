@@ -31,6 +31,7 @@ public class AdRequestFactory {
             adUnitId,
             MaxAds.API_VERSION,
             MaxAds.SDK_VERSION,
+            mDeviceInfo.getAppVersion(),
             info.getId(),
             info.isLimitAdTrackingEnabled(),
             "",

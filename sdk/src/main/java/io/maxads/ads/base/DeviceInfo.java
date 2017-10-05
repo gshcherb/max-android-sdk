@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
 
+import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,6 +68,7 @@ public class DeviceInfo {
     }
   }
 
+  @NonNull private static final String UNKNOWN_APP_VERSION_IDENTIFIER = "UNKNOWN";
   @NonNull private final Context mContext;
   @NonNull private final String mUserAgent;
   @Nullable private final ConnectivityManager mConnectivityManager;
@@ -112,6 +114,16 @@ public class DeviceInfo {
       }
     }).subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  @NonNull
+  public String getAppVersion() {
+    try {
+      return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+    } catch (PackageManager.NameNotFoundException e) {
+      MaxAdsLog.d("Could not determine app version", e);
+      return UNKNOWN_APP_VERSION_IDENTIFIER;
+    }
   }
 
   @NonNull

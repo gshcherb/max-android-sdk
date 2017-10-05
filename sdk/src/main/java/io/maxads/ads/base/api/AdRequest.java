@@ -18,6 +18,10 @@ public class AdRequest {
   @Expose
   @NonNull private final String mSdkVersion;
 
+  @SerializedName("app_v")
+  @Expose
+  @NonNull private final String mAppVersion;
+
   @SerializedName("ifa")
   @Expose
   @NonNull private final String mIFA;
@@ -82,8 +86,9 @@ public class AdRequest {
   @Expose
   @Nullable private final Boolean mTest;
 
-  private AdRequest(@NonNull String adUnitId, @NonNull String version, @NonNull String sdkVersion, @NonNull String ifa,
-                    @NonNull Boolean lmt, @NonNull String vendorId, @NonNull String timeZone, @NonNull String locale,
+  private AdRequest(@NonNull String adUnitId, @NonNull String version, @NonNull String sdkVersion,
+                    @NonNull String appVersion, @NonNull String ifa, @NonNull Boolean lmt,
+                    @NonNull String vendorId, @NonNull String timeZone, @NonNull String locale,
                     @NonNull String orientation, @NonNull Integer widthPx, @NonNull Integer heightPx,
                     @NonNull String browserAgent, @NonNull String model, @NonNull String connectivity,
                     @NonNull String carrier, @Nullable Integer sessionDepth, @Nullable Integer latitude,
@@ -91,6 +96,7 @@ public class AdRequest {
     mAdUnitId = adUnitId;
     mVersion = version;
     mSdkVersion = sdkVersion;
+    mAppVersion = appVersion;
     mIFA = ifa;
     mLMT = lmt;
     mVendorId = vendorId;
@@ -118,6 +124,7 @@ public class AdRequest {
     @NonNull private final String mAdUnitId;
     @NonNull private final String mVersion;
     @NonNull private final String mSdkVersion;
+    @NonNull private final String mAppVersion;
     @NonNull private final String mIFA;
     @NonNull private final Boolean mLMT;
     @NonNull private final String mVendorId;
@@ -135,14 +142,16 @@ public class AdRequest {
     @Nullable private Integer mLongitude;
     @Nullable private Boolean mTest;
 
-    public Builder(@NonNull String adUnitId, @NonNull String version, @NonNull String sdkVersion, @NonNull String ifa,
-                   @NonNull Boolean lmt, @NonNull String vendorId, @NonNull String timeZone, @NonNull String locale,
+    public Builder(@NonNull String adUnitId, @NonNull String version, @NonNull String sdkVersion,
+                   @NonNull String appVersion, @NonNull String ifa, @NonNull Boolean lmt,
+                   @NonNull String vendorId, @NonNull String timeZone, @NonNull String locale,
                    @NonNull String orientation, @NonNull Integer widthPx, @NonNull Integer heightPx,
                    @NonNull String browserAgent, @NonNull String model, @NonNull String connectivity,
                    @NonNull String carrier, @NonNull Integer sessionDepth) {
       mAdUnitId = adUnitId;
       mVersion = version;
       mSdkVersion = sdkVersion;
+      mAppVersion = appVersion;
       mIFA = ifa;
       mLMT = lmt;
       mVendorId = vendorId;
@@ -174,9 +183,9 @@ public class AdRequest {
     }
 
     public AdRequest build() {
-      return new AdRequest(mAdUnitId, mVersion, mSdkVersion, mIFA, mLMT, mVendorId, mTimeZone, mLocale, mOrientation,
-        mWidthPx, mHeightPx, mBrowserAgent, mModel, mConnectivity, mCarrier, mSessionDepth, mLatitude, mLongitude,
-        mTest);
+      return new AdRequest(mAdUnitId, mVersion, mSdkVersion, mAppVersion, mIFA, mLMT, mVendorId,
+          mTimeZone, mLocale, mOrientation, mWidthPx, mHeightPx, mBrowserAgent, mModel,
+          mConnectivity, mCarrier, mSessionDepth, mLatitude, mLongitude, mTest);
     }
   }
 }
