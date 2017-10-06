@@ -16,14 +16,14 @@ public class BannerPresenterFactory {
   @NonNull
   public BannerPresenter createBannerPresenter(@NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener) {
-//    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
-    final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
+    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
+//    final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
 
-    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(htmlBannerPresenter,
+    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(mraidBannerPresenter,
       new AdTrackingDelegate(ad.getSelectedUrls(), ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
 
-//    mraidBannerPresenter.setListener(bannerPresenterDecorator);
-    htmlBannerPresenter.setListener(bannerPresenterDecorator);
+    mraidBannerPresenter.setListener(bannerPresenterDecorator);
+//    htmlBannerPresenter.setListener(bannerPresenterDecorator);
 
     return bannerPresenterDecorator;
   }

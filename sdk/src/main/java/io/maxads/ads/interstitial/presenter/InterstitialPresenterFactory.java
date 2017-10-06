@@ -1,29 +1,31 @@
 package io.maxads.ads.interstitial.presenter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
 
 public class InterstitialPresenterFactory {
-  @NonNull private final Context mContext;
+  @NonNull private final Activity mActivity;
 
-  public InterstitialPresenterFactory(@NonNull Context context) {
-    mContext = context;
+  public InterstitialPresenterFactory(@NonNull Activity activity) {
+    mActivity = activity;
   }
 
   @NonNull
   public InterstitialPresenter createInterstitialPresenter(
     @NonNull Ad ad,
     @NonNull InterstitialPresenter.Listener interstitialPresenterListener) {
-    final HtmlInterstitialPresenter htmlBannerPresenter = new HtmlInterstitialPresenter(mContext, ad);
+//    final HtmlInterstitialPresenter htmlBannerPresenter = new HtmlInterstitialPresenter(mActivity, ad);
+    final MraidInterstitialPresenter mraidInterstitialPresenter = new MraidInterstitialPresenter(mActivity, ad);
 
     final InterstitialPresenterDecorator interstitialPresenterDecorator =
-      new InterstitialPresenterDecorator(htmlBannerPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
+      new InterstitialPresenterDecorator(mraidInterstitialPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
         ad.getImpressionUrls(), ad.getClickUrls()), interstitialPresenterListener);
 
-    htmlBannerPresenter.setListener(interstitialPresenterDecorator);
+//    htmlBannerPresenter.setListener(interstitialPresenterDecorator);
+    mraidInterstitialPresenter.setListener(interstitialPresenterDecorator);
 
     return interstitialPresenterDecorator;
   }

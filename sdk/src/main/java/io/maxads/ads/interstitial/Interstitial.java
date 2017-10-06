@@ -1,6 +1,6 @@
 package io.maxads.ads.interstitial;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -25,8 +25,8 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
   @Nullable private InterstitialPresenter mInterstitialPresenter;
   @Nullable private Listener mListener;
 
-  public Interstitial(@NonNull Context context) {
-    mInterstitialPresenterFactory = new InterstitialPresenterFactory(context);
+  public Interstitial(@NonNull Activity activity) {
+    mInterstitialPresenterFactory = new InterstitialPresenterFactory(activity);
     mRequestManager = new RequestManager();
     mRequestManager.setRequestListener(this);
   }

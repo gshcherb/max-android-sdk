@@ -1,31 +1,31 @@
-package io.maxads.ads.banner.presenter;
+package io.maxads.ads.interstitial.presenter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.UrlHandlerDelegate;
 import io.maxads.ads.base.model.Ad;
-import io.maxads.mraid.MRAIDBanner;
+import io.maxads.mraid.MRAIDInterstitial;
 import io.maxads.mraid.MRAIDNativeFeatureListener;
 import io.maxads.mraid.MRAIDView;
 import io.maxads.mraid.MRAIDViewListener;
 
-public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener, MRAIDNativeFeatureListener {
+public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDViewListener, MRAIDNativeFeatureListener {
 
-  @NonNull private final Context mContext;
+  @NonNull private final Activity mActivity;
   @NonNull private final Ad mAd;
   @NonNull private final UrlHandlerDelegate mUrlHandlerDelegate;
   @NonNull private final String[] mSupportedNativeFeatures;
 
-  @Nullable private BannerPresenter.Listener mListener;
-  @Nullable private MRAIDBanner mMRAIDBanner;
+  @Nullable private InterstitialPresenter.Listener mListener;
+  @Nullable private MRAIDInterstitial mMRAIDInterstitial;
 
-  public MraidBannerPresenter(@NonNull Context context, @NonNull Ad ad) {
-    mContext = context;
+  public MraidInterstitialPresenter(@NonNull Activity activity, @NonNull Ad ad) {
+    mActivity = activity;
     mAd = ad;
-    mUrlHandlerDelegate = new UrlHandlerDelegate(context);
+    mUrlHandlerDelegate = new UrlHandlerDelegate(activity);
     mSupportedNativeFeatures = new String[]{};
   }
 
@@ -42,14 +42,25 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Override
   public void load() {
-    mMRAIDBanner = new MRAIDBanner(mContext, "http://" + MaxAds.HOST + "/", mAd.getCreative(), mSupportedNativeFeatures,
-      this, this);
+    mMRAIDInterstitial = new MRAIDInterstitial(mActivity, "http://" + MaxAds.HOST + "/", mAd.getCreative(),
+      mSupportedNativeFeatures, this, this);
+  }
+
+  @Override
+  public void show() {
+    if (mMRAIDInterstitial != null) {
+      mMRAIDInterstitial.show(mActivity);
+
+      if (mListener != null) {
+        mListener.onInterstitialShown(this);
+      }
+    }
   }
 
   @Override
   public void destroy() {
-    if (mMRAIDBanner != null) {
-      mMRAIDBanner.destroy();
+    if (mMRAIDInterstitial != null) {
+      mMRAIDInterstitial.destroy();
     }
     mListener = null;
   }
@@ -57,20 +68,19 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
   @Override
   public void mraidViewLoaded(MRAIDView mraidView) {
     if (mListener != null) {
-      mListener.onBannerLoaded(this, mraidView);
+      mListener.onInterstitialLoaded(this);
     }
   }
 
   @Override
   public void mraidViewExpand(MRAIDView mraidView) {
-    if (mListener != null) {
-      mListener.onBannerClicked(this);
-    }
   }
 
   @Override
   public void mraidViewClose(MRAIDView mraidView) {
-
+    if (mListener != null) {
+      mListener.onInterstitialDismissed(this);
+    }
   }
 
   @Override
@@ -98,7 +108,7 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
     mUrlHandlerDelegate.handleUrl(url);
     // TODO (steffan): will this always count as a click? Are there other cases that should be considered a click?
     if (mListener != null) {
-      mListener.onBannerClicked(this);
+      mListener.onInterstitialClicked(this);
     }
   }
 

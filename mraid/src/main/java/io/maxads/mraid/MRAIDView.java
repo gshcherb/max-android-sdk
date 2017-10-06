@@ -1180,7 +1180,7 @@ public class MRAIDView extends RelativeLayout {
     }
 
     private static void injectJavaScript(WebView webView, String js) {
-        if (!TextUtils.isEmpty(js)) {
+        if (webView != null && !TextUtils.isEmpty(js)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 MRAIDLog.d(MRAID_LOG_TAG, "evaluating js: " + js);
                 webView.evaluateJavascript(js, new ValueCallback<String>() {
