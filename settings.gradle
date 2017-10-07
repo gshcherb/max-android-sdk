@@ -1,1 +1,1 @@
-include ':app', ':sdk', ':mraid'
+include ':app', ':sdk', ':mraid', ':vast'
