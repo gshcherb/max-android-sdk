@@ -1423,7 +1423,12 @@ public class MRAIDView extends RelativeLayout {
         }
 
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            MRAIDLog.d("hz-m MRAIDView WebViewClient - onReceivedError");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                MRAIDLog.d("hz-m MRAIDView WebViewClient - onReceivedError code: " +  error.getErrorCode());
+                MRAIDLog.d("hz-m MRAIDView WebViewClient - onReceivedError: " + error.getDescription());
+            } else {
+                MRAIDLog.d("hz-m MRAIDView WebViewClient - onReceivedError: " + error);
+            }
         }
 
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
