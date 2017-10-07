@@ -3,5 +3,6 @@
     <application>
         <activity android:name="io.maxads.ads.interstitial.activity.InterstitialActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="io.maxads.vast.activity.VASTActivity"/>
     </application>
 </manifest>

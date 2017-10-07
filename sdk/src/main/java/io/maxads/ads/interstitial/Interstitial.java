@@ -115,6 +115,11 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onInterstitialError(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mInterstitialPresenter != null) {
+      mInterstitialPresenter.destroy();
+      mInterstitialPresenter = null;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialError(this);
     }
