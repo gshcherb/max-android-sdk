@@ -18,16 +18,16 @@ public class InterstitialPresenterFactory {
     @NonNull Ad ad,
     @NonNull InterstitialPresenter.Listener interstitialPresenterListener) {
 //    final HtmlInterstitialPresenter htmlBannerPresenter = new HtmlInterstitialPresenter(mActivity, ad);
-//    final MraidInterstitialPresenter mraidInterstitialPresenter = new MraidInterstitialPresenter(mActivity, ad);
-    final VastInterstitialPresenter vastInterstitialPresenter = new VastInterstitialPresenter(mActivity, ad);
+    final MraidInterstitialPresenter mraidInterstitialPresenter = new MraidInterstitialPresenter(mActivity, ad);
+//    final VastInterstitialPresenter vastInterstitialPresenter = new VastInterstitialPresenter(mActivity, ad);
 
     final InterstitialPresenterDecorator interstitialPresenterDecorator =
-      new InterstitialPresenterDecorator(vastInterstitialPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
+      new InterstitialPresenterDecorator(mraidInterstitialPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
         ad.getImpressionUrls(), ad.getClickUrls()), interstitialPresenterListener);
 
 //    htmlBannerPresenter.setListener(interstitialPresenterDecorator);
-//    mraidInterstitialPresenter.setListener(interstitialPresenterDecorator);
-    vastInterstitialPresenter.setListener(interstitialPresenterDecorator);
+    mraidInterstitialPresenter.setListener(interstitialPresenterDecorator);
+//    vastInterstitialPresenter.setListener(interstitialPresenterDecorator);
 
     return interstitialPresenterDecorator;
   }
