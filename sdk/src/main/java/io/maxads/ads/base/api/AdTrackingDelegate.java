@@ -71,6 +71,10 @@ public class AdTrackingDelegate {
     mClickTracked = true;
   }
 
+  public void trackError(@NonNull String errorMessage) {
+    mApiClient.trackError(errorMessage);
+  }
+
   private void trackUrls(@NonNull List<String> urls, @NonNull final Type type) {
     for (final String url : urls) {
       MaxAdsLog.d("Tracking " + type.toString() + " url: " + url);

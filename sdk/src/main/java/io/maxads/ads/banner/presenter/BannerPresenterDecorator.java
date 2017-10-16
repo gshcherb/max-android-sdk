@@ -61,7 +61,9 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
-    MaxAdsLog.d("Banner error for ad unit id: " + getAd().getAdUnitId());
+    String errorMessage = "Banner error for ad unit id: " + getAd().getAdUnitId();
+    MaxAdsLog.d(errorMessage);
+    mAdTrackingDelegate.trackError(errorMessage);
     mListener.onBannerError(bannerPresenter);
   }
 }

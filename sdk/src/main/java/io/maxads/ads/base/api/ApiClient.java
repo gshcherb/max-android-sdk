@@ -62,4 +62,15 @@ public class ApiClient {
       .observeOn(AndroidSchedulers.mainThread())
       .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5));
   }
+
+  public Observable<Void> trackError(@NonNull String message) {
+    return new ErrorRequestFactory()
+        .createErrorRequest(message)
+        .flatMap(new Function<ErrorRequest, Observable<Void>>() {
+          @Override
+          public Observable<Void> apply(ErrorRequest errorRequest) throws Exception {
+            return mApiService.trackError(errorRequest);
+          }
+        });
+  }
 }

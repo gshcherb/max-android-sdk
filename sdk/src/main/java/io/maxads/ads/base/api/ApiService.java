@@ -13,4 +13,7 @@ public interface ApiService {
 
   @GET
   Observable<Void> trackUrl(@Url String url);
+
+  @POST("/events/client-error")
+  Observable<Void> trackError(@Body ErrorRequest errorRequest);
 }

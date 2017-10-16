@@ -78,7 +78,9 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
 
   @Override
   public void onInterstitialError(@NonNull InterstitialPresenter interstitialPresenter) {
-    MaxAdsLog.d("Interstitial error for ad unit id: " + getAd().getAdUnitId());
+    String errorMessage = "Interstitial error for ad unit id: " + getAd().getAdUnitId();
+    MaxAdsLog.d(errorMessage);
+    mAdTrackingDelegate.trackError(errorMessage);
     mListener.onInterstitialError(interstitialPresenter);
   }
 }
