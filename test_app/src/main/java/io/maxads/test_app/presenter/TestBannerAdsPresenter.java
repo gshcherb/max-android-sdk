@@ -41,6 +41,10 @@ public class TestBannerAdsPresenter implements TestAdViewHolder.Listener, Banner
     mTestBannerAdsViewModule.refreshTestAds();
   }
 
+  public void destroy() {
+    mTestBannerAdsViewModule.destroy();
+  }
+
   @Override
   public void onAdItemClicked(int position) {
     final AdResponse adResponse = new AdResponse();

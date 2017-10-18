@@ -27,6 +27,9 @@
 
         <activity android:name=".activities.TestBannerActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+        <activity android:name=".activities.TestInterstitialActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"/>
     </application>
 
 </manifest>

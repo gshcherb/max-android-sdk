@@ -7,16 +7,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import io.maxads.ads.banner.view.BannerAdView;
-
-public class TestBannerAdsViewModuleImpl implements TestBannerAdsViewModule {
-
+public class TestInterstitialAdsViewModuleImpl implements TestInterstitialAdsViewModule {
   @NonNull private final RecyclerView mRecyclerView;
   @NonNull private final TestAdsAdapter mTestAdsAdapter;
-  @NonNull private final BannerAdView mBannerAdView;
 
-  public TestBannerAdsViewModuleImpl(@NonNull RecyclerView recyclerView, @NonNull TestAdsAdapter testAdsAdapter,
-                                     @NonNull BannerAdView bannerAdView) {
+  public TestInterstitialAdsViewModuleImpl(@NonNull RecyclerView recyclerView, @NonNull TestAdsAdapter testAdsAdapter) {
     mRecyclerView = recyclerView;
     final Context context = mRecyclerView.getContext();
     final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -24,7 +19,6 @@ public class TestBannerAdsViewModuleImpl implements TestBannerAdsViewModule {
     mRecyclerView.addItemDecoration(new DividerItemDecoration(context, linearLayoutManager.getOrientation()));
     mTestAdsAdapter = testAdsAdapter;
     mRecyclerView.setAdapter(mTestAdsAdapter);
-    mBannerAdView = bannerAdView;
   }
 
   @Override
@@ -33,22 +27,7 @@ public class TestBannerAdsViewModuleImpl implements TestBannerAdsViewModule {
   }
 
   @Override
-  public void setAdViewListener(@Nullable BannerAdView.Listener listener) {
-    mBannerAdView.setListener(listener);
-  }
-
-  @Override
-  public void destroy() {
-    mBannerAdView.destroy();
-  }
-
-  @Override
   public void refreshTestAds() {
     mTestAdsAdapter.notifyDataSetChanged();
-  }
-
-  @Override
-  public void loadTestAd(@NonNull String adUnitId) {
-    mBannerAdView.load(adUnitId);
   }
 }
