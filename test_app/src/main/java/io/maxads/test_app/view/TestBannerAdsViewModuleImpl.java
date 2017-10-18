@@ -9,14 +9,14 @@ import android.support.v7.widget.RecyclerView;
 
 import io.maxads.ads.banner.view.BannerAdView;
 
-public class TestAdsViewModuleImpl implements TestAdsViewModule {
+public class TestBannerAdsViewModuleImpl implements TestBannerAdsViewModule {
 
   @NonNull private final RecyclerView mRecyclerView;
   @NonNull private final TestAdsAdapter mTestAdsAdapter;
   @NonNull private final BannerAdView mBannerAdView;
 
-  public TestAdsViewModuleImpl(@NonNull RecyclerView recyclerView, @NonNull TestAdsAdapter testAdsAdapter,
-                               @NonNull BannerAdView bannerAdView) {
+  public TestBannerAdsViewModuleImpl(@NonNull RecyclerView recyclerView, @NonNull TestAdsAdapter testAdsAdapter,
+                                     @NonNull BannerAdView bannerAdView) {
     mRecyclerView = recyclerView;
     final Context context = mRecyclerView.getContext();
     final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);

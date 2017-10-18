@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import io.maxads.ads.banner.view.BannerAdView;
 
-public interface TestAdsViewModule {
+public interface TestBannerAdsViewModule {
   void setAdItemListener(@Nullable TestAdViewHolder.Listener listener);
   void setAdViewListener(@Nullable BannerAdView.Listener listener);
   void refreshTestAds();

@@ -14,22 +14,22 @@ import io.maxads.test_app.TestAdReader;
 import io.maxads.test_app.TestApp;
 import io.maxads.test_app.model.TestAdItem;
 import io.maxads.test_app.view.TestAdViewHolder;
-import io.maxads.test_app.view.TestAdsViewModule;
+import io.maxads.test_app.view.TestBannerAdsViewModule;
 
-public class BannerTestAdsPresenter implements TestAdViewHolder.Listener, BannerAdView.Listener {
-  @NonNull private static final String TAG = BannerTestAdsPresenter.class.getSimpleName();
+public class TestBannerAdsPresenter implements TestAdViewHolder.Listener, BannerAdView.Listener {
+  @NonNull private static final String TAG = TestBannerAdsPresenter.class.getSimpleName();
   @NonNull private final TestAdReader mTestAdReader;
-  @NonNull private final TestAdsViewModule mTestAdsViewModule;
+  @NonNull private final TestBannerAdsViewModule mTestBannerAdsViewModule;
   @NonNull private final List<TestAdItem> mTestAdItems;
   @NonNull private final TestAdInterceptor mTestAdInterceptor;
 
-  public BannerTestAdsPresenter(@NonNull TestAdReader testAdReader,
-                                @NonNull TestAdsViewModule testAdsViewModule,
+  public TestBannerAdsPresenter(@NonNull TestAdReader testAdReader,
+                                @NonNull TestBannerAdsViewModule testBannerAdsViewModule,
                                 @NonNull List<TestAdItem> testAdItems) {
     mTestAdReader = testAdReader;
-    mTestAdsViewModule = testAdsViewModule;
-    mTestAdsViewModule.setAdItemListener(this);
-    mTestAdsViewModule.setAdViewListener(this);
+    mTestBannerAdsViewModule = testBannerAdsViewModule;
+    mTestBannerAdsViewModule.setAdItemListener(this);
+    mTestBannerAdsViewModule.setAdViewListener(this);
     mTestAdItems = testAdItems;
     mTestAdInterceptor = TestApp.getTestAdInterceptor();
   }
@@ -37,7 +37,7 @@ public class BannerTestAdsPresenter implements TestAdViewHolder.Listener, Banner
   public void showTestAds() {
     mTestAdItems.clear();
     mTestAdItems.addAll(mTestAdReader.getTestAdItems());
-    mTestAdsViewModule.refreshTestAds();
+    mTestBannerAdsViewModule.refreshTestAds();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class BannerTestAdsPresenter implements TestAdViewHolder.Listener, Banner
     adResponse.winner = new WinnerResponse();
 
     mTestAdInterceptor.setAdResponse(adResponse);
-    mTestAdsViewModule.loadTestAd("adUnitId:" + testAdItem.getAdName());
+    mTestBannerAdsViewModule.loadTestAd("adUnitId:" + testAdItem.getAdName());
   }
 
   @Override
