@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import io.maxads.ads.base.api.AdResponse;
 import io.maxads.ads.base.api.WinnerResponse;
@@ -63,7 +64,7 @@ public class TestInterstitialAdsPresenter implements TestAdViewHolder.Listener, 
     adResponse.errorUrls = Collections.singletonList(testAdItem.getAdName() + "/errorUrl");
 
     final WinnerResponse winnerResponse = new WinnerResponse();
-    winnerResponse.creativeType = mCreativeType.toString().toLowerCase();
+    winnerResponse.creativeType = mCreativeType.toString().toLowerCase(Locale.ROOT);
     adResponse.winner = winnerResponse;
 
     mTestAdInterceptor.setAdResponse(adResponse);

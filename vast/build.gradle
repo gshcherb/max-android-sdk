@@ -4,6 +4,9 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
 
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion 16

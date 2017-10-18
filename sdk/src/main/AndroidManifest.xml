@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.maxads.ads">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application>
         <activity android:name="io.maxads.ads.interstitial.activity.InterstitialActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"/>

@@ -4,16 +4,15 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
 
-
     defaultConfig {
         applicationId "io.maxads.test_app"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -22,7 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -32,7 +30,6 @@ dependencies {
     // Android
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Network
     implementation 'com.facebook.stetho:stetho:1.5.0'

@@ -2,6 +2,7 @@ package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.maxads.ads.base.util.MaxAdsLog;
@@ -41,7 +42,7 @@ public class ExponentialBackoff implements Function<Observable<? extends Throwab
         @Override
         public ObservableSource<Long> apply(Integer attemptNumber) throws Exception {
           long newInterval = getNewInterval(attemptNumber);
-          MaxAdsLog.d("Retrying request in " + newInterval + " " + mTimeUnit.toString().toLowerCase());
+          MaxAdsLog.d("Retrying request in " + newInterval + " " + mTimeUnit.toString().toLowerCase(Locale.ROOT));
           return Observable.timer(newInterval, mTimeUnit);
         }
       });
