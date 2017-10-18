@@ -19,13 +19,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-  @NonNull private ApiService mApiService;
+  @NonNull private final ApiService mApiService;
 
-  public ApiClient() {
-    initializeApiService(null, null);
-  }
-
-  public void initializeApiService(@Nullable Interceptor applicationInterceptor, @Nullable Interceptor networkInterceptor) {
+  public ApiClient(@Nullable Interceptor applicationInterceptor, @Nullable Interceptor networkInterceptor) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
     if (applicationInterceptor != null) {
       builder.addInterceptor(applicationInterceptor);

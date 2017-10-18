@@ -3,10 +3,13 @@ package io.maxads.ads.base;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import io.maxads.ads.BuildConfig;
 import io.maxads.ads.base.api.ApiClient;
 import io.maxads.ads.base.util.Checks;
+import okhttp3.Interceptor;
 
 public class MaxAds {
   @NonNull public static final String API_VERSION = "1";
@@ -21,7 +24,13 @@ public class MaxAds {
   private static boolean sInitialized;
 
   public static void initialize(@NonNull Application application) {
-    sApiClient = new ApiClient();
+    initialize(application, null, null);
+  }
+
+  @VisibleForTesting
+  public static void initialize(@NonNull Application application, @Nullable Interceptor applicationInterceptor,
+                                @Nullable Interceptor networkInterceptor) {
+    sApiClient = new ApiClient(applicationInterceptor, networkInterceptor);
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());
     sSessionDepthManager = new SessionDepthManager(application);
     Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);

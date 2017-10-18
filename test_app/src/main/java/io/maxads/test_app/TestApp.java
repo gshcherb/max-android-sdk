@@ -1,5 +1,6 @@
 package io.maxads.test_app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
@@ -12,13 +13,13 @@ import io.maxads.ads.base.util.TestAdInterceptor;
 public class TestApp extends Application {
   @NonNull private static TestAdInterceptor sTestAdInterceptor;
 
+  @SuppressLint("VisibleForTests")
   @Override
   public void onCreate() {
     super.onCreate();
     Stetho.initializeWithDefaults(this);
-    MaxAds.initialize(this);
     sTestAdInterceptor = new TestAdInterceptor();
-    MaxAds.getApiManager().initializeApiService(sTestAdInterceptor, new StethoInterceptor());
+    MaxAds.initialize(this, sTestAdInterceptor, new StethoInterceptor());
   }
 
   @NonNull
