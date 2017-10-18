@@ -14,6 +14,6 @@ public class MaxAdsSample extends Application {
     super.onCreate();
     Stetho.initializeWithDefaults(this);
     MaxAds.initialize(this);
-    MaxAds.getApiManager().initializeApiService(new StethoInterceptor());
+    MaxAds.getApiManager().initializeApiService(null, new StethoInterceptor());
   }
 }
