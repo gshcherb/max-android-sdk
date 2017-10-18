@@ -22,13 +22,16 @@ public class ApiClient {
   @NonNull private ApiService mApiService;
 
   public ApiClient() {
-    initializeApiService(null);
+    initializeApiService(null, null);
   }
 
-  public void initializeApiService(@Nullable Interceptor interceptor) {
+  public void initializeApiService(@Nullable Interceptor applicationInterceptor, @Nullable Interceptor networkInterceptor) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (interceptor != null) {
-      builder.addNetworkInterceptor(interceptor);
+    if (applicationInterceptor != null) {
+      builder.addInterceptor(applicationInterceptor);
+    }
+    if (networkInterceptor != null) {
+      builder.addNetworkInterceptor(networkInterceptor);
     }
 
     final Retrofit retrofit = new Retrofit.Builder()
