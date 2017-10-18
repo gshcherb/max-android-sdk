@@ -50,6 +50,13 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   private void loadInterstitial(@NonNull Ad ad) {
     mInterstitialPresenter = mInterstitialPresenterFactory.createInterstitialPresenter(ad, this);
+    if (mInterstitialPresenter == null) {
+      // TODO (steffan): start request timer here?
+      if (mListener != null) {
+        mListener.onInterstitialError(this);
+      }
+      return;
+    }
     mInterstitialPresenter.load();
   }
 
@@ -77,7 +84,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onRequestFail(@NonNull Throwable throwable) {
-
+    // TODO (steffan): start request timer here?
+    if (mListener != null) {
+      mListener.onInterstitialError(this);
+    }
   }
 
   @Override
@@ -120,6 +130,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
       mInterstitialPresenter = null;
     }
 
+    // TODO (steffan): start request timer here?
     if (mListener != null) {
       mListener.onInterstitialError(this);
     }

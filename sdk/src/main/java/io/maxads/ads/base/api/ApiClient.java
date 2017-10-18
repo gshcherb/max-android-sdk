@@ -50,7 +50,7 @@ public class ApiClient {
         public Ad apply(AdResponse adResponse) throws Exception {
           return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
             adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls,
-            adResponse.errorUrls, new Winner(adResponse.winner.creativeType));
+            adResponse.errorUrls, new Winner(Winner.CreativeType.from(adResponse.winner.creativeType)));
         }
       });
   }

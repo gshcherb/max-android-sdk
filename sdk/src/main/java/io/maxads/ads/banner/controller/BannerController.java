@@ -3,7 +3,6 @@ package io.maxads.ads.banner.controller;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +54,13 @@ public class BannerController implements RequestManager.RequestListener, Request
     }
 
     mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, this);
+    if (mNextBannerPresenter == null) {
+      // TODO (steffan): start request timer here?
+      if (mListener != null && mBannerAdView != null) {
+        mListener.onBannerError(mBannerAdView);
+      }
+      return;
+    }
     mNextBannerPresenter.load();
   }
 

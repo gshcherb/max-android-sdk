@@ -9,6 +9,7 @@ import java.util.List;
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.base.api.AdResponse;
 import io.maxads.ads.base.api.WinnerResponse;
+import io.maxads.ads.base.model.Winner;
 import io.maxads.ads.base.util.TestAdInterceptor;
 import io.maxads.test_app.TestAdReader;
 import io.maxads.test_app.TestApp;
@@ -50,7 +51,10 @@ public class TestBannerAdsPresenter implements TestAdViewHolder.Listener, Banner
     adResponse.clickUrls = Collections.singletonList(testAdItem.getAdName() + "/clickUrl");
     adResponse.selectedUrls = Collections.singletonList(testAdItem.getAdName() + "/selectedUrl");
     adResponse.errorUrls = Collections.singletonList(testAdItem.getAdName() + "/errorUrl");
-    adResponse.winner = new WinnerResponse();
+
+    final WinnerResponse winnerResponse = new WinnerResponse();
+    winnerResponse.creativeType = Winner.CreativeType.HTML.toString().toLowerCase();
+    adResponse.winner = winnerResponse;
 
     mTestAdInterceptor.setAdResponse(adResponse);
     mTestBannerAdsViewModule.loadTestAd("adUnitId:" + testAdItem.getAdName());

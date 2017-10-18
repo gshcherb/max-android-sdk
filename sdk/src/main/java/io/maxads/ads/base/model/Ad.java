@@ -59,4 +59,9 @@ public class Ad {
   public List<String> getSelectedUrls() {
     return mSelectedUrls;
   }
+
+  @NonNull
+  public Winner getWinner() {
+    return mWinner;
+  }
 }
