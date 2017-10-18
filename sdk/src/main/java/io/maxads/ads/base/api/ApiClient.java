@@ -31,7 +31,7 @@ public class ApiClient {
     }
 
     final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl("http://" + MaxAds.HOST)
+      .baseUrl("https://" + MaxAds.HOST)
       .addConverterFactory(GsonConverterFactory.create())
       .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
       .client(builder.build())
