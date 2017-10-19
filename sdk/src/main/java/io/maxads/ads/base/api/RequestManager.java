@@ -64,7 +64,7 @@ public class RequestManager {
     mApiClient.getAd(adRequest)
       .subscribe(new Consumer<Ad>() {
         @Override
-        public void accept(Ad ad) throws Exception {
+        public void accept(@NonNull Ad ad) throws Exception {
           MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
           MaxAds.getAdCache().put(adRequest.getAdUnitId(), ad);
           if (mRequestListener != null) {
@@ -72,6 +72,9 @@ public class RequestManager {
           }
         }
       }, new Consumer<Throwable>() {
+        /**
+         * Handles failed network requests and empty responses
+         */
         @Override
         public void accept(Throwable throwable) throws Exception {
           MaxAdsLog.w("Failed to receive ad response for ad unit id: " + adRequest.getAdUnitId(), throwable);

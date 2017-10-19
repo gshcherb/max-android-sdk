@@ -46,8 +46,13 @@ public class ApiClient {
       .observeOn(AndroidSchedulers.mainThread())
       .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5))
       .map(new Function<AdResponse, Ad>() {
+        @Nullable
         @Override
-        public Ad apply(AdResponse adResponse) throws Exception {
+        public Ad apply(@Nullable AdResponse adResponse) throws Exception {
+          if (adResponse == null) {
+            return null;
+          }
+
           return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
             adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls,
             adResponse.errorUrls, new Winner(Winner.CreativeType.from(adResponse.winner.creativeType)));
