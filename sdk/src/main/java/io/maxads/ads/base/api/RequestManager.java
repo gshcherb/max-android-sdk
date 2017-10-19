@@ -86,15 +86,18 @@ public class RequestManager {
   }
 
   public void startTimer(long delaySeconds) {
-    mRefreshTimer.start(delaySeconds)
-      .subscribe(new Consumer<Long>() {
-        @Override
-        public void accept(Long aLong) throws Exception {
-          if (mTimerListener != null) {
-            mTimerListener.onTimerComplete();
-          }
+    mRefreshTimer.start(delaySeconds, new Consumer<Long>() {
+      @Override
+      public void accept(Long aLong) throws Exception {
+        if (mTimerListener != null) {
+          mTimerListener.onTimerComplete();
         }
-      });
+      }
+    });
+  }
+
+  public void stopTimer() {
+    mRefreshTimer.stop();
   }
 
   public void destroy() {

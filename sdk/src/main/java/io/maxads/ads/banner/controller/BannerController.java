@@ -46,6 +46,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     mAdUnitId = adUnitId;
     mBannerAdView = bannerAdView;
     mRequestManager.requestAd(adUnitId);
+    mRequestManager.stopTimer();
   }
 
   private void showAd(@NonNull Ad ad) {
