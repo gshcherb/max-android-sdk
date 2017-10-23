@@ -55,6 +55,10 @@ public class BannerController implements RequestManager.RequestListener, Request
       return;
     }
 
+    // TODO (steffan): there is a low probability bug here if ads are requested rapidly that the mNextBannerPresenter
+    // will continue to change before it can be loaded into the view. This means that there will be BannerPresenters
+    // without a strong reference to them attempting to be loaded. It's possible for them to be garbage collected before
+    // being displayed
     mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, this);
     if (mNextBannerPresenter == null) {
       mRequestManager.startTimer(ad.getRefreshTimeSeconds());
