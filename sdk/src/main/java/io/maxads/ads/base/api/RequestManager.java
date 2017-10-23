@@ -27,6 +27,7 @@ public class RequestManager {
   @NonNull private final RefreshTimer mRefreshTimer;
   @Nullable private RequestListener mRequestListener;
   @Nullable private TimerListener mTimerListener;
+  private boolean mIsDestroyed;
 
   public RequestManager() {
     mApiClient = MaxAds.getApiManager();
@@ -52,6 +53,10 @@ public class RequestManager {
       return;
     }
 
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "RequestManager has been destroyed")) {
+      return;
+    }
+
     mAdRequestFactory.createAdRequest(adUnitId)
       .subscribe(new Consumer<AdRequest>() {
         @Override
@@ -67,6 +72,10 @@ public class RequestManager {
       .subscribe(new Consumer<Ad>() {
         @Override
         public void accept(@NonNull Ad ad) throws Exception {
+          if (mIsDestroyed) {
+            return;
+          }
+
           MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
           MaxAds.getAdCache().put(adRequest.getAdUnitId(), ad);
           if (mRequestListener != null) {
@@ -79,6 +88,10 @@ public class RequestManager {
          */
         @Override
         public void accept(Throwable throwable) throws Exception {
+          if (mIsDestroyed) {
+            return;
+          }
+
           MaxAdsLog.w("Failed to receive ad response for ad unit id: " + adRequest.getAdUnitId(), throwable);
           if (mRequestListener != null) {
             mRequestListener.onRequestFail(throwable);
@@ -88,6 +101,10 @@ public class RequestManager {
   }
 
   public void startTimer(long delaySeconds) {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "RequestManager has been destroyed")) {
+      return;
+    }
+
     delaySeconds = delaySeconds > 0 ? delaySeconds : DEFAULT_REFRESH_TIME_SECONDS;
 
     mRefreshTimer.start(delaySeconds, new Consumer<Long>() {
@@ -108,5 +125,6 @@ public class RequestManager {
     mRefreshTimer.stop();
     mRequestListener = null;
     mTimerListener = null;
+    mIsDestroyed = true;
   }
 }

@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.maxads.ads.base.MaxAds;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.TestAdInterceptor;
 import okhttp3.Interceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,6 +30,7 @@ public class TestApp extends Application {
     applicationInterceptors.add(sTestAdInterceptor);
     applicationInterceptors.add(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
     MaxAds.initialize(this, applicationInterceptors, Collections.<Interceptor>singletonList(new StethoInterceptor()));
+    Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);
   }
 
   @NonNull

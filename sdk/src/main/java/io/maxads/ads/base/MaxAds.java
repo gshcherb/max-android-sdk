@@ -35,7 +35,6 @@ public class MaxAds {
     sApiClient = new ApiClient(applicationInterceptors, networkInterceptors);
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());
     sSessionDepthManager = new SessionDepthManager(application);
-    Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);
     sAdCache = new AdCache();
     sInitialized = true;
   }

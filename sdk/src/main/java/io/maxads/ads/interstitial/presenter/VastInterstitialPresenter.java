@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.vast.VASTPlayer;
 
 public class VastInterstitialPresenter implements InterstitialPresenter, VASTPlayer.VASTPlayerListener {
@@ -14,6 +15,7 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Nullable private VASTPlayer mVastPlayer;
   @Nullable private InterstitialPresenter.Listener mListener;
+  private boolean mIsDestroyed;
 
   public VastInterstitialPresenter(@NonNull Activity activity, @NonNull Ad ad) {
     mActivity = activity;
@@ -33,12 +35,20 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Override
   public void load() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "VastInterstitialPresenter is destroyed")) {
+      return;
+    }
+
     mVastPlayer = new VASTPlayer(mActivity, this);
     mVastPlayer.loadVideoWithData(mAd.getCreative());
   }
 
   @Override
   public void show() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "VastInterstitialPresenter is destroyed")) {
+      return;
+    }
+
     if (mVastPlayer != null) {
       mVastPlayer.play();
     }
@@ -46,12 +56,18 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Override
   public void destroy() {
+    mListener = null;
+    mIsDestroyed = true;
   }
 
   // VASTPlayerListener
 
   @Override
   public void vastReady() {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialLoaded(this);
     }
@@ -59,6 +75,10 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Override
   public void vastError(int error) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialError(this);
     }
@@ -66,6 +86,10 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Override
   public void vastClick() {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialClicked(this);
     }
@@ -77,6 +101,10 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
   @Override
   public void vastDismiss() {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialDismissed(this);
     }
