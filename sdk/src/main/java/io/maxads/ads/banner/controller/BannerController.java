@@ -13,6 +13,7 @@ import io.maxads.ads.banner.presenter.BannerPresenterFactory;
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 
 public class BannerController implements RequestManager.RequestListener, RequestManager.TimerListener,
   BannerPresenter.Listener {
@@ -25,6 +26,7 @@ public class BannerController implements RequestManager.RequestListener, Request
   @Nullable private BannerPresenter mCurrentBannerPresenter;
   @Nullable private BannerPresenter mNextBannerPresenter;
   @Nullable private BannerAdView.Listener mListener;
+  private boolean mIsDestroyed;
 
   public BannerController(@NonNull Context context) {
     mBannerPresenterFactory = new BannerPresenterFactory(context);
@@ -37,10 +39,10 @@ public class BannerController implements RequestManager.RequestListener, Request
     mListener = listener;
   }
 
-  public void load(@Nullable String adUnitId, @Nullable final BannerAdView bannerAdView) {
-    if (adUnitId == null || bannerAdView == null) {
-      return;
-    }
+  public void load(@NonNull String adUnitId, @NonNull BannerAdView bannerAdView) {
+    Checks.checkNotNull(adUnitId, "adUnitId cannot be null");
+    Checks.checkNotNull(bannerAdView, "bannerAdView cannot be null");
+    Checks.checkArgument(!mIsDestroyed, "BannerController is destroyed");
 
     mAdUnitId = adUnitId;
     mBannerAdView = bannerAdView;
@@ -49,7 +51,7 @@ public class BannerController implements RequestManager.RequestListener, Request
   }
 
   private void showAd(@NonNull Ad ad) {
-    if (mBannerAdView == null) {
+    if (mIsDestroyed) {
       return;
     }
 
@@ -74,6 +76,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     destroyBannerPresenter(mNextBannerPresenter);
     mNextBannerPresenter = null;
     mListener = null;
+    mIsDestroyed = true;
   }
 
   private void destroyBannerPresenter(@Nullable BannerPresenter bannerPresenter) {
@@ -85,11 +88,19 @@ public class BannerController implements RequestManager.RequestListener, Request
   // RequestManager.RequestListener
   @Override
   public void onRequestSuccess(@NonNull Ad ad) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     showAd(ad);
   }
 
   @Override
   public void onRequestFail(@NonNull Throwable throwable) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     mRequestManager.startTimer(RequestManager.DEFAULT_REFRESH_TIME_SECONDS);
 
     if (mListener != null && mBannerAdView != null) {
@@ -100,12 +111,20 @@ public class BannerController implements RequestManager.RequestListener, Request
   // RequestManager.TimerListener
   @Override
   public void onTimerComplete() {
+    if (mIsDestroyed || mAdUnitId == null || mBannerAdView == null) {
+      return;
+    }
+
     load(mAdUnitId, mBannerAdView);
   }
 
   // BannerPresenter.Listener
   @Override
   public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     destroyBannerPresenter(mCurrentBannerPresenter);
     mCurrentBannerPresenter = mNextBannerPresenter;
     mNextBannerPresenter = null;
@@ -126,6 +145,10 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerClicked(mBannerAdView);
     }
@@ -133,6 +156,10 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     mRequestManager.startTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
 
     if (mListener != null && mBannerAdView != null) {

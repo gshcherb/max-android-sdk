@@ -12,6 +12,7 @@ import io.maxads.ads.interstitial.presenter.InterstitialPresenter;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenterFactory;
 
 public class Interstitial implements RequestManager.RequestListener, InterstitialPresenter.Listener {
+
   public interface Listener {
     void onInterstitialLoaded(@NonNull Interstitial interstitial);
     void onInterstitialShown(@NonNull Interstitial interstitial);
@@ -24,6 +25,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
   @NonNull private final RequestManager mRequestManager;
   @Nullable private InterstitialPresenter mInterstitialPresenter;
   @Nullable private Listener mListener;
+  private boolean mIsDestroyed;
 
   public Interstitial(@NonNull Activity activity) {
     mInterstitialPresenterFactory = new InterstitialPresenterFactory(activity);
@@ -35,7 +37,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
     mListener = listener;
   }
 
-  public void load(@Nullable String adUnitId) {
+  public void load(@NonNull String adUnitId) {
     if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
       "Please call MaxAds#initialize in your application's onCreate method.")) {
       return;
@@ -45,10 +47,18 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
       return;
     }
 
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "Interstitial has been destroyed")) {
+      return;
+    }
+
     mRequestManager.requestAd(adUnitId);
   }
 
   private void loadInterstitial(@NonNull Ad ad) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     mInterstitialPresenter = mInterstitialPresenterFactory.createInterstitialPresenter(ad, this);
     if (mInterstitialPresenter == null) {
       if (mListener != null) {
@@ -74,16 +84,25 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
     }
     mInterstitialPresenter = null;
     mListener = null;
+    mIsDestroyed = true;
   }
 
   // RequestManager.RequestListener
   @Override
   public void onRequestSuccess(@NonNull Ad ad) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     loadInterstitial(ad);
   }
 
   @Override
   public void onRequestFail(@NonNull Throwable throwable) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialError(this);
     }
@@ -92,6 +111,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
   // Interstitial.Listener
   @Override
   public void onInterstitialLoaded(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialLoaded(this);
     }
@@ -99,6 +122,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onInterstitialShown(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialShown(this);
     }
@@ -106,6 +133,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onInterstitialClicked(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialClicked(this);
     }
@@ -113,6 +144,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onInterstitialDismissed(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mInterstitialPresenter != null) {
       mInterstitialPresenter.destroy();
       mInterstitialPresenter = null;
@@ -125,6 +160,10 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @Override
   public void onInterstitialError(@NonNull InterstitialPresenter interstitialPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mInterstitialPresenter != null) {
       mInterstitialPresenter.destroy();
       mInterstitialPresenter = null;

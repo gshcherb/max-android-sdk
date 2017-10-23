@@ -11,6 +11,7 @@ import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.util.Checks;
 
 public class BannerAdView extends FrameLayout {
+
   public interface Listener {
     void onBannerLoaded(@NonNull BannerAdView bannerAdView);
     void onBannerClicked(@NonNull BannerAdView bannerAdView);
@@ -18,6 +19,7 @@ public class BannerAdView extends FrameLayout {
   }
 
   @NonNull private final BannerController mBannerController;
+  private boolean mIsDestroyed;
 
   public BannerAdView(@NonNull Context context) {
     this(context, null);
@@ -36,7 +38,7 @@ public class BannerAdView extends FrameLayout {
     mBannerController.setListener(listener);
   }
 
-  public void load(@Nullable String adUnitId) {
+  public void load(@NonNull String adUnitId) {
     if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
       "Please call MaxAds#initialize in your application's onCreate method.")) {
       return;
@@ -46,11 +48,17 @@ public class BannerAdView extends FrameLayout {
       return;
     }
 
+
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "BannerAdView is destroyed")) {
+      return;
+    }
+
     mBannerController.load(adUnitId, this);
   }
 
   public void destroy() {
     removeAllViews();
     mBannerController.destroy();
+    mIsDestroyed = true;
   }
 }
