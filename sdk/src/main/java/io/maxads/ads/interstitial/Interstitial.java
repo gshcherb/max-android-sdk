@@ -76,6 +76,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
     mListener = null;
   }
 
+  // RequestManager.RequestListener
   @Override
   public void onRequestSuccess(@NonNull Ad ad) {
     loadInterstitial(ad);
@@ -88,6 +89,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
     }
   }
 
+  // Interstitial.Listener
   @Override
   public void onInterstitialLoaded(@NonNull InterstitialPresenter interstitialPresenter) {
     if (mListener != null) {

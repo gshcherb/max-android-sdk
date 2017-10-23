@@ -11,6 +11,8 @@ import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
 public class RequestManager {
+  public static final int DEFAULT_REFRESH_TIME_SECONDS = 60;
+
   public interface RequestListener {
     void onRequestSuccess(@NonNull Ad ad);
     void onRequestFail(@NonNull Throwable throwable);
@@ -86,6 +88,8 @@ public class RequestManager {
   }
 
   public void startTimer(long delaySeconds) {
+    delaySeconds = delaySeconds > 0 ? delaySeconds : DEFAULT_REFRESH_TIME_SECONDS;
+
     mRefreshTimer.start(delaySeconds, new Consumer<Long>() {
       @Override
       public void accept(Long aLong) throws Exception {

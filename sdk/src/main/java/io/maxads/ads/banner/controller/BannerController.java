@@ -16,7 +16,6 @@ import io.maxads.ads.base.model.Ad;
 
 public class BannerController implements RequestManager.RequestListener, RequestManager.TimerListener,
   BannerPresenter.Listener {
-  private static final int DEFAULT_REFRESH_TIME_SECONDS = 60;
 
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
   @NonNull private final RequestManager mRequestManager;
@@ -56,7 +55,8 @@ public class BannerController implements RequestManager.RequestListener, Request
 
     mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, this);
     if (mNextBannerPresenter == null) {
-      // TODO (steffan): start request timer here?
+      mRequestManager.startTimer(ad.getRefreshTimeSeconds());
+
       if (mListener != null && mBannerAdView != null) {
         mListener.onBannerError(mBannerAdView);
       }
@@ -82,6 +82,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     }
   }
 
+  // RequestManager.RequestListener
   @Override
   public void onRequestSuccess(@NonNull Ad ad) {
     showAd(ad);
@@ -89,25 +90,27 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onRequestFail(@NonNull Throwable throwable) {
-    // TODO (steffan): start request timer here?
+    mRequestManager.startTimer(RequestManager.DEFAULT_REFRESH_TIME_SECONDS);
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
     }
   }
 
+  // RequestManager.TimerListener
   @Override
   public void onTimerComplete() {
     load(mAdUnitId, mBannerAdView);
   }
 
+  // BannerPresenter.Listener
   @Override
   public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
     destroyBannerPresenter(mCurrentBannerPresenter);
     mCurrentBannerPresenter = mNextBannerPresenter;
     mNextBannerPresenter = null;
 
-    final long refreshTimeSeconds = bannerPresenter.getAd().getRefreshTimeSeconds();
-    mRequestManager.startTimer(refreshTimeSeconds > 0 ? refreshTimeSeconds : DEFAULT_REFRESH_TIME_SECONDS);
+    mRequestManager.startTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
 
     if (mBannerAdView != null) {
       mBannerAdView.removeAllViews();
@@ -130,7 +133,8 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
-    // TODO (steffan): start request timer here?
+    mRequestManager.startTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
     }

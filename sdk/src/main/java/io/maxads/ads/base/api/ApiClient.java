@@ -46,7 +46,7 @@ public class ApiClient {
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5))
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100))
       .map(new Function<Response<AdResponse>, Ad>() {
         @Nullable
         @Override
@@ -67,7 +67,7 @@ public class ApiClient {
     return mApiService.trackUrl(url)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5));
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100));
   }
 
   public Observable<Response<Void>> trackError(@NonNull String message) {
