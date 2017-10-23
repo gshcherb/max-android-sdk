@@ -3,8 +3,10 @@ package io.maxads.ads.base;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+
+import java.util.Collections;
+import java.util.List;
 
 import io.maxads.ads.BuildConfig;
 import io.maxads.ads.base.api.ApiClient;
@@ -24,13 +26,13 @@ public class MaxAds {
   private static boolean sInitialized;
 
   public static void initialize(@NonNull Application application) {
-    initialize(application, null, null);
+    initialize(application, Collections.<Interceptor>emptyList(), Collections.<Interceptor>emptyList());
   }
 
   @VisibleForTesting
-  public static void initialize(@NonNull Application application, @Nullable Interceptor applicationInterceptor,
-                                @Nullable Interceptor networkInterceptor) {
-    sApiClient = new ApiClient(applicationInterceptor, networkInterceptor);
+  public static void initialize(@NonNull Application application, @NonNull List<Interceptor> applicationInterceptors,
+                                @NonNull List<Interceptor> networkInterceptors) {
+    sApiClient = new ApiClient(applicationInterceptors, networkInterceptors);
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());
     sSessionDepthManager = new SessionDepthManager(application);
     Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);

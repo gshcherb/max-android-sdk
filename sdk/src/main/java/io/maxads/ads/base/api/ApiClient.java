@@ -3,6 +3,7 @@ package io.maxads.ads.base.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.maxads.ads.base.MaxAds;
@@ -22,12 +23,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
   @NonNull private final ApiService mApiService;
 
-  public ApiClient(@Nullable Interceptor applicationInterceptor, @Nullable Interceptor networkInterceptor) {
+  public ApiClient(@NonNull List<Interceptor> applicationInterceptors, @NonNull List<Interceptor> networkInterceptors) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (applicationInterceptor != null) {
+    for (Interceptor applicationInterceptor : applicationInterceptors) {
       builder.addInterceptor(applicationInterceptor);
     }
-    if (networkInterceptor != null) {
+    for (Interceptor networkInterceptor : networkInterceptors) {
       builder.addNetworkInterceptor(networkInterceptor);
     }
 
