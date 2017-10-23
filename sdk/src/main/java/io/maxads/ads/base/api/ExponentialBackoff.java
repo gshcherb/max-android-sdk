@@ -29,13 +29,12 @@ public class ExponentialBackoff implements Function<Observable<? extends Throwab
     mRetries = retries > 0 ? retries : Integer.MAX_VALUE;
   }
 
-  @Override public Observable<Long> apply(
-    @NonNull Observable<? extends Throwable> observable) throws Exception {
+  @Override public Observable<Long> apply(@NonNull final Observable<? extends Throwable> observable) throws Exception {
     return observable
       .zipWith(Observable.range(1, mRetries), new BiFunction<Throwable, Integer, Integer>() {
           @Override
           public Integer apply(Throwable throwable, @NonNull Integer retryCount) throws Exception {
-            MaxAdsLog.e("Request failed, retry count: " + retryCount, throwable);
+            MaxAdsLog.w("Request failed, retry count: " + retryCount, throwable);
             return retryCount;
           }
         }).flatMap(new Function<Integer, ObservableSource<Long>>() {

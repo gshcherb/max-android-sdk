@@ -7,6 +7,7 @@ import java.util.List;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
+import retrofit2.Response;
 
 public class AdTrackingDelegate {
   private enum Type {
@@ -80,9 +81,9 @@ public class AdTrackingDelegate {
       MaxAdsLog.d("Tracking " + type.toString() + " url: " + url);
       mApiClient.trackUrl(url)
         .subscribe(
-          new Consumer<Void>() {
+          new Consumer<Response<Void>>() {
             @Override
-            public void accept(Void aVoid) throws Exception {
+            public void accept(Response<Void> response) throws Exception {
               MaxAdsLog.d("Successfully tracked " + type.toString() + " url: " + url);
             }
           },

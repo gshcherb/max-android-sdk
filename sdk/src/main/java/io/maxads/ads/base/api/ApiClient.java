@@ -14,6 +14,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -45,10 +46,11 @@ public class ApiClient {
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5))
-      .map(new Function<AdResponse, Ad>() {
+      .map(new Function<Response<AdResponse>, Ad>() {
         @Nullable
         @Override
-        public Ad apply(@Nullable AdResponse adResponse) throws Exception {
+        public Ad apply(Response<AdResponse> response) throws Exception {
+          final AdResponse adResponse = response.body();
           if (adResponse == null) {
             return null;
           }
@@ -60,19 +62,19 @@ public class ApiClient {
       });
   }
 
-  public Observable<Void> trackUrl(@NonNull String url) {
+  public Observable<Response<Void>> trackUrl(@NonNull String url) {
     return mApiService.trackUrl(url)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5));
   }
 
-  public Observable<Void> trackError(@NonNull String message) {
+  public Observable<Response<Void>> trackError(@NonNull String message) {
     return new ErrorRequestFactory()
         .createErrorRequest(message)
-        .flatMap(new Function<ErrorRequest, Observable<Void>>() {
+        .flatMap(new Function<ErrorRequest, Observable<Response<Void>>>() {
           @Override
-          public Observable<Void> apply(ErrorRequest errorRequest) throws Exception {
+          public Observable<Response<Void>> apply(ErrorRequest errorRequest) throws Exception {
             return mApiService.trackError(errorRequest);
           }
         });
