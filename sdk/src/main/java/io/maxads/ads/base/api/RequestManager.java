@@ -18,15 +18,11 @@ public class RequestManager {
     void onRequestFail(@NonNull Throwable throwable);
   }
 
-  public interface TimerListener {
-    void onTimerComplete();
-  }
-
   @NonNull private final ApiClient mApiClient;
   @NonNull private final AdRequestFactory mAdRequestFactory;
   @NonNull private final RefreshTimer mRefreshTimer;
+  @Nullable private String mAdUnitId;
   @Nullable private RequestListener mRequestListener;
-  @Nullable private TimerListener mTimerListener;
   private boolean mIsDestroyed;
 
   public RequestManager() {
@@ -39,17 +35,17 @@ public class RequestManager {
     mRequestListener = requestListener;
   }
 
-  public void setTimerListener(@Nullable TimerListener timerListener) {
-    mTimerListener = timerListener;
+  public void setAdUnitId(@Nullable String adUnitId) {
+    mAdUnitId = adUnitId;
   }
 
-  public void requestAd(@Nullable String adUnitId) {
+  public void requestAd() {
     if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
       "Please call MaxAds#initialize in your application's onCreate method.")) {
       return;
     }
 
-    if (!Checks.NoThrow.checkNotNull(adUnitId, "adUnitId cannot be null")) {
+    if (!Checks.NoThrow.checkNotNull(mAdUnitId, "adUnitId cannot be null")) {
       return;
     }
 
@@ -57,7 +53,7 @@ public class RequestManager {
       return;
     }
 
-    mAdRequestFactory.createAdRequest(adUnitId)
+    mAdRequestFactory.createAdRequest(mAdUnitId)
       .subscribe(new Consumer<AdRequest>() {
         @Override
         public void accept(AdRequest adRequest) throws Exception {
@@ -100,7 +96,7 @@ public class RequestManager {
       });
   }
 
-  public void startTimer(long delaySeconds) {
+  public void startRefreshTimer(long delaySeconds) {
     if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "RequestManager has been destroyed")) {
       return;
     }
@@ -110,9 +106,7 @@ public class RequestManager {
     mRefreshTimer.start(delaySeconds, new Consumer<Long>() {
       @Override
       public void accept(Long aLong) throws Exception {
-        if (mTimerListener != null) {
-          mTimerListener.onTimerComplete();
-        }
+        requestAd();
       }
     });
   }
@@ -124,7 +118,6 @@ public class RequestManager {
   public void destroy() {
     mRefreshTimer.stop();
     mRequestListener = null;
-    mTimerListener = null;
     mIsDestroyed = true;
   }
 }

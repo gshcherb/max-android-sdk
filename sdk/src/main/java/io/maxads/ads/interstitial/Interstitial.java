@@ -51,7 +51,8 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
       return;
     }
 
-    mRequestManager.requestAd(adUnitId);
+    mRequestManager.setAdUnitId(adUnitId);
+    mRequestManager.requestAd();
   }
 
   private void loadInterstitial(@NonNull Ad ad) {

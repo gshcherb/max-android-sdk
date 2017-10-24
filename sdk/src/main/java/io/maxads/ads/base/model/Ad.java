@@ -41,6 +41,11 @@ public class Ad {
   }
 
   @NonNull
+  public String getPrebidKeywords() {
+    return mPrebidKeywords;
+  }
+
+  @NonNull
   public Integer getRefreshTimeSeconds() {
     return mRefreshTimeSeconds;
   }

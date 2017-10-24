@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "io.maxads.maxads_sample"
@@ -30,6 +30,15 @@ dependencies {
     // Android
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // MoPub
+    compile('com.mopub:mopub-sdk-banner:4.15.0@aar') {
+        transitive = true
+    }
+
+    compile('com.mopub:mopub-sdk-interstitial:4.15.0@aar') {
+        transitive = true
+    }
 
     // Network
     implementation 'com.facebook.stetho:stetho:1.5.0'

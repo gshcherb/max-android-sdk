@@ -15,8 +15,7 @@ import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
 
-public class BannerController implements RequestManager.RequestListener, RequestManager.TimerListener,
-  BannerPresenter.Listener {
+public class BannerController implements RequestManager.RequestListener, BannerPresenter.Listener {
 
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
   @NonNull private final RequestManager mRequestManager;
@@ -32,7 +31,6 @@ public class BannerController implements RequestManager.RequestListener, Request
     mBannerPresenterFactory = new BannerPresenterFactory(context);
     mRequestManager = new RequestManager();
     mRequestManager.setRequestListener(this);
-    mRequestManager.setTimerListener(this);
   }
 
   public void setListener(@Nullable BannerAdView.Listener listener) {
@@ -46,7 +44,8 @@ public class BannerController implements RequestManager.RequestListener, Request
 
     mAdUnitId = adUnitId;
     mBannerAdView = bannerAdView;
-    mRequestManager.requestAd(adUnitId);
+    mRequestManager.setAdUnitId(adUnitId);
+    mRequestManager.requestAd();
     mRequestManager.stopTimer();
   }
 
@@ -61,7 +60,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     // being displayed
     mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, this);
     if (mNextBannerPresenter == null) {
-      mRequestManager.startTimer(ad.getRefreshTimeSeconds());
+      mRequestManager.startRefreshTimer(ad.getRefreshTimeSeconds());
 
       if (mListener != null && mBannerAdView != null) {
         mListener.onBannerError(mBannerAdView);
@@ -105,21 +104,11 @@ public class BannerController implements RequestManager.RequestListener, Request
       return;
     }
 
-    mRequestManager.startTimer(RequestManager.DEFAULT_REFRESH_TIME_SECONDS);
+    mRequestManager.startRefreshTimer(RequestManager.DEFAULT_REFRESH_TIME_SECONDS);
 
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
     }
-  }
-
-  // RequestManager.TimerListener
-  @Override
-  public void onTimerComplete() {
-    if (mIsDestroyed || mAdUnitId == null || mBannerAdView == null) {
-      return;
-    }
-
-    load(mAdUnitId, mBannerAdView);
   }
 
   // BannerPresenter.Listener
@@ -133,7 +122,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     mCurrentBannerPresenter = mNextBannerPresenter;
     mNextBannerPresenter = null;
 
-    mRequestManager.startTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
+    mRequestManager.startRefreshTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
 
     if (mBannerAdView != null) {
       mBannerAdView.removeAllViews();
@@ -164,7 +153,7 @@ public class BannerController implements RequestManager.RequestListener, Request
       return;
     }
 
-    mRequestManager.startTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
+    mRequestManager.startRefreshTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
 
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
