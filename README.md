@@ -134,15 +134,65 @@ To create a MAX line item:
 2. Set the Custom Event Class to the appropriate value depending on their type: `MaxMoPubBannerCustomEvent` or `MAXMoPubInterstitialCustomEvent`.
 3. Set the Custom Event Info to `{"adunit_id": "<MAX_ADUNIT_ID>"}` where the value of `MAX_ADUNIT_ID` corresponds to the ID of the MAX ad unit for this request.
 
+## Debugging
+Use Chrome Developer Tools (chrome://inspect) to view network requests, debug view heirarchies, debug web views
+* [Stetho](http://facebook.github.io/stetho/) - Sophisticated debug bridge for Android applications accessed using Chrome Developer Tools
+
+Configuration:
+
+In your app's build.gradle
+``` 
+compile 'com.facebook.stetho:stetho:1.5.0'
+compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+```
+
+In your app's Application file
+```
+MaxAds.initialize(this,
+  Collections.<Interceptor>emptyList(),
+  Collections.<Interceptor>singletonList(new StethoInterceptor()));
+```
+
+* [OkHttp3 Logging Interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor) - logs HTTP request and response data to Android Studio Logcat
+
+Configuration:
+
+In your app's build.gradle
+``` 
+compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+```
+
+In your app's Application file
+```
+MaxAds.initialize(this,
+  Collections.<Interceptor>singletonList(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)),
+  Collections.<Interceptor>emptyList());
+```
+
+* MRAID Log Level
+
+```
+MRAIDLog.setLoggingLevel(logLevel);
+```
+
+* VAST Log Level
+
+```
+VASTLog.setLoggingLevel(logLevel);
+```
+
+* Enable strict mode. SDK will force crash when supplied with invalid arguments to certain methods.
+
+```
+Checks.NoThrow.setStrictMode(true);
+```
+
 ## Developers
 ### Patterns
 * [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter)
 
 ### Tools
 * [Genymotion](https://www.genymotion.com/) - Android emulation platform
-* [Stetho](http://facebook.github.io/stetho/) - Sophisticated debug bridge for Android applications
-
-Usage: chrome://inspect to view network requests, debug view heirarchies using Chrome developer tools
 
 ### Libraries
 Android
