@@ -165,7 +165,7 @@ compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
 In your app's Application file
 ```
 MaxAds.initialize(this,
-  Collections.<Interceptor>singletonList(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)),
+  Collections.<Interceptor>singletonList(new HttpLoggingInterceptor().setLevel(level)),
   Collections.<Interceptor>emptyList());
 ```
 
