@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="io.maxads.test_app.activities.MainActivity">
+
+    <Button
+        android:id="@+id/mraid_banners"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="MRAID Banners"
+        android:textAlignment="center"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/mraid_interstitials"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="MRAID Interstitials"
+        android:textAlignment="center"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/vast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="VAST"
+        android:textAlignment="center"
+        tools:ignore="HardcodedText"/>
+
+</LinearLayout>

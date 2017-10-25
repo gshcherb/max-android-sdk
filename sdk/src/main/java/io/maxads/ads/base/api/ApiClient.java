@@ -3,6 +3,7 @@ package io.maxads.ads.base.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.maxads.ads.base.MaxAds;
@@ -14,25 +15,25 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-  @NonNull private ApiService mApiService;
+  @NonNull private final ApiService mApiService;
 
-  public ApiClient() {
-    initializeApiService(null);
-  }
-
-  public void initializeApiService(@Nullable Interceptor interceptor) {
+  public ApiClient(@NonNull List<Interceptor> applicationInterceptors, @NonNull List<Interceptor> networkInterceptors) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (interceptor != null) {
-      builder.addNetworkInterceptor(interceptor);
+    for (Interceptor applicationInterceptor : applicationInterceptors) {
+      builder.addInterceptor(applicationInterceptor);
+    }
+    for (Interceptor networkInterceptor : networkInterceptors) {
+      builder.addNetworkInterceptor(networkInterceptor);
     }
 
     final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl("http://" + MaxAds.HOST)
+      .baseUrl("https://" + MaxAds.HOST)
       .addConverterFactory(GsonConverterFactory.create())
       .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
       .client(builder.build())
@@ -45,21 +46,38 @@ public class ApiClient {
     return mApiService.getAd(adRequest.getAdUnitId(), adRequest)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5))
-      .map(new Function<AdResponse, Ad>() {
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100))
+      .map(new Function<Response<AdResponse>, Ad>() {
+        @Nullable
         @Override
-        public Ad apply(AdResponse adResponse) throws Exception {
+        public Ad apply(Response<AdResponse> response) throws Exception {
+          final AdResponse adResponse = response.body();
+          if (adResponse == null) {
+            return null;
+          }
+
           return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
             adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls,
-            adResponse.errorUrls, new Winner(adResponse.winner.creativeType));
+            adResponse.errorUrls, new Winner(Winner.CreativeType.from(adResponse.winner.creativeType)));
         }
       });
   }
 
-  public Observable<Void> trackUrl(@NonNull String url) {
+  public Observable<Response<Void>> trackUrl(@NonNull String url) {
     return mApiService.trackUrl(url)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 1, TimeUnit.SECONDS, 5));
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100));
+  }
+
+  public Observable<Response<Void>> trackError(@NonNull String message) {
+    return new ErrorRequestFactory()
+        .createErrorRequest(message)
+        .flatMap(new Function<ErrorRequest, Observable<Response<Void>>>() {
+          @Override
+          public Observable<Response<Void>> apply(ErrorRequest errorRequest) throws Exception {
+            return mApiService.trackError(errorRequest);
+          }
+        });
   }
 }

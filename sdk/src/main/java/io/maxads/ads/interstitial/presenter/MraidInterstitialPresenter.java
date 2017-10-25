@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.UrlHandlerDelegate;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.mraid.MRAIDInterstitial;
 import io.maxads.mraid.MRAIDNativeFeatureListener;
 import io.maxads.mraid.MRAIDView;
@@ -21,6 +22,7 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Nullable private InterstitialPresenter.Listener mListener;
   @Nullable private MRAIDInterstitial mMRAIDInterstitial;
+  private boolean mIsDestroyed;
 
   public MraidInterstitialPresenter(@NonNull Activity activity, @NonNull Ad ad) {
     mActivity = activity;
@@ -42,12 +44,20 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Override
   public void load() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "MraidInterstitialPresenter is destroyed")) {
+      return;
+    }
+
     mMRAIDInterstitial = new MRAIDInterstitial(mActivity, "http://" + MaxAds.HOST + "/", mAd.getCreative(),
       mSupportedNativeFeatures, this, this);
   }
 
   @Override
   public void show() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "MraidInterstitialPresenter is destroyed")) {
+      return;
+    }
+
     if (mMRAIDInterstitial != null) {
       mMRAIDInterstitial.show(mActivity);
 
@@ -63,10 +73,15 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
       mMRAIDInterstitial.destroy();
     }
     mListener = null;
+    mIsDestroyed = true;
   }
 
   @Override
   public void mraidViewLoaded(MRAIDView mraidView) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialLoaded(this);
     }
@@ -78,6 +93,10 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Override
   public void mraidViewClose(MRAIDView mraidView) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onInterstitialDismissed(this);
     }
@@ -105,6 +124,10 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Override
   public void mraidNativeFeatureOpenBrowser(String url) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     mUrlHandlerDelegate.handleUrl(url);
     // TODO (steffan): will this always count as a click? Are there other cases that should be considered a click?
     if (mListener != null) {

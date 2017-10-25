@@ -6,12 +6,14 @@ import android.view.View;
 
 import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class BannerPresenterDecorator implements BannerPresenter, BannerPresenter.Listener {
   @NonNull private final BannerPresenter mBannerPresenter;
   @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
   @NonNull private final BannerPresenter.Listener mListener;
+  private boolean mIsDestroyed;
 
   public BannerPresenterDecorator(@NonNull BannerPresenter bannerPresenter,
                                   @NonNull AdTrackingDelegate adTrackingDelegate,
@@ -34,6 +36,10 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void load() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "BannerPresenterDecorator is destroyed")) {
+      return;
+    }
+
     MaxAdsLog.d("Loading banner presenter for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackSelected();
     mBannerPresenter.load();
@@ -43,10 +49,15 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
   public void destroy() {
     MaxAdsLog.d("Destroying banner presenter for ad unit id: " + getAd().getAdUnitId());
     mBannerPresenter.destroy();
+    mIsDestroyed = true;
   }
 
   @Override
   public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     MaxAdsLog.d("Banner loaded for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackImpression();
     mListener.onBannerLoaded(bannerPresenter, banner);
@@ -54,6 +65,10 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     MaxAdsLog.d("Banner clicked for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackClick();
     mListener.onBannerClicked(bannerPresenter);
@@ -61,7 +76,13 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
-    MaxAdsLog.d("Banner error for ad unit id: " + getAd().getAdUnitId());
+    if (mIsDestroyed) {
+      return;
+    }
+
+    String errorMessage = "Banner error for ad unit id: " + getAd().getAdUnitId();
+    MaxAdsLog.d(errorMessage);
+    mAdTrackingDelegate.trackError(errorMessage);
     mListener.onBannerError(bannerPresenter);
   }
 }

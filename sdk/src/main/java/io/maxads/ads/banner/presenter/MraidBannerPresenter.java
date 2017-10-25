@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.UrlHandlerDelegate;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 import io.maxads.mraid.MRAIDBanner;
 import io.maxads.mraid.MRAIDNativeFeatureListener;
 import io.maxads.mraid.MRAIDView;
@@ -21,6 +22,7 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Nullable private BannerPresenter.Listener mListener;
   @Nullable private MRAIDBanner mMRAIDBanner;
+  private boolean mIsDestroyed;
 
   public MraidBannerPresenter(@NonNull Context context, @NonNull Ad ad) {
     mContext = context;
@@ -42,6 +44,10 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Override
   public void load() {
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "MraidBannerPresenter is destroyed")) {
+      return;
+    }
+
     mMRAIDBanner = new MRAIDBanner(mContext, "http://" + MaxAds.HOST + "/", mAd.getCreative(), mSupportedNativeFeatures,
       this, this);
   }
@@ -52,10 +58,15 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
       mMRAIDBanner.destroy();
     }
     mListener = null;
+    mIsDestroyed = true;
   }
 
   @Override
   public void mraidViewLoaded(MRAIDView mraidView) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onBannerLoaded(this, mraidView);
     }
@@ -63,6 +74,10 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Override
   public void mraidViewExpand(MRAIDView mraidView) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null) {
       mListener.onBannerClicked(this);
     }
@@ -95,6 +110,10 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Override
   public void mraidNativeFeatureOpenBrowser(String url) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     mUrlHandlerDelegate.handleUrl(url);
     // TODO (steffan): will this always count as a click? Are there other cases that should be considered a click?
     if (mListener != null) {

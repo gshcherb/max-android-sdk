@@ -13,10 +13,9 @@ import io.maxads.ads.banner.presenter.BannerPresenterFactory;
 import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.util.Checks;
 
-public class BannerController implements RequestManager.RequestListener, RequestManager.TimerListener,
-  BannerPresenter.Listener {
-  private static final int DEFAULT_REFRESH_TIME_SECONDS = 60;
+public class BannerController implements RequestManager.RequestListener, BannerPresenter.Listener {
 
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
   @NonNull private final RequestManager mRequestManager;
@@ -26,34 +25,48 @@ public class BannerController implements RequestManager.RequestListener, Request
   @Nullable private BannerPresenter mCurrentBannerPresenter;
   @Nullable private BannerPresenter mNextBannerPresenter;
   @Nullable private BannerAdView.Listener mListener;
+  private boolean mIsDestroyed;
 
   public BannerController(@NonNull Context context) {
     mBannerPresenterFactory = new BannerPresenterFactory(context);
     mRequestManager = new RequestManager();
     mRequestManager.setRequestListener(this);
-    mRequestManager.setTimerListener(this);
   }
 
   public void setListener(@Nullable BannerAdView.Listener listener) {
     mListener = listener;
   }
 
-  public void load(@Nullable String adUnitId, @Nullable final BannerAdView bannerAdView) {
-    if (adUnitId == null || bannerAdView == null) {
-      return;
-    }
+  public void load(@NonNull String adUnitId, @NonNull BannerAdView bannerAdView) {
+    Checks.checkNotNull(adUnitId, "adUnitId cannot be null");
+    Checks.checkNotNull(bannerAdView, "bannerAdView cannot be null");
+    Checks.checkArgument(!mIsDestroyed, "BannerController is destroyed");
 
     mAdUnitId = adUnitId;
     mBannerAdView = bannerAdView;
-    mRequestManager.requestAd(adUnitId);
+    mRequestManager.setAdUnitId(adUnitId);
+    mRequestManager.requestAd();
+    mRequestManager.stopTimer();
   }
 
   private void showAd(@NonNull Ad ad) {
-    if (mBannerAdView == null) {
+    if (mIsDestroyed) {
       return;
     }
 
+    // TODO (steffan): there is a low probability bug here if ads are requested rapidly that the mNextBannerPresenter
+    // will continue to change before it can be loaded into the view. This means that there will be BannerPresenters
+    // without a strong reference to them attempting to be loaded. It's possible for them to be garbage collected before
+    // being displayed
     mNextBannerPresenter = mBannerPresenterFactory.createBannerPresenter(ad, this);
+    if (mNextBannerPresenter == null) {
+      mRequestManager.startRefreshTimer(ad.getRefreshTimeSeconds());
+
+      if (mListener != null && mBannerAdView != null) {
+        mListener.onBannerError(mBannerAdView);
+      }
+      return;
+    }
     mNextBannerPresenter.load();
   }
 
@@ -66,6 +79,7 @@ public class BannerController implements RequestManager.RequestListener, Request
     destroyBannerPresenter(mNextBannerPresenter);
     mNextBannerPresenter = null;
     mListener = null;
+    mIsDestroyed = true;
   }
 
   private void destroyBannerPresenter(@Nullable BannerPresenter bannerPresenter) {
@@ -74,32 +88,41 @@ public class BannerController implements RequestManager.RequestListener, Request
     }
   }
 
+  // RequestManager.RequestListener
   @Override
   public void onRequestSuccess(@NonNull Ad ad) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     showAd(ad);
   }
 
   @Override
   public void onRequestFail(@NonNull Throwable throwable) {
-    // TODO (steffan): start request timer here?
+    if (mIsDestroyed) {
+      return;
+    }
+
+    mRequestManager.startRefreshTimer(RequestManager.DEFAULT_REFRESH_TIME_SECONDS);
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
     }
   }
 
-  @Override
-  public void onTimerComplete() {
-    load(mAdUnitId, mBannerAdView);
-  }
-
+  // BannerPresenter.Listener
   @Override
   public void onBannerLoaded(@NonNull BannerPresenter bannerPresenter, @NonNull View banner) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     destroyBannerPresenter(mCurrentBannerPresenter);
     mCurrentBannerPresenter = mNextBannerPresenter;
     mNextBannerPresenter = null;
 
-    final long refreshTimeSeconds = bannerPresenter.getAd().getRefreshTimeSeconds();
-    mRequestManager.startTimer(refreshTimeSeconds > 0 ? refreshTimeSeconds : DEFAULT_REFRESH_TIME_SECONDS);
+    mRequestManager.startRefreshTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
 
     if (mBannerAdView != null) {
       mBannerAdView.removeAllViews();
@@ -115,6 +138,10 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onBannerClicked(@NonNull BannerPresenter bannerPresenter) {
+    if (mIsDestroyed) {
+      return;
+    }
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerClicked(mBannerAdView);
     }
@@ -122,7 +149,12 @@ public class BannerController implements RequestManager.RequestListener, Request
 
   @Override
   public void onBannerError(@NonNull BannerPresenter bannerPresenter) {
-    // TODO (steffan): start request timer here?
+    if (mIsDestroyed) {
+      return;
+    }
+
+    mRequestManager.startRefreshTimer(bannerPresenter.getAd().getRefreshTimeSeconds());
+
     if (mListener != null && mBannerAdView != null) {
       mListener.onBannerError(mBannerAdView);
     }

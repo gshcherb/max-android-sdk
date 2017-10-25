@@ -1,16 +1,33 @@
 package io.maxads.ads.base.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class Winner {
-  @NonNull private final String mCreativeType;
+  public enum CreativeType {
+    HTML,
+    VAST3,
+    EMPTY;
 
-  public Winner(@NonNull String creativeType) {
+    public static CreativeType from(@Nullable String creativeType) {
+      if ("html".equalsIgnoreCase(creativeType)) {
+        return HTML;
+      } else if ("vast3".equalsIgnoreCase(creativeType)) {
+        return VAST3;
+      } else {
+        return EMPTY;
+      }
+    }
+  }
+
+  @NonNull private final CreativeType mCreativeType;
+
+  public Winner(@NonNull CreativeType creativeType) {
     mCreativeType = creativeType;
   }
 
   @NonNull
-  public String getCreativeType() {
+  public CreativeType getCreativeType() {
     return mCreativeType;
   }
 }

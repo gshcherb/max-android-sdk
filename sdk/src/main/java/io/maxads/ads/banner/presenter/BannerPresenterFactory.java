@@ -2,9 +2,12 @@ package io.maxads.ads.banner.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
+import io.maxads.ads.base.model.Winner;
+import io.maxads.ads.base.util.MaxAdsLog;
 
 public class BannerPresenterFactory {
   @NonNull private final Context mContext;
@@ -13,18 +16,25 @@ public class BannerPresenterFactory {
     mContext = context;
   }
 
-  @NonNull
+  @Nullable
   public BannerPresenter createBannerPresenter(@NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener) {
-    final MraidBannerPresenter mraidBannerPresenter = new MraidBannerPresenter(mContext, ad);
-//    final HtmlBannerPresenter htmlBannerPresenter = new HtmlBannerPresenter(mContext, ad);
+    BannerPresenter bannerPresenter;
+    final Winner.CreativeType creativeType = ad.getWinner().getCreativeType();
+    switch (creativeType) {
+      case HTML: {
+        bannerPresenter = new MraidBannerPresenter(mContext, ad);
+        break;
+      }
+      default: {
+        MaxAdsLog.e("Incompatible creative type: " + creativeType + ", for banner ad format.");
+        return null;
+      }
+    }
 
-    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(mraidBannerPresenter,
+    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(bannerPresenter,
       new AdTrackingDelegate(ad.getSelectedUrls(), ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
-
-    mraidBannerPresenter.setListener(bannerPresenterDecorator);
-//    htmlBannerPresenter.setListener(bannerPresenterDecorator);
-
+    bannerPresenter.setListener(bannerPresenterDecorator);
     return bannerPresenterDecorator;
   }
 }

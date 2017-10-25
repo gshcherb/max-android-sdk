@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Locale;
+
 import io.maxads.ads.base.util.IntentHandlerDelegate;
 import io.maxads.ads.base.util.MaxAdsLog;
 
@@ -30,7 +32,7 @@ public class UrlHandlerDelegate {
     final Uri uri = Uri.parse(url);
     final String scheme = uri.getScheme();
     final String host = uri.getHost();
-    final String uriLower = uri.toString().toLowerCase();
+    final String uriLower = uri.toString().toLowerCase(Locale.ROOT);
 
     // NOTE: currently these all handle the same, but we might want different behavior in the future
 

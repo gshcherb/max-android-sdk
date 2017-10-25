@@ -11,14 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:text="Load Banner" />
+        android:text="Load Banner"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/load_banner_mopub"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/load_banner"
+        android:text="Load Banner MoPub"
+        tools:ignore="HardcodedText"/>
 
     <Button
         android:id="@+id/load_interstitial"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/load_banner"
-        android:text="Load Interstitial" />
+        android:layout_below="@id/load_banner_mopub"
+        android:text="Load Interstitial"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/load_interstitial_mopub"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/load_interstitial"
+        android:text="Load Interstitial MoPub"
+        tools:ignore="HardcodedText"/>
+
+    <com.mopub.mobileads.MoPubView
+        android:id="@+id/mopub_ad"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@id/ad"/>
 
     <io.maxads.ads.banner.view.BannerAdView
         android:id="@+id/ad"

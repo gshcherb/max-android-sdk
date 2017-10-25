@@ -41,6 +41,11 @@ public class Ad {
   }
 
   @NonNull
+  public String getPrebidKeywords() {
+    return mPrebidKeywords;
+  }
+
+  @NonNull
   public Integer getRefreshTimeSeconds() {
     return mRefreshTimeSeconds;
   }
@@ -58,5 +63,10 @@ public class Ad {
   @NonNull
   public List<String> getSelectedUrls() {
     return mSelectedUrls;
+  }
+
+  @NonNull
+  public Winner getWinner() {
+    return mWinner;
   }
 }

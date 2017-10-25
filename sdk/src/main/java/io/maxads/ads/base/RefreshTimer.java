@@ -1,28 +1,29 @@
 package io.maxads.ads.base;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Predicate;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class RefreshTimer {
-  private boolean mIsStopped = true;
+  @Nullable private Disposable mDisposable;
 
-  public Observable<Long> start(long delaySeconds) {
+  public void start(long delaySeconds, @NonNull Consumer<Long> consumer) {
+    stop();
     // Subscribes on Schedulers.computation() by default
-    mIsStopped = false;
-    return Observable.timer(delaySeconds, TimeUnit.SECONDS)
+    mDisposable = Observable.timer(delaySeconds, TimeUnit.SECONDS)
       .observeOn(AndroidSchedulers.mainThread())
-      .takeWhile(new Predicate<Long>() {
-        @Override
-        public boolean test(Long aLong) throws Exception {
-          return !mIsStopped;
-        }
-      });
+      .subscribe(consumer);
   }
 
   public void stop() {
-    mIsStopped = true;
+    if (mDisposable != null) {
+      mDisposable.dispose();
+    }
   }
 }
