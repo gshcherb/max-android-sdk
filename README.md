@@ -25,6 +25,7 @@ the way your ads are served currently.
 It is simple to wrap your existing banner ad view with MAX using the MAX RequestManager. MAX will handle all auto-refresh and error retry logic, so you should disable these features on your SSP. Example integration with MoPub:
 
 ``` mMoPubView.setAutorefreshEnabled(false);
+    mRequestManager.setAdUnitId(MAX_BANNER_ADUNIT_ID);
     mRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
       public void onRequestSuccess(@NonNull Ad ad) {
@@ -64,7 +65,6 @@ It is simple to wrap your existing banner ad view with MAX using the MAX Request
       }
     });
     
-    mRequestManager.setAdUnitId(MAX_BANNER_ADUNIT_ID);
     mRequestManager.requestAd();
 ```
 
@@ -72,7 +72,8 @@ It is simple to wrap your existing banner ad view with MAX using the MAX Request
 
 Interstitials work similarly to the above. None of your other interstitial display logic needs to change. Example integration with MoPub:
 
-``` mMoPubInterstitial = new MoPubInterstitial(this, "MOPUB_INTERSTITIAL_ADUNIT_ID");
+``` mMoPubInterstitial = new MoPubInterstitial(this, MOPUB_INTERSTITIAL_ADUNIT_ID);
+    mRequestManager.setAdUnitId(MAX_INTERSTITIAL_ADUNIT_ID);
     mRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
       public void onRequestSuccess(@NonNull Ad ad) {
@@ -108,8 +109,7 @@ Interstitials work similarly to the above. None of your other interstitial displ
       public void onInterstitialDismissed(MoPubInterstitial interstitial) {
       }
     });
-    
-    mRequestManager.setAdUnitId("MAX_INTERSTITIAL_ADUNIT_ID");
+  
     mRequestManager.requestAd();
 ```
 
