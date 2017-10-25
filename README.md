@@ -2,7 +2,7 @@
 MAX Advertising Systems Android SDK
 
 ### Patterns
-* [Model View Presenter](http://lmgtfy.com/?q=android+model+view+presenter)
+* [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter)
 
 ### Tools
 * [Genymotion](https://www.genymotion.com/) - Android emulation platform
