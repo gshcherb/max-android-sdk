@@ -24,7 +24,6 @@ public class MRAIDNativeFeatureManager {
     public boolean isCalendarSupported() {
         boolean retval =
                 supportedNativeFeatures.contains(MRAIDNativeFeature.CALENDAR) &&
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH &&
                         PackageManager.PERMISSION_GRANTED == context.checkCallingOrSelfPermission(Manifest.permission.WRITE_CALENDAR);
         MRAIDLog.d(TAG, "isCalendarSupported " + retval);
         return retval;

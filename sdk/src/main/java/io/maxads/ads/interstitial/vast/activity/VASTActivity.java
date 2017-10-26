@@ -7,6 +7,7 @@
 
 package io.maxads.ads.interstitial.vast.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -366,6 +367,7 @@ public class VASTActivity extends Activity implements OnCompletionListener,
 		}
 	}
 
+	@SuppressLint("ResourceType")
 	private void createCloseButton(int size) {
 
 		LayoutParams params = new LayoutParams(size, size);
@@ -465,8 +467,8 @@ public class VASTActivity extends Activity implements OnCompletionListener,
 		try {
 			Uri uri = Uri.parse(clickThroughUrl);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-			ResolveInfo resolvable = getPackageManager().resolveActivity(intent, PackageManager.GET_INTENT_FILTERS);
-			if(resolvable == null) {
+			final List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(intent, 0);
+			if(resolveInfos.isEmpty()) {
 				VASTLog.e(TAG, "Clickthrough error occured, uri unresolvable");
 				if (mCurrentVideoPosition>=mMediaPlayer.getCurrentPosition()*0.99) {
 					mMediaPlayer.start();

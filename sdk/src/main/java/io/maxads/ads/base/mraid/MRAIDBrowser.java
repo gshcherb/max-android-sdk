@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import io.maxads.ads.base.util.Views;
+
 public class MRAIDBrowser extends Activity {
 	
 	private static final String TAG = "MraidBrowser";
@@ -114,7 +116,7 @@ public class MRAIDBrowser extends Activity {
 		buttonLayout.setPadding(0, 0, 0, 0);
         Drawable backgroundDrawable = Assets.getDrawableFromBase64(getResources(), Assets.bkgrnd);
         buttonLayout.setBackgroundDrawable(backgroundDrawable);
-		buttonLayout.setId(View.generateViewId());
+		buttonLayout.setId(Views.generateViewId());
 
 		int buttonWidth = screenWidth >>> 2;
 		int buttonHeight = Math.min(buttonWidth >>> 1, screenHeight / 10);

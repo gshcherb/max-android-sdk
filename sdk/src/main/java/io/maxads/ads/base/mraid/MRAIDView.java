@@ -325,6 +325,11 @@ public class MRAIDView extends RelativeLayout {
                     //pauseWebView(this);
                 }
             }
+
+            @Override
+            public boolean performClick() {
+                return super.performClick();
+            }
         };
 
         // changes behavior of view when bigger than window or something?
@@ -989,13 +994,11 @@ public class MRAIDView extends RelativeLayout {
 
         // First, see if the activity has an action bar.
         boolean hasActionBar = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActionBar actionBar = activity.getActionBar();
-            if (actionBar != null) {
-                hasActionBar = true;
-                isActionBarShowing = actionBar.isShowing();
-                actionBar.hide();
-            }
+        ActionBar actionBar = activity.getActionBar();
+        if (actionBar != null) {
+            hasActionBar = true;
+            isActionBarShowing = actionBar.isShowing();
+            actionBar.hide();
         }
 
         // If not, see if the app has a title bar
@@ -1034,7 +1037,7 @@ public class MRAIDView extends RelativeLayout {
         if (isForceNotFullScreen) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isActionBarShowing) {
+        if (isActionBarShowing) {
             ActionBar actionBar = activity.getActionBar();
             actionBar.show();
         } else if (titleBar != null) {
@@ -1262,17 +1265,11 @@ public class MRAIDView extends RelativeLayout {
         injectJavaScript("mraid.setSupports(mraid.SUPPORTED_FEATURES.TEL, " + nativeFeatureManager.isTelSupported() + ");");
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void pauseWebView(WebView webView) {
         MRAIDLog.d(MRAID_LOG_TAG, "pauseWebView " + webView.toString());
         // Stop any video/animation that may be running in the WebView.
         // Otherwise, it will keep playing in the background.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            webView.onPause();
-        } else {
-            webView.loadUrl("about:blank");
-        }
-
+        webView.onPause();
     }
 
     /**************************************************************************
