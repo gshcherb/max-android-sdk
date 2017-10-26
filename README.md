@@ -20,11 +20,25 @@ It works as follows:
 In this way, you can increase competition and take control of the exchange layer in your ad waterfall without disrupting
 the way your ads are served currently.
 
+## SDK Initialization
+
+The SDK must be initialized in your Application class before being able to request ads. Example:
+
+```
+public class MyApplication extends Application {
+  public void onCreate() {
+    super.onCreate();
+    MaxAds.initialize(this);
+  }
+}
+```
+
 ## Banner Integration
 
 It is simple to wrap your existing banner ad view with MAX using the MAX RequestManager. MAX will handle all auto-refresh and error retry logic, so you should disable these features on your SSP. Example integration with MoPub:
 
 ``` mMoPubView.setAutorefreshEnabled(false);
+    mRequestManager = new RequestManager();
     mRequestManager.setAdUnitId(MAX_BANNER_ADUNIT_ID);
     mRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
@@ -79,6 +93,7 @@ mRequestManager.destroy();
 Interstitials work similarly to the above. None of your other interstitial display logic needs to change. Example integration with MoPub:
 
 ``` mMoPubInterstitial = new MoPubInterstitial(this, MOPUB_INTERSTITIAL_ADUNIT_ID);
+    mRequestManager = new RequestManager();
     mRequestManager.setAdUnitId(MAX_INTERSTITIAL_ADUNIT_ID);
     mRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
