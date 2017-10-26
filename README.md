@@ -68,6 +68,12 @@ It is simple to wrap your existing banner ad view with MAX using the MAX Request
     mRequestManager.requestAd();
 ```
 
+When the Activity or Fragment containing the above code is destroyed, the RequestManager must also be destroyed.
+
+```
+mRequestManager.destroy();
+```
+
 ## Interstitial Integration
 
 Interstitials work similarly to the above. None of your other interstitial display logic needs to change. Example integration with MoPub:
@@ -111,6 +117,12 @@ Interstitials work similarly to the above. None of your other interstitial displ
     });
   
     mRequestManager.requestAd();
+```
+
+When the Activity or Fragment containing the above code is destroyed, the RequestManager must also be destroyed.
+
+```
+mRequestManager.destroy();
 ```
 
 ## Ad Server/SSP Setup
