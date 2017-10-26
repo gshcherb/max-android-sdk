@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
-import io.maxads.vast.VASTPlayer;
+import io.maxads.ads.interstitial.vast.VASTPlayer;
 
 public class VastInterstitialPresenter implements InterstitialPresenter, VASTPlayer.VASTPlayerListener {
 

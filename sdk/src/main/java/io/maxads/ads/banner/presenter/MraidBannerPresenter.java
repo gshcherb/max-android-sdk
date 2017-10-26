@@ -8,10 +8,10 @@ import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.UrlHandlerDelegate;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
-import io.maxads.mraid.MRAIDBanner;
-import io.maxads.mraid.MRAIDNativeFeatureListener;
-import io.maxads.mraid.MRAIDView;
-import io.maxads.mraid.MRAIDViewListener;
+import io.maxads.ads.base.mraid.MRAIDBanner;
+import io.maxads.ads.base.mraid.MRAIDNativeFeatureListener;
+import io.maxads.ads.base.mraid.MRAIDView;
+import io.maxads.ads.base.mraid.MRAIDViewListener;
 
 public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener, MRAIDNativeFeatureListener {
 
