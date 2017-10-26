@@ -10,6 +10,7 @@ import java.util.Collections;
 
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.util.Checks;
+import io.maxads.mraid.MRAIDBanner;
 import okhttp3.Interceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 

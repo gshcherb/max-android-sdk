@@ -1,1 +1,1 @@
-include ':app', ':sdk', ':mraid', ':vast', ':test_app'
+include ':sample_app', ':sdk', ':mraid', ':vast', ':test_app'
