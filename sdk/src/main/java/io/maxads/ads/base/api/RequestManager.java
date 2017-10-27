@@ -102,7 +102,6 @@ public class RequestManager {
     }
 
     delaySeconds = delaySeconds > 0 ? delaySeconds : DEFAULT_REFRESH_TIME_SECONDS;
-
     mRefreshTimer.start(delaySeconds, new Consumer<Long>() {
       @Override
       public void accept(Long aLong) throws Exception {

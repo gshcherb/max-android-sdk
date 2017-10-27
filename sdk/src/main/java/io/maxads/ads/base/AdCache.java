@@ -11,19 +11,19 @@ import io.maxads.ads.base.util.MaxAdsLog;
 
 public class AdCache {
 
-  @NonNull private Map<String, Ad> mAdsMap;
+  @NonNull private final Map<String, Ad> mAdMap;
 
   public AdCache() {
-    mAdsMap = new HashMap<>();
+    mAdMap = new HashMap<>();
   }
 
   @Nullable
   public Ad remove(@NonNull String adUnitKey) {
-    return mAdsMap.remove(adUnitKey);
+    return mAdMap.remove(adUnitKey);
   }
 
-  public void put(@NonNull String adUnitKey, @NonNull Ad response) {
-    MaxAdsLog.d("AdCache putting response value for adUnitKey " + adUnitKey);
-    mAdsMap.put(adUnitKey, response);
+  public void put(@NonNull String adUnitKey, @NonNull Ad ad) {
+    MaxAdsLog.d("AdCache putting ad for adUnitKey: " + adUnitKey);
+    mAdMap.put(adUnitKey, ad);
   }
 }

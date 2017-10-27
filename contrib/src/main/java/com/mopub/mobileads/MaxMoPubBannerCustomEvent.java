@@ -13,11 +13,9 @@ import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.MaxAdsLog;
 
-public class MaxMoPubBannerCustomEvent extends CustomEventBanner
-    implements BannerPresenter.Listener {
+public class MaxMoPubBannerCustomEvent extends CustomEventBanner implements BannerPresenter.Listener {
 
   @NonNull private static final String ADUNIT_ID_KEY = "adunit_id";
-  @Nullable private String mMaxAdUnitKey;
   @Nullable private CustomEventBannerListener mBannerListener;
   @Nullable private BannerPresenter mBannerPresenter;
 
@@ -26,26 +24,39 @@ public class MaxMoPubBannerCustomEvent extends CustomEventBanner
                             CustomEventBannerListener customEventBannerListener,
                             Map<String, Object> localExtras,
                             Map<String, String> serverExtras) {
+
+    if (customEventBannerListener == null) {
+      MaxAdsLog.e("customEventBannerListener is null");
+      return;
+    }
     mBannerListener = customEventBannerListener;
 
+    String maxAdUnitKey;
     if (localExtras.containsKey(ADUNIT_ID_KEY)) {
-      mMaxAdUnitKey = (String) localExtras.get(ADUNIT_ID_KEY);
+      maxAdUnitKey = (String) localExtras.get(ADUNIT_ID_KEY);
     } else if (serverExtras.containsKey(ADUNIT_ID_KEY)) {
-      mMaxAdUnitKey = serverExtras.get(ADUNIT_ID_KEY);
+      maxAdUnitKey = serverExtras.get(ADUNIT_ID_KEY);
     } else {
-      MaxAdsLog.e("Couldn't find max adunit_id value in CustomEvent localExtras or serverExtras");
-      mBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+      MaxAdsLog.e("Could not find MAX adunit_id value in CustomEventBanner localExtras or serverExtras");
+      mBannerListener.onBannerFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
       return;
     }
 
-    final Ad ad = MaxAds.getAdCache().remove(mMaxAdUnitKey);
-    if (ad != null) {
-      mBannerPresenter = new BannerPresenterFactory(context).createBannerPresenter(ad, this);
-      mBannerPresenter.load();
-    } else {
-      MaxAdsLog.e("Couldn't find an ad in the cache for adunit with key " + mMaxAdUnitKey);
-      mBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+    final Ad ad = MaxAds.getAdCache().remove(maxAdUnitKey);
+    if (ad == null) {
+      MaxAdsLog.e("Could not find an ad in the cache for adunit with key: " + maxAdUnitKey);
+      mBannerListener.onBannerFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+      return;
     }
+
+    mBannerPresenter = new BannerPresenterFactory(context).createBannerPresenter(ad, this);
+    if (mBannerPresenter == null) {
+      MaxAdsLog.e("Could not create valid banner presenter");
+      mBannerListener.onBannerFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+      return;
+    }
+
+    mBannerPresenter.load();
   }
 
   @Override

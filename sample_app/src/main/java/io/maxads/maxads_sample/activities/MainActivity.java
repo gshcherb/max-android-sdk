@@ -16,7 +16,13 @@ import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.interstitial.Interstitial;
 import io.maxads.maxads_sample.R;
 
-public class MainActivity extends AppCompatActivity implements BannerAdView.Listener, View.OnClickListener, Interstitial.Listener, MoPubView.BannerAdListener, MoPubInterstitial.InterstitialAdListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, BannerAdView.Listener,
+  Interstitial.Listener, MoPubView.BannerAdListener, MoPubInterstitial.InterstitialAdListener {
+
+  @NonNull public static final String MAX_BANNER_ADUNIT_ID = "ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw";
+  @NonNull public static final String MAX_INTERSTITIAL_ADUNIT_ID = "ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICA2uOGCgw";
+  @NonNull public static final String MOPUB_BANNER_ADUNIT_ID = "ed0a225fb6934576a23405356cdb4e58";
+  @NonNull public static final String MOPUB_INTERSTITIAL_ADUNIT_ID = "fdfb9913c3594f2aa858d0560eaf66cc";
 
   private Ad mBannerAd;
   private RequestManager mBannerRequestManager;
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
     mMoPubView.setAutorefreshEnabled(false);
     mBannerAdView = findViewById(R.id.ad);
     mBannerAdView.setListener(this);
-    mMoPubInterstitial = new MoPubInterstitial(this, "MOPUB_INTERSTITIAL_ADUNIT_ID");
+    mMoPubInterstitial = new MoPubInterstitial(this, MOPUB_INTERSTITIAL_ADUNIT_ID);
     mMoPubInterstitial.setInterstitialAdListener(this);
     mInterstitial = new Interstitial(this);
     mInterstitial.setListener(this);
@@ -68,22 +74,23 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
   @Override
   public void onClick(View view) {
     if (view == mLoadBannerButton) {
-      mBannerAdView.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
+      mBannerAdView.load(MAX_BANNER_ADUNIT_ID);
     } else if (view == mLoadBannerMoPubButton) {
       loadBannerMoPub();
     } else if (view == mLoadInterstitialButton) {
-      mInterstitial.load("ag9zfm1heGFkcy0xNTY1MTlyEwsSBkFkVW5pdBiAgICAvKGCCQw");
+      mInterstitial.load(MAX_INTERSTITIAL_ADUNIT_ID);
     } else if (view == mLoadInterstitialMoPubButton) {
       loadInterstitialMoPub();
     }
   }
 
   private void loadBannerMoPub() {
+    mBannerRequestManager.setAdUnitId(MAX_BANNER_ADUNIT_ID);
     mBannerRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
       public void onRequestSuccess(@NonNull Ad ad) {
         mBannerAd = ad;
-        mMoPubView.setAdUnitId("MOPUB_BANNER_ADUNIT_ID");
+        mMoPubView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID);
         mMoPubView.setKeywords(ad.getPrebidKeywords());
         mMoPubView.loadAd();
       }
@@ -94,15 +101,14 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
       }
     });
 
-    mBannerRequestManager.setAdUnitId("MAX_BANNER_ADUNIT_ID");
     mBannerRequestManager.requestAd();
   }
 
   private void loadInterstitialMoPub() {
+    mInterstitialRequestManager.setAdUnitId(MAX_INTERSTITIAL_ADUNIT_ID);
     mInterstitialRequestManager.setRequestListener(new RequestManager.RequestListener() {
       @Override
       public void onRequestSuccess(@NonNull Ad ad) {
-        mBannerAd = ad;
         mMoPubInterstitial.setKeywords(ad.getPrebidKeywords());
         mMoPubInterstitial.load();
       }
@@ -113,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements BannerAdView.List
       }
     });
 
-    mInterstitialRequestManager.setAdUnitId("MAX_INTERSTITIAL_ADUNIT_ID");
     mInterstitialRequestManager.requestAd();
   }
 

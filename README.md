@@ -157,8 +157,8 @@ This structure allows you to set price increments in your SSP at the dollar, ten
 
 To create a MAX line item:
 
-1. Create a new line item of type Custom Native 
-2. Set the Custom Event Class to the appropriate value depending on their type: `MaxMoPubBannerCustomEvent` or `MAXMoPubInterstitialCustomEvent`.
+1. Create a new line item of type Custom Native Network
+2. Set the Custom Event Class to the appropriate value depending on their type: `com.mopub.mobileads.MaxMoPubBannerCustomEvent` or `com.mopub.mobileads.MAXMoPubInterstitialCustomEvent`.
 3. Set the Custom Event Info to `{"adunit_id": "<MAX_ADUNIT_ID>"}` where the value of `MAX_ADUNIT_ID` corresponds to the ID of the MAX ad unit for this request.
 
 ## Debugging

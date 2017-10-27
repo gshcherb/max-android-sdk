@@ -1,24 +1,21 @@
 package com.mopub.mobileads;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import io.maxads.ads.base.AdCache;
+import java.util.Map;
+
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.MaxAdsLog;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenter;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenterFactory;
 
-import java.util.Map;
-
-
-public class MaxMoPubInterstitialCustomEvent extends CustomEventInterstitial
-    implements InterstitialPresenter.Listener {
+public class MaxMoPubInterstitialCustomEvent extends CustomEventInterstitial implements InterstitialPresenter.Listener {
 
   @NonNull private static final String ADUNIT_ID_KEY = "adunit_id";
-  @Nullable private String mMaxAdUnitKey;
   @Nullable private CustomEventInterstitialListener mInterstitialListener;
   @Nullable private InterstitialPresenter mInterstitialPresenter;
 
@@ -27,27 +24,46 @@ public class MaxMoPubInterstitialCustomEvent extends CustomEventInterstitial
                                   CustomEventInterstitialListener customEventInterstitialListener,
                                   Map<String, Object> localExtras,
                                   Map<String, String> serverExtras) {
+
+    if (customEventInterstitialListener == null) {
+      MaxAdsLog.e("customEventInterstitialListener is null");
+      return;
+    }
     mInterstitialListener = customEventInterstitialListener;
 
+    if (!(context instanceof Activity)) {
+      MaxAdsLog.e("MAX interstitial ad can only be rendered with an Activity context");
+      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+      return;
+    }
+    final Activity activity = (Activity) context;
+
+    String maxAdUnitKey;
     if (localExtras.containsKey(ADUNIT_ID_KEY)) {
-      mMaxAdUnitKey = (String) localExtras.get(ADUNIT_ID_KEY);
+      maxAdUnitKey = (String) localExtras.get(ADUNIT_ID_KEY);
     } else if (serverExtras.containsKey(ADUNIT_ID_KEY)) {
-      mMaxAdUnitKey = serverExtras.get(ADUNIT_ID_KEY);
+      maxAdUnitKey = serverExtras.get(ADUNIT_ID_KEY);
     } else {
-      MaxAdsLog.e("Couldn't find max adunit_id value in CustomEvent localExtras or serverExtras");
-      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.INTERNAL_ERROR);
+      MaxAdsLog.e("Could not find MAX adunit_id value in CustomEventInterstitial localExtras or serverExtras");
+      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
       return;
     }
 
-    final Ad ad = MaxAds.getAdCache().remove(mMaxAdUnitKey);
-    if (ad != null) {
-      mInterstitialPresenter = new InterstitialPresenterFactory(context)
-          .createInterstitialPresenter(ad, this);
-      mInterstitialPresenter.load();
-    } else {
-      MaxAdsLog.e("Couldn't find an ad in the cache for adunit with key " + mMaxAdUnitKey);
-      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.INTERNAL_ERROR);
+    final Ad ad = MaxAds.getAdCache().remove(maxAdUnitKey);
+    if (ad == null) {
+      MaxAdsLog.e("Could not find an ad in the cache for adunit with key " + maxAdUnitKey);
+      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+      return;
     }
+
+    mInterstitialPresenter = new InterstitialPresenterFactory(activity).createInterstitialPresenter(ad, this);
+    if (mInterstitialPresenter == null) {
+      MaxAdsLog.e("Could not create valid interstitial presenter");
+      mInterstitialListener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+      return;
+    }
+
+    mInterstitialPresenter.load();
   }
 
   @Override
