@@ -20,6 +20,23 @@ It works as follows:
 In this way, you can increase competition and take control of the exchange layer in your ad waterfall without disrupting
 the way your ads are served currently.
 
+## SDK Installation
+
+Using the [MAX Android SDK](https://github.com/MAXAds/max-android-sdk) open source Github repository
+1. Clone the repository locally
+
+```
+git clone git@github.com:MAXAds/max-android-sdk.git
+```
+
+2. Open your app in Android Studio and import the code as a module. File > New > Import Module
+3. Select sdk directory inside the directory where the repository was cloned: max-android-sdk/sdk
+4. In your app's build.gradle file add the sdk module as a dependency
+
+```
+compile project(':sdk')
+```
+
 ## SDK Initialization
 
 The SDK must be initialized in your Application class before being able to request ads. Example:
