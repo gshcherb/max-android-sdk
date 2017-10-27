@@ -90,7 +90,7 @@ public class MraidBannerPresenter implements BannerPresenter, MRAIDViewListener,
 
   @Override
   public boolean mraidViewResize(MRAIDView mraidView, int width, int height, int offsetX, int offsetY) {
-    return false;
+    return true;
   }
 
   @Override

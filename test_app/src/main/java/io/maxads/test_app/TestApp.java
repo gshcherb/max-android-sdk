@@ -12,8 +12,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.maxads.ads.base.MaxAds;
+import io.maxads.ads.base.mraid.internal.MRAIDLog;
 import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.TestAdInterceptor;
+import io.maxads.ads.interstitial.vast.util.VASTLog;
 import okhttp3.Interceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -31,6 +33,8 @@ public class TestApp extends Application {
     applicationInterceptors.add(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
     MaxAds.initialize(this, applicationInterceptors, Collections.<Interceptor>singletonList(new StethoInterceptor()));
     Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);
+    MRAIDLog.setLoggingLevel(MRAIDLog.LOG_LEVEL.verbose);
+    VASTLog.setLoggingLevel(VASTLog.LOG_LEVEL.verbose);
   }
 
   @NonNull

@@ -60,10 +60,6 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
     if (mMRAIDInterstitial != null) {
       mMRAIDInterstitial.show(mActivity);
-
-      if (mListener != null) {
-        mListener.onInterstitialShown(this);
-      }
     }
   }
 
@@ -89,6 +85,13 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Override
   public void mraidViewExpand(MRAIDView mraidView) {
+    if (mIsDestroyed) {
+      return;
+    }
+
+    if (mListener != null) {
+      mListener.onInterstitialShown(this);
+    }
   }
 
   @Override
@@ -104,7 +107,7 @@ public class MraidInterstitialPresenter implements InterstitialPresenter, MRAIDV
 
   @Override
   public boolean mraidViewResize(MRAIDView mraidView, int width, int height, int offsetX, int offsetY) {
-    return false;
+    return true;
   }
 
   @Override
