@@ -25,12 +25,19 @@ public class MaxAds {
   @NonNull private static AdCache sAdCache;
   private static boolean sInitialized;
 
+  /**
+   * This method must be called to initialize the SDK before request ads.
+   */
   public static void initialize(@NonNull Application application) {
     initialize(application, Collections.<Interceptor>emptyList(), Collections.<Interceptor>emptyList());
   }
 
+  /**
+   * For testing and debugging purposes only.
+   */
   @VisibleForTesting
-  public static void initialize(@NonNull Application application, @NonNull List<Interceptor> applicationInterceptors,
+  public static void initialize(@NonNull Application application,
+                                @NonNull List<Interceptor> applicationInterceptors,
                                 @NonNull List<Interceptor> networkInterceptors) {
     sApiClient = new ApiClient(applicationInterceptors, networkInterceptors);
     sDeviceInfo = new DeviceInfo(application.getApplicationContext());

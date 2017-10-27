@@ -10,6 +10,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.functions.Consumer;
 
+/**
+ * Session depth starts at 0 and is incremented for each ad request attempt regardless of whether a response is received
+ * or not. A single session is defined as the app being in the foreground. When the app is backgrounded, the session
+ * depth counter starts over again.
+ */
 public class SessionDepthManager {
   @NonNull private final AtomicInteger mSessionDepth;
 
