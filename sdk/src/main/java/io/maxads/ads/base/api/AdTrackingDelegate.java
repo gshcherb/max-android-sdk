@@ -79,21 +79,7 @@ public class AdTrackingDelegate {
   private void trackUrls(@NonNull List<String> urls, @NonNull final Type type) {
     for (final String url : urls) {
       MaxAdsLog.d("Tracking " + type.toString() + " url: " + url);
-      mApiClient.trackUrl(url)
-        .subscribe(
-          new Consumer<Response<Void>>() {
-            @Override
-            public void accept(Response<Void> response) throws Exception {
-              MaxAdsLog.d("Successfully tracked " + type.toString() + " url: " + url);
-            }
-          },
-          new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-              MaxAdsLog.d("Failed to track " + type.toString() + " url: " + url, throwable);
-            }
-          }
-        );
+      mApiClient.trackUrl(url);
     }
   }
 }
