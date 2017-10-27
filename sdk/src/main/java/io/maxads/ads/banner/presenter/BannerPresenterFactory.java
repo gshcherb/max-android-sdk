@@ -26,6 +26,10 @@ public class BannerPresenterFactory {
         bannerPresenter = new MraidBannerPresenter(mContext, ad);
         break;
       }
+      case EMPTY: {
+        MaxAdsLog.d("Banner creative type is empty");
+        return null;
+      }
       default: {
         MaxAdsLog.e("Incompatible creative type: " + creativeType + ", for banner ad format.");
         return null;

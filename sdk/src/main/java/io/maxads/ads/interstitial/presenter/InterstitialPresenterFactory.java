@@ -32,6 +32,10 @@ public class InterstitialPresenterFactory {
         interstitialPresenter = new VastInterstitialPresenter(mActivity, ad);
         break;
       }
+      case EMPTY: {
+        MaxAdsLog.d("Interstitial creative type is empty");
+        return null;
+      }
       default: {
         MaxAdsLog.e("Incompatible creative type: " + creativeType + ", for interstitial ad format.");
         return null;

@@ -1,5 +1,7 @@
 package io.maxads.ads.base.api;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -36,5 +38,5 @@ public class AdResponse {
 
   @SerializedName("winner")
   @Expose
-  public WinnerResponse winner;
+  @Nullable public WinnerResponse winner;
 }

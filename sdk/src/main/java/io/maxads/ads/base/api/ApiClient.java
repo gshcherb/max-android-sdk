@@ -56,9 +56,12 @@ public class ApiClient {
             return null;
           }
 
+          final WinnerResponse winner = adResponse.winner;
+          final Winner.CreativeType creativeType = Winner.CreativeType.from(winner == null ? null : winner.creativeType);
+
           return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
             adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls,
-            adResponse.errorUrls, new Winner(Winner.CreativeType.from(adResponse.winner.creativeType)));
+            adResponse.errorUrls, new Winner(creativeType));
         }
       });
   }
