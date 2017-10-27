@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -16,7 +19,6 @@ import io.maxads.ads.base.util.Views;
 
 public class MaxAdsWebView extends WebView {
   private static boolean sDeadlockCleared = false;
-  private boolean mIsDestroyed;
 
   public MaxAdsWebView(Context context) {
     this(context, null);
@@ -32,23 +34,48 @@ public class MaxAdsWebView extends WebView {
     getSettings().setAllowUniversalAccessFromFileURLs(false);
 
     enablePlugins(false);
-    // TODO (steffan): disable JS chrome client?
+    setWebChromeClient(new WebChromeClient() {
+      @Override
+      public boolean onJsAlert(@NonNull final WebView view, @NonNull final String url, @NonNull final String message,
+                               @NonNull final JsResult result) {
+        result.confirm();
+        return true;
+      }
+
+      @Override
+      public boolean onJsConfirm(@NonNull final WebView view, @NonNull final String url, @NonNull final String message,
+                                 @NonNull final JsResult result) {
+        result.confirm();
+        return true;
+      }
+
+      @Override
+      public boolean onJsPrompt(@NonNull final WebView view, @NonNull final String url, @NonNull final String message,
+                                @NonNull final String defaultValue, @NonNull final JsPromptResult result) {
+        result.confirm();
+        return true;
+      }
+
+      @Override
+      public boolean onJsBeforeUnload(@NonNull final WebView view, @NonNull final String url,
+                                      @NonNull final String message, @NonNull final JsResult result) {
+        result.confirm();
+        return true;
+      }
+    });
 
     if (!sDeadlockCleared) {
-      clearWebViewDeadlock(getContext());
+      fixWebViewDeadlock(getContext());
       sDeadlockCleared = true;
     }
   }
 
   @Override
   public void destroy() {
-    mIsDestroyed = true;
-
     // Fixes issue: https://code.google.com/p/android/issues/detail?id=65833.
     // https://stackoverflow.com/questions/11995270/error-webview-destroy-called-while-still-attached
     Views.removeFromParent(this);
     removeAllViews();
-
     super.destroy();
   }
 
@@ -77,10 +104,10 @@ public class MaxAdsWebView extends WebView {
   /**
    * Fixes issue: https://code.google.com/p/android/issues/detail?id=63754
    *
-   * When a WebView with HTML5 video is is destroyed it can deadlock the WebView thread until another hardware
-   * accelerated WebView is added to the view hierarchy and restores the GL context.
+   * On KitKat, when a WebView with HTML5 video is is destroyed it can deadlock the WebView thread until another
+   * hardware accelerated WebView is added to the view hierarchy.
    */
-  private void clearWebViewDeadlock(@NonNull Context context) {
+  private void fixWebViewDeadlock(@NonNull Context context) {
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.KITKAT) {
       return;
     }
@@ -89,21 +116,22 @@ public class MaxAdsWebView extends WebView {
     final WebView webView = new WebView(context.getApplicationContext());
     webView.setBackgroundColor(Color.TRANSPARENT);
 
-    // For the deadlock to be cleared, we must load content and add to the view hierarchy. Since
-    // we don't have an activity context, we'll use a system window.
+    // Clear the deadlock by loading content and add to the view hierarchy using a system window
     webView.loadDataWithBaseURL(null, "", "text/html", "UTF-8", null);
     final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
     params.width = 1;
     params.height = 1;
 
-    // Unlike other system window types TYPE_TOAST doesn't require extra permissions
     params.type = WindowManager.LayoutParams.TYPE_TOAST;
-    params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+    params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+      | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
       | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
     params.format = PixelFormat.TRANSPARENT;
     params.gravity = Gravity.START | Gravity.TOP;
 
     final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    windowManager.addView(webView, params);
+    if (windowManager != null) {
+      windowManager.addView(webView, params);
+    }
   }
 }
