@@ -30,7 +30,7 @@ git clone git@github.com:MAXAds/max-android-sdk.git
 ```
 
 2. Open your app in Android Studio and import the code as a module. File > New > Import Module
-3. Select sdk directory inside the directory where the repository was cloned: max-android-sdk/sdk
+3. Select the sdk directory inside the directory where the repository was cloned: max-android-sdk/sdk
 4. In your app's build.gradle file add the sdk module as a dependency
 
 ```
