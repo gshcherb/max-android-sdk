@@ -51,7 +51,7 @@ public class TestBannerAdsPresenter implements TestAdViewHolder.Listener, Banner
     final AdResponse adResponse = new AdResponse();
     final TestAdItem testAdItem = mTestAdItems.get(position);
     adResponse.creative = testAdItem.getAdPayload();
-    adResponse.refresh = 0;
+    adResponse.refresh = 9999;
     adResponse.impressionUrls = Collections.singletonList(testAdItem.getAdName() + "/impressionUrl");
     adResponse.clickUrls = Collections.singletonList(testAdItem.getAdName() + "/clickUrl");
     adResponse.selectedUrls = Collections.singletonList(testAdItem.getAdName() + "/selectedUrl");
