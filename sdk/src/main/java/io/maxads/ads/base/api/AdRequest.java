@@ -2,7 +2,6 @@ package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

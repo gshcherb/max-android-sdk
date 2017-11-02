@@ -19,7 +19,6 @@ import io.reactivex.functions.Consumer;
 
 import static io.reactivex.Observable.just;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -194,7 +193,7 @@ public class RequestManagerTest {
 
   @Test
   public void stopTimer() {
-    mSubject.stopTimer();
+    mSubject.stopRefreshTimer();
 
     verify(mMockRefreshTimer).stop();
   }

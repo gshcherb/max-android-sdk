@@ -127,7 +127,7 @@ public class RequestManager {
     });
   }
 
-  public void stopTimer() {
+  public void stopRefreshTimer() {
     mRefreshTimer.stop();
   }
 

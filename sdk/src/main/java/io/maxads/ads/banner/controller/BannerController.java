@@ -3,6 +3,7 @@ package io.maxads.ads.banner.controller;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,14 @@ import io.maxads.ads.banner.view.BannerAdView;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
+import io.maxads.ads.base.util.InitializationHelper;
 
 public class BannerController implements RequestManager.RequestListener, BannerPresenter.Listener {
 
   @NonNull private final BannerPresenterFactory mBannerPresenterFactory;
   @NonNull private final RequestManager mRequestManager;
+  @NonNull private final InitializationHelper mInitializationHelper;
 
-  @Nullable private String mAdUnitId;
   @Nullable private BannerAdView mBannerAdView;
   @Nullable private BannerPresenter mCurrentBannerPresenter;
   @Nullable private BannerPresenter mNextBannerPresenter;
@@ -28,9 +30,16 @@ public class BannerController implements RequestManager.RequestListener, BannerP
   private boolean mIsDestroyed;
 
   public BannerController(@NonNull Context context) {
-    mBannerPresenterFactory = new BannerPresenterFactory(context);
-    mRequestManager = new RequestManager();
+    this(new BannerPresenterFactory(context), new RequestManager(), new InitializationHelper());
+  }
+
+  @VisibleForTesting
+  BannerController(@NonNull BannerPresenterFactory bannerPresenterFactory,
+                   @NonNull RequestManager requestManager, @NonNull InitializationHelper initializationHelper) {
+    mBannerPresenterFactory = bannerPresenterFactory;
+    mRequestManager = requestManager;
     mRequestManager.setRequestListener(this);
+    mInitializationHelper = initializationHelper;
   }
 
   public void setListener(@Nullable BannerAdView.Listener listener) {
@@ -38,18 +47,31 @@ public class BannerController implements RequestManager.RequestListener, BannerP
   }
 
   public void load(@NonNull String adUnitId, @NonNull BannerAdView bannerAdView) {
-    Checks.checkNotNull(adUnitId, "adUnitId cannot be null");
-    Checks.checkNotNull(bannerAdView, "bannerAdView cannot be null");
-    Checks.checkArgument(!mIsDestroyed, "BannerController is destroyed");
+    if (!Checks.NoThrow.checkArgument(mInitializationHelper.isInitialized(), "MaxAds SDK has not been initialized. " +
+      "Please call MaxAds#initialize in your application's onCreate method.")) {
+      return;
+    }
 
-    mAdUnitId = adUnitId;
+    if (!Checks.NoThrow.checkNotNull(adUnitId, "adUnitId cannot be null")) {
+      return;
+    }
+
+    if (!Checks.NoThrow.checkNotNull(bannerAdView, "bannerAdView cannot be null")) {
+      return;
+    }
+
+    if (!Checks.NoThrow.checkArgument(!mIsDestroyed, "BannerController is destroyed")) {
+      return;
+    }
+
     mBannerAdView = bannerAdView;
     mRequestManager.setAdUnitId(adUnitId);
     mRequestManager.requestAd();
-    mRequestManager.stopTimer();
+    mRequestManager.stopRefreshTimer();
   }
 
-  private void showAd(@NonNull Ad ad) {
+  @VisibleForTesting
+  void showAd(@NonNull Ad ad) {
     if (mIsDestroyed) {
       return;
     }
@@ -72,7 +94,6 @@ public class BannerController implements RequestManager.RequestListener, BannerP
 
   public void destroy() {
     mRequestManager.destroy();
-    mAdUnitId = null;
     mBannerAdView = null;
     destroyBannerPresenter(mCurrentBannerPresenter);
     mCurrentBannerPresenter = null;
