@@ -59,7 +59,7 @@ public class TestBannerAdsPresenter implements TestAdViewHolder.Listener, Banner
 
     final WinnerResponse winnerResponse = new WinnerResponse();
     winnerResponse.creativeType = Winner.CreativeType.HTML.toString().toLowerCase(Locale.ROOT);
-    adResponse.winner = winnerResponse;
+    adResponse.winnerResponse = winnerResponse;
 
     mTestAdInterceptor.setAdResponse(adResponse);
     mTestBannerAdsViewModule.loadTestAd("adUnitId:" + testAdItem.getAdName());

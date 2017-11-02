@@ -65,7 +65,7 @@ public class TestInterstitialAdsPresenter implements TestAdViewHolder.Listener, 
 
     final WinnerResponse winnerResponse = new WinnerResponse();
     winnerResponse.creativeType = mCreativeType.toString().toLowerCase(Locale.ROOT);
-    adResponse.winner = winnerResponse;
+    adResponse.winnerResponse = winnerResponse;
 
     mTestAdInterceptor.setAdResponse(adResponse);
     mInterstitial.load("adUnitId:" + testAdItem.getAdName());
