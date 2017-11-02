@@ -12,6 +12,7 @@ public class TestUtil {
       "timeZone", "locale", "orientation", 320, 50, "browserAgent", "model", "connectivity", "carrier", 3)
       .withLatitude(123)
       .withLongitude(456)
+      .withTest(true)
       .build();
   }
 
