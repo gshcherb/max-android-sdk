@@ -16,8 +16,12 @@ public class TestUtil {
   }
 
   public static Ad createTestAd() {
+    return createTestAd(Winner.CreativeType.HTML);
+  }
+
+  public static Ad createTestAd(Winner.CreativeType creativeType) {
     return new Ad("adUnitId", "creative", "prebidKeywords", 123, Collections.singletonList("impressionUrl"),
       Collections.singletonList("clickUrl"), Collections.singletonList("selectedUrl"),
-      Collections.singletonList("errorUrl"), new Winner(Winner.CreativeType.HTML));
+      Collections.singletonList("errorUrl"), new Winner(creativeType));
   }
 }

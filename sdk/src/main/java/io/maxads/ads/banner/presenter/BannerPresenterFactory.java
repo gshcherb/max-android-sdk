@@ -3,6 +3,7 @@ package io.maxads.ads.banner.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
@@ -19,12 +20,23 @@ public class BannerPresenterFactory {
   @Nullable
   public BannerPresenter createBannerPresenter(@NonNull Ad ad,
                                                @NonNull BannerPresenter.Listener bannerPresenterListener) {
-    BannerPresenter bannerPresenter;
-    final Winner.CreativeType creativeType = ad.getWinner().getCreativeType();
+    final BannerPresenter bannerPresenter = fromCreativeType(ad.getWinner().getCreativeType(), ad);
+    if (bannerPresenter == null) {
+      return null;
+    }
+
+    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(bannerPresenter,
+      new AdTrackingDelegate(ad.getSelectedUrls(), ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
+    bannerPresenter.setListener(bannerPresenterDecorator);
+    return bannerPresenterDecorator;
+  }
+
+  @Nullable
+  @VisibleForTesting
+  BannerPresenter fromCreativeType(@NonNull Winner.CreativeType creativeType, @NonNull Ad ad) {
     switch (creativeType) {
       case HTML: {
-        bannerPresenter = new MraidBannerPresenter(mContext, ad);
-        break;
+        return new MraidBannerPresenter(mContext, ad);
       }
       case EMPTY: {
         MaxAdsLog.d("Banner creative type is empty");
@@ -35,10 +47,5 @@ public class BannerPresenterFactory {
         return null;
       }
     }
-
-    final BannerPresenterDecorator bannerPresenterDecorator = new BannerPresenterDecorator(bannerPresenter,
-      new AdTrackingDelegate(ad.getSelectedUrls(), ad.getImpressionUrls(), ad.getClickUrls()), bannerPresenterListener);
-    bannerPresenter.setListener(bannerPresenterDecorator);
-    return bannerPresenterDecorator;
   }
 }
