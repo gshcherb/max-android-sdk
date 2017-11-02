@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
-import io.maxads.ads.base.model.Winner;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -56,12 +55,7 @@ public class ApiClient {
             return null;
           }
 
-          final WinnerResponse winner = adResponse.winner;
-          final Winner.CreativeType creativeType = Winner.CreativeType.from(winner == null ? null : winner.creativeType);
-
-          return new Ad(adRequest.getAdUnitId(), adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
-            adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls,
-            adResponse.errorUrls, new Winner(creativeType));
+          return Ad.from(adRequest.getAdUnitId(), adResponse);
         }
       });
   }

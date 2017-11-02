@@ -1,5 +1,6 @@
 package io.maxads.ads.base.api;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
@@ -10,33 +11,33 @@ import java.util.List;
 public class AdResponse {
   @SerializedName("creative")
   @Expose
-  public String creative;
+  @Nullable public String creative;
 
   @SerializedName("prebid_keywords")
   @Expose
-  public String prebidKeywords;
+  @NonNull public String prebidKeywords;
 
   @SerializedName("refresh")
   @Expose
-  public Integer refresh;
+  @NonNull public Integer refresh;
 
   @SerializedName("impression_urls")
   @Expose
-  public List<String> impressionUrls;
+  @Nullable public List<String> impressionUrls;
 
   @SerializedName("click_urls")
   @Expose
-  public List<String> clickUrls;
+  @Nullable public List<String> clickUrls;
 
   @SerializedName("selected_urls")
   @Expose
-  public List<String> selectedUrls;
+  @Nullable public List<String> selectedUrls;
 
   @SerializedName("error_urls")
   @Expose
-  public List<String> errorUrls;
+  @Nullable public List<String> errorUrls;
 
   @SerializedName("winner")
   @Expose
-  @Nullable public WinnerResponse winner;
+  @Nullable public WinnerResponse winnerResponse;
 }

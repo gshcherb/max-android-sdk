@@ -3,6 +3,8 @@ package io.maxads.ads.base.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import io.maxads.ads.base.api.WinnerResponse;
+
 public class Winner {
   public enum CreativeType {
     HTML,
@@ -21,6 +23,10 @@ public class Winner {
   }
 
   @NonNull private final CreativeType mCreativeType;
+
+  public static Winner from(@Nullable WinnerResponse winnerResponse) {
+    return new Winner(CreativeType.from(winnerResponse == null ? null : winnerResponse.creativeType));
+  }
 
   public Winner(@NonNull CreativeType creativeType) {
     mCreativeType = creativeType;

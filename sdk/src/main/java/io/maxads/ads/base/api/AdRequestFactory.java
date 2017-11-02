@@ -5,8 +5,6 @@ import android.support.annotation.VisibleForTesting;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
-import java.util.TimeZone;
-
 import io.maxads.ads.base.DeviceInfo;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.SessionDepthManager;

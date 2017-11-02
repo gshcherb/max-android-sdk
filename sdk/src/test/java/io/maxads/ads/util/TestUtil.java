@@ -3,6 +3,8 @@ package io.maxads.ads.util;
 import java.util.Collections;
 
 import io.maxads.ads.base.api.AdRequest;
+import io.maxads.ads.base.api.AdResponse;
+import io.maxads.ads.base.api.WinnerResponse;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.model.Winner;
 
@@ -14,6 +16,22 @@ public class TestUtil {
       .withLongitude(456)
       .withTest(true)
       .build();
+  }
+
+  public static AdResponse createTestAdResponse() {
+    final AdResponse adResponse = new AdResponse();
+    adResponse.creative = "creative";
+    adResponse.prebidKeywords = "prebidKeywords";
+    adResponse.refresh = 123;
+    adResponse.impressionUrls = Collections.singletonList("impressionUrl");
+    adResponse.clickUrls = Collections.singletonList("clickUrl");
+    adResponse.selectedUrls = Collections.singletonList("selectedUrl");
+    adResponse.errorUrls = Collections.singletonList("errorUrl");
+    final WinnerResponse winnerResponse = new WinnerResponse();
+    winnerResponse.creativeType = "html";
+    adResponse.winnerResponse = winnerResponse;
+
+    return adResponse;
   }
 
   public static Ad createTestAd() {

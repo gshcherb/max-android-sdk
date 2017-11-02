@@ -1,12 +1,17 @@
 package io.maxads.ads.base.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
+import java.util.Collections;
 import java.util.List;
+
+import io.maxads.ads.base.api.AdResponse;
 
 public class Ad {
   @NonNull private final String mAdUnitId;
-  @NonNull private final String mCreative;
+  @Nullable private final String mCreative;
   @NonNull private final String mPrebidKeywords;
   @NonNull private final Integer mRefreshTimeSeconds;
   @NonNull private final List<String> mImpressionUrls;
@@ -15,18 +20,25 @@ public class Ad {
   @NonNull private final List<String> mErrorUrls;
   @NonNull private final Winner mWinner;
 
-  public Ad(@NonNull String adUnitId, @NonNull String creative, @NonNull String prebidKeywords,
-            @NonNull Integer refreshTimeSeconds, @NonNull List<String> impressionUrls, @NonNull List<String> clickUrls,
-            @NonNull List<String> selectedUrls, @NonNull List<String> errorUrls, @NonNull Winner winner) {
+  public static Ad from(@NonNull String adUnitId, @NonNull AdResponse adResponse) {
+    return new Ad(adUnitId, adResponse.creative, adResponse.prebidKeywords, adResponse.refresh,
+      adResponse.impressionUrls, adResponse.clickUrls, adResponse.selectedUrls, adResponse.errorUrls,
+      Winner.from(adResponse.winnerResponse));
+  }
+
+  @VisibleForTesting
+  public Ad(@NonNull String adUnitId, @Nullable String creative, @NonNull String prebidKeywords,
+            @NonNull Integer refreshTimeSeconds, @Nullable List<String> impressionUrls, @Nullable List<String> clickUrls,
+            @Nullable List<String> selectedUrls, @Nullable List<String> errorUrls, @NonNull Winner winner) {
 
     mAdUnitId = adUnitId;
     mCreative = creative;
     mPrebidKeywords = prebidKeywords;
     mRefreshTimeSeconds = refreshTimeSeconds;
-    mImpressionUrls = impressionUrls;
-    mClickUrls = clickUrls;
-    mSelectedUrls = selectedUrls;
-    mErrorUrls = errorUrls;
+    mImpressionUrls = impressionUrls == null ? Collections.<String>emptyList() : impressionUrls;
+    mClickUrls = clickUrls == null ? Collections.<String>emptyList() : clickUrls;
+    mSelectedUrls = selectedUrls == null ? Collections.<String>emptyList() : selectedUrls;
+    mErrorUrls = errorUrls == null ? Collections.<String>emptyList() : errorUrls;
     mWinner = winner;
   }
 
@@ -35,7 +47,7 @@ public class Ad {
     return mAdUnitId;
   }
 
-  @NonNull
+  @Nullable
   public String getCreative() {
     return mCreative;
   }
@@ -63,6 +75,11 @@ public class Ad {
   @NonNull
   public List<String> getSelectedUrls() {
     return mSelectedUrls;
+  }
+
+  @NonNull
+  public List<String> getErrorUrls() {
+    return mErrorUrls;
   }
 
   @NonNull
