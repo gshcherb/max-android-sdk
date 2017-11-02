@@ -35,7 +35,7 @@ public class ErrorRequestFactory {
                 info.getId(),
                 info.isLimitAdTrackingEnabled(),
                 "",
-                mDeviceInfo.getTimeZone().getDisplayName(false, TimeZone.SHORT),
+                mDeviceInfo.getTimeZoneShortDisplayName(),
                 mDeviceInfo.getLocale().toString(),
                 mDeviceInfo.getOrientation().toString(),
                 mDeviceInfo.getScreenWidthPx(),

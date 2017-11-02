@@ -132,8 +132,8 @@ public class DeviceInfo {
   }
 
   @NonNull
-  public TimeZone getTimeZone() {
-    return TimeZone.getDefault();
+  public String getTimeZoneShortDisplayName() {
+    return TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT);
   }
 
   @NonNull

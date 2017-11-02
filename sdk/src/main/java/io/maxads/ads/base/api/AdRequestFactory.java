@@ -1,6 +1,7 @@
 package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
@@ -17,8 +18,13 @@ public class AdRequestFactory {
   @NonNull private final SessionDepthManager mSessionDepthManager;
 
   public AdRequestFactory() {
-    mDeviceInfo = MaxAds.getDeviceInfo();
-    mSessionDepthManager = MaxAds.getSessionDepthManager();
+    this(MaxAds.getDeviceInfo(), MaxAds.getSessionDepthManager());
+  }
+
+  @VisibleForTesting
+  AdRequestFactory(@NonNull DeviceInfo deviceInfo, @NonNull SessionDepthManager sessionDepthManager) {
+    mDeviceInfo = deviceInfo;
+    mSessionDepthManager = sessionDepthManager;
   }
 
   @NonNull
@@ -35,7 +41,7 @@ public class AdRequestFactory {
             info.getId(),
             info.isLimitAdTrackingEnabled(),
             "",
-            mDeviceInfo.getTimeZone().getDisplayName(false, TimeZone.SHORT),
+            mDeviceInfo.getTimeZoneShortDisplayName(),
             mDeviceInfo.getLocale().toString(),
             mDeviceInfo.getOrientation().toString(),
             mDeviceInfo.getScreenWidthPx(),

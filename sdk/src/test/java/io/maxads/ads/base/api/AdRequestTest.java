@@ -18,8 +18,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)
 public class AdRequestTest {
-  private AdRequest mSubject;
   private Gson mGson;
+
+  private AdRequest mSubject;
 
   @Before
   public void setup() {
