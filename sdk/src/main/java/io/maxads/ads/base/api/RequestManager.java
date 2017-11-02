@@ -2,11 +2,14 @@ package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
+import io.maxads.ads.base.AdCache;
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.RefreshTimer;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
+import io.maxads.ads.base.util.InitializationHelper;
 import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
@@ -19,16 +22,29 @@ public class RequestManager {
   }
 
   @NonNull private final ApiClient mApiClient;
+  @NonNull private final AdCache mAdCache;
   @NonNull private final AdRequestFactory mAdRequestFactory;
   @NonNull private final RefreshTimer mRefreshTimer;
+  @NonNull private final InitializationHelper mInitializationHelper;
   @Nullable private String mAdUnitId;
   @Nullable private RequestListener mRequestListener;
   private boolean mIsDestroyed;
 
   public RequestManager() {
-    mApiClient = MaxAds.getApiManager();
-    mAdRequestFactory = new AdRequestFactory();
-    mRefreshTimer = new RefreshTimer();
+    this(MaxAds.getApiManager(), MaxAds.getAdCache(), new AdRequestFactory(), new RefreshTimer(), new InitializationHelper());
+  }
+
+  @VisibleForTesting
+  RequestManager(@NonNull ApiClient apiClient,
+                 @NonNull AdCache adCache,
+                 @NonNull AdRequestFactory adRequestFactory,
+                 @NonNull RefreshTimer refreshTimer,
+                 @NonNull InitializationHelper initializationHelper) {
+    mApiClient = apiClient;
+    mAdCache = adCache;
+    mAdRequestFactory = adRequestFactory;
+    mRefreshTimer = refreshTimer;
+    mInitializationHelper = initializationHelper;
   }
 
   public void setRequestListener(@Nullable RequestListener requestListener) {
@@ -40,7 +56,7 @@ public class RequestManager {
   }
 
   public void requestAd() {
-    if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
+    if (!Checks.NoThrow.checkArgument(mInitializationHelper.isInitialized(), "MaxAds SDK has not been initialized. " +
       "Please call MaxAds#initialize in your application's onCreate method.")) {
       return;
     }
@@ -62,7 +78,8 @@ public class RequestManager {
       });
   }
 
-  private void requestAdFromApi(@NonNull final AdRequest adRequest) {
+  @VisibleForTesting
+  void requestAdFromApi(@NonNull final AdRequest adRequest) {
     MaxAdsLog.d("Requesting ad for ad unit id: " + adRequest.getAdUnitId());
     mApiClient.getAd(adRequest)
       .subscribe(new Consumer<Ad>() {
@@ -73,7 +90,7 @@ public class RequestManager {
           }
 
           MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
-          MaxAds.getAdCache().put(adRequest.getAdUnitId(), ad);
+          mAdCache.put(adRequest.getAdUnitId(), ad);
           if (mRequestListener != null) {
             mRequestListener.onRequestSuccess(ad);
           }
