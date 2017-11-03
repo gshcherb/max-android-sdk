@@ -10,7 +10,7 @@ import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class AdCache {
-
+  @NonNull private static final String TAG = AdCache.class.getSimpleName();
   @NonNull private final Map<String, Ad> mAdMap;
 
   public AdCache() {
@@ -23,7 +23,7 @@ public class AdCache {
   }
 
   public void put(@NonNull String adUnitKey, @NonNull Ad ad) {
-    MaxAdsLog.d("AdCache putting ad for adUnitKey: " + adUnitKey);
+    MaxAdsLog.d(TAG, "AdCache putting ad for adUnitKey: " + adUnitKey);
     mAdMap.put(adUnitKey, ad);
   }
 }

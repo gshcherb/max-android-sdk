@@ -14,13 +14,13 @@ import io.maxads.ads.base.util.MaxAdsLog;
 import io.reactivex.functions.Consumer;
 
 public class RequestManager {
-  public static final int DEFAULT_REFRESH_TIME_SECONDS = 60;
-
   public interface RequestListener {
     void onRequestSuccess(@NonNull Ad ad);
     void onRequestFail(@NonNull Throwable throwable);
   }
 
+  @NonNull private static final String TAG = RequestManager.class.getSimpleName();
+  public static final int DEFAULT_REFRESH_TIME_SECONDS = 60;
   @NonNull private final ApiClient mApiClient;
   @NonNull private final AdCache mAdCache;
   @NonNull private final AdRequestFactory mAdRequestFactory;
@@ -80,7 +80,7 @@ public class RequestManager {
 
   @VisibleForTesting
   void requestAdFromApi(@NonNull final AdRequest adRequest) {
-    MaxAdsLog.d("Requesting ad for ad unit id: " + adRequest.getAdUnitId());
+    MaxAdsLog.d(TAG, "Requesting ad for ad unit id: " + adRequest.getAdUnitId());
     mApiClient.getAd(adRequest)
       .subscribe(new Consumer<Ad>() {
         @Override
@@ -89,7 +89,7 @@ public class RequestManager {
             return;
           }
 
-          MaxAdsLog.d("Received ad response for ad unit id: " + adRequest.getAdUnitId());
+          MaxAdsLog.d(TAG, "Received ad response for ad unit id: " + adRequest.getAdUnitId());
           mAdCache.put(adRequest.getAdUnitId(), ad);
           if (mRequestListener != null) {
             mRequestListener.onRequestSuccess(ad);
@@ -105,7 +105,7 @@ public class RequestManager {
             return;
           }
 
-          MaxAdsLog.w("Failed to receive ad response for ad unit id: " + adRequest.getAdUnitId(), throwable);
+          MaxAdsLog.w(TAG, "Failed to receive ad response for ad unit id: " + adRequest.getAdUnitId(), throwable);
           if (mRequestListener != null) {
             mRequestListener.onRequestFail(throwable);
           }

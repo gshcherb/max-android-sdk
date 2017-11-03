@@ -68,6 +68,7 @@ public class DeviceInfo {
     }
   }
 
+  @NonNull private static final String TAG = DeviceInfo.class.getSimpleName();
   @NonNull private static final String UNKNOWN_APP_VERSION_IDENTIFIER = "UNKNOWN";
   @NonNull private final Context mContext;
   @NonNull private final String mUserAgent;
@@ -121,7 +122,7 @@ public class DeviceInfo {
     try {
       return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
     } catch (PackageManager.NameNotFoundException e) {
-      MaxAdsLog.d("Could not determine app version", e);
+      MaxAdsLog.d(TAG, "Could not determine app version", e);
       return UNKNOWN_APP_VERSION_IDENTIFIER;
     }
   }

@@ -11,7 +11,7 @@ import io.maxads.ads.base.util.IntentHandlerDelegate;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class UrlHandlerDelegate {
-
+  @NonNull private static final String TAG = UrlHandlerDelegate.class.getSimpleName();
   @NonNull private final IntentHandlerDelegate mIntentHandlerDelegate;
 
   public UrlHandlerDelegate(@NonNull Context context) {
@@ -27,7 +27,7 @@ public class UrlHandlerDelegate {
     }
 
     // TODO (steffan): follow redirects first before handling url
-    MaxAdsLog.d("Handling url: " + url);
+    MaxAdsLog.d(TAG, "Handling url: " + url);
 
     final Uri uri = Uri.parse(url);
     final String scheme = uri.getScheme();

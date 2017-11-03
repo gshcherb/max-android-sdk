@@ -11,6 +11,7 @@ import io.maxads.ads.base.model.Winner;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class BannerPresenterFactory {
+  @NonNull private static final String TAG = BannerPresenterFactory.class.getSimpleName();
   @NonNull private final Context mContext;
 
   public BannerPresenterFactory(@NonNull Context context) {
@@ -39,11 +40,11 @@ public class BannerPresenterFactory {
         return new MraidBannerPresenter(mContext, ad);
       }
       case EMPTY: {
-        MaxAdsLog.d("Banner creative type is empty");
+        MaxAdsLog.d(TAG, "Banner creative type is empty");
         return null;
       }
       default: {
-        MaxAdsLog.e("Incompatible creative type: " + creativeType + ", for banner ad format.");
+        MaxAdsLog.e(TAG, "Incompatible creative type: " + creativeType + ", for banner ad format.");
         return null;
       }
     }

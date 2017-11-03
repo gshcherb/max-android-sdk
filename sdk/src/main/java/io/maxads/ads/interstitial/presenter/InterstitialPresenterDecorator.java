@@ -9,6 +9,7 @@ import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class InterstitialPresenterDecorator implements InterstitialPresenter, InterstitialPresenter.Listener {
+  @NonNull private static final String TAG = InterstitialPresenterDecorator.class.getSimpleName();
   @NonNull private final InterstitialPresenter mInterstitialPresenter;
   @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
   @NonNull private final InterstitialPresenter.Listener mListener;
@@ -39,7 +40,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Loading interstitial presenter for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Loading interstitial presenter for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackSelected();
     mInterstitialPresenter.load();
   }
@@ -50,13 +51,13 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Showing interstitial presenter for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Showing interstitial presenter for ad unit id: " + getAd().getAdUnitId());
     mInterstitialPresenter.show();
   }
 
   @Override
   public void destroy() {
-    MaxAdsLog.d("Destroying interstitial presenter for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Destroying interstitial presenter for ad unit id: " + getAd().getAdUnitId());
     mInterstitialPresenter.destroy();
     mIsDestroyed = true;
   }
@@ -67,7 +68,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Interstitial loaded for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Interstitial loaded for ad unit id: " + getAd().getAdUnitId());
     mListener.onInterstitialLoaded(interstitialPresenter);
   }
 
@@ -77,7 +78,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Interstitial shown for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Interstitial shown for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackImpression();
     mListener.onInterstitialShown(interstitialPresenter);
   }
@@ -88,7 +89,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Interstitial clicked for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Interstitial clicked for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackClick();
     mListener.onInterstitialClicked(interstitialPresenter);
   }
@@ -99,7 +100,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
       return;
     }
 
-    MaxAdsLog.d("Interstitial dismissed for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Interstitial dismissed for ad unit id: " + getAd().getAdUnitId());
     mListener.onInterstitialDismissed(interstitialPresenter);
   }
 
@@ -110,7 +111,7 @@ public class InterstitialPresenterDecorator implements InterstitialPresenter, In
     }
 
     String errorMessage = "Interstitial error for ad unit id: " + getAd().getAdUnitId();
-    MaxAdsLog.d(errorMessage);
+    MaxAdsLog.d(TAG, errorMessage);
     mAdTrackingDelegate.trackError(errorMessage);
     mListener.onInterstitialError(interstitialPresenter);
   }

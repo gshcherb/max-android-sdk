@@ -11,6 +11,7 @@ import io.maxads.ads.base.model.Winner;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class InterstitialPresenterFactory {
+  @NonNull private static final String TAG = InterstitialPresenterFactory.class.getSimpleName();
   @NonNull private final Activity mActivity;
 
   public InterstitialPresenterFactory(@NonNull Activity activity) {
@@ -45,11 +46,11 @@ public class InterstitialPresenterFactory {
         return new VastInterstitialPresenter(mActivity, ad);
       }
       case EMPTY: {
-        MaxAdsLog.d("Interstitial creative type is empty");
+        MaxAdsLog.d(TAG, "Interstitial creative type is empty");
         return null;
       }
       default: {
-        MaxAdsLog.e("Incompatible creative type: " + creativeType + ", for interstitial ad format.");
+        MaxAdsLog.e(TAG, "Incompatible creative type: " + creativeType + ", for interstitial ad format.");
         return null;
       }
     }

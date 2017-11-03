@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public class Checks {
+  @NonNull private static final String TAG = Checks.class.getSimpleName();
+
   public static void checkArgument(boolean expression, @NonNull String errorMessage) {
     checkArgumentImpl(expression, true, errorMessage);
   }
@@ -37,7 +39,7 @@ public class Checks {
       throw new IllegalArgumentException(errorMessage);
     }
 
-    MaxAdsLog.e(errorMessage);
+    MaxAdsLog.e(TAG, errorMessage);
     return false;
   }
 
@@ -51,7 +53,7 @@ public class Checks {
       throw new NullPointerException(errorMessage);
     }
 
-    MaxAdsLog.e(errorMessage);
+    MaxAdsLog.e(TAG, errorMessage);
     return false;
   }
 }

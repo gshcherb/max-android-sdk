@@ -5,29 +5,59 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class MaxAdsLog {
+  public enum Level {
+    verbose(1),
+    debug(2),
+    info(3),
+    warning(4),
+    error(5),
+    none(6);
+
+    private int mValue;
+
+    Level(int value) {
+      mValue = value;
+    }
+
+    public int getValue() {
+      return mValue;
+    }
+  }
+
   @NonNull private static final String TAG = "MAXAds";
+  @Nullable private static Level sLogLevel = Level.debug;
 
-  public static void d(@Nullable String msg) {
-    d(msg, null);
+  public static void setLogLevel(@NonNull Level logLevel) {
+    sLogLevel = logLevel;
   }
 
-  public static void w(@Nullable String msg) {
-    w(msg, null);
+  public static void d(@Nullable String subTag, @Nullable String msg) {
+    d(subTag, msg, null);
   }
 
-  public static void e(@Nullable String msg) {
-    e(msg, null);
+  public static void w(@Nullable String subTag, @Nullable String msg) {
+    w(subTag, msg, null);
   }
 
-  public static void d(@Nullable String msg, @Nullable Throwable throwable) {
-    Log.d(TAG, msg, throwable);
+  public static void e(@Nullable String subTag, @Nullable String msg) {
+    e(subTag, msg, null);
   }
 
-  public static void w(@Nullable String msg, @Nullable Throwable throwable) {
-    Log.w(TAG, msg, throwable);
+  public static void d(@Nullable String subTag, @Nullable String msg, @Nullable Throwable throwable) {
+    if (sLogLevel != null && sLogLevel.getValue() <= Level.debug.getValue()) {
+      Log.d(TAG, "[" + subTag + "] " + msg, throwable);
+    }
   }
 
-  public static void e(@Nullable String msg, @Nullable Throwable throwable) {
-    Log.e(TAG, msg, throwable);
+  public static void w(@Nullable String subTag, @Nullable String msg, @Nullable Throwable throwable) {
+    if (sLogLevel != null && sLogLevel.getValue() <= Level.warning.getValue()) {
+      Log.w(TAG, "[" + subTag + "] " + msg, throwable);
+    }
+  }
+
+  public static void e(@Nullable String subTag, @Nullable String msg, @Nullable Throwable throwable) {
+    if (sLogLevel != null && sLogLevel.getValue() <= Level.error.getValue()) {
+      Log.e(TAG, "[" + subTag + "] " + msg, throwable);
+    }
   }
 }

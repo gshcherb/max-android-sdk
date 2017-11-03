@@ -10,6 +10,7 @@ import io.maxads.ads.base.util.Checks;
 import io.maxads.ads.base.util.MaxAdsLog;
 
 public class BannerPresenterDecorator implements BannerPresenter, BannerPresenter.Listener {
+  @NonNull private static final String TAG = BannerPresenterDecorator.class.getSimpleName();
   @NonNull private final BannerPresenter mBannerPresenter;
   @NonNull private final AdTrackingDelegate mAdTrackingDelegate;
   @NonNull private final BannerPresenter.Listener mListener;
@@ -40,14 +41,14 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
       return;
     }
 
-    MaxAdsLog.d("Loading banner presenter for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Loading banner presenter for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackSelected();
     mBannerPresenter.load();
   }
 
   @Override
   public void destroy() {
-    MaxAdsLog.d("Destroying banner presenter for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Destroying banner presenter for ad unit id: " + getAd().getAdUnitId());
     mBannerPresenter.destroy();
     mIsDestroyed = true;
   }
@@ -58,7 +59,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
       return;
     }
 
-    MaxAdsLog.d("Banner loaded for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Banner loaded for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackImpression();
     mListener.onBannerLoaded(bannerPresenter, banner);
   }
@@ -69,7 +70,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
       return;
     }
 
-    MaxAdsLog.d("Banner clicked for ad unit id: " + getAd().getAdUnitId());
+    MaxAdsLog.d(TAG, "Banner clicked for ad unit id: " + getAd().getAdUnitId());
     mAdTrackingDelegate.trackClick();
     mListener.onBannerClicked(bannerPresenter);
   }
@@ -81,7 +82,7 @@ public class BannerPresenterDecorator implements BannerPresenter, BannerPresente
     }
 
     String errorMessage = "Banner error for ad unit id: " + getAd().getAdUnitId();
-    MaxAdsLog.d(errorMessage);
+    MaxAdsLog.d(TAG, errorMessage);
     mAdTrackingDelegate.trackError(errorMessage);
     mListener.onBannerError(bannerPresenter);
   }

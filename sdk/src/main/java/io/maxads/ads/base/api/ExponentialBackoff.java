@@ -12,6 +12,7 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 public class ExponentialBackoff implements Function<Observable<? extends Throwable>, Observable<Long>> {
+  @NonNull private static final String TAG = ExponentialBackoff.class.getSimpleName();
   @NonNull private final Jitter mJitter;
   private final long mDelay;
   private final long mMaxDelay;
@@ -38,14 +39,14 @@ public class ExponentialBackoff implements Function<Observable<? extends Throwab
       .zipWith(Observable.range(1, mRetries), new BiFunction<Throwable, Integer, Integer>() {
           @Override
           public Integer apply(Throwable throwable, @NonNull Integer retryCount) throws Exception {
-            MaxAdsLog.w("Request failed, retry count: " + retryCount, throwable);
+            MaxAdsLog.w(TAG, "Request failed, retry count: " + retryCount, throwable);
             return retryCount;
           }
         }).flatMap(new Function<Integer, ObservableSource<Long>>() {
         @Override
         public ObservableSource<Long> apply(Integer attemptNumber) throws Exception {
           long newInterval = getNewInterval(attemptNumber);
-          MaxAdsLog.d("Retrying request in " + newInterval + " " + mTimeUnit.toString().toLowerCase(Locale.ROOT));
+          MaxAdsLog.d(TAG, "Retrying request in " + newInterval + " " + mTimeUnit.toString().toLowerCase(Locale.ROOT));
           return Observable.timer(newInterval, mTimeUnit);
         }
       });

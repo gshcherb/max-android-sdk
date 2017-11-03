@@ -27,6 +27,7 @@ public class AdTrackingDelegate {
     }
   }
 
+  @NonNull private static final String TAG = AdTrackingDelegate.class.getSimpleName();
   @NonNull private final ApiClient mApiClient;
   @NonNull private final List<String> mSelectedUrls;
   @NonNull private final List<String> mImpressionUrls;
@@ -83,9 +84,9 @@ public class AdTrackingDelegate {
     mApiClient.trackError(errorMessage);
   }
 
-  private void trackUrls(@NonNull List<String> urls, @NonNull final Type type) {
+  private void trackUrls(@NonNull List<String> urls, @NonNull Type type) {
     for (final String url : urls) {
-      MaxAdsLog.d("Tracking " + type.toString() + " url: " + url);
+      MaxAdsLog.d(TAG, "Tracking " + type.toString() + " url: " + url);
       mApiClient.trackUrl(url);
     }
   }
