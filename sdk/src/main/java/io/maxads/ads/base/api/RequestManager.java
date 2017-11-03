@@ -31,7 +31,7 @@ public class RequestManager {
   private boolean mIsDestroyed;
 
   public RequestManager() {
-    this(MaxAds.getApiManager(), MaxAds.getAdCache(), new AdRequestFactory(), new RefreshTimer(), new InitializationHelper());
+    this(MaxAds.getApiClient(), MaxAds.getAdCache(), new AdRequestFactory(), new RefreshTimer(), new InitializationHelper());
   }
 
   @VisibleForTesting

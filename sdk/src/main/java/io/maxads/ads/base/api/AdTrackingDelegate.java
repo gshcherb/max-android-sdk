@@ -1,6 +1,7 @@
 package io.maxads.ads.base.api;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.List;
 
@@ -37,7 +38,15 @@ public class AdTrackingDelegate {
   public AdTrackingDelegate(@NonNull List<String> selectedUrls,
                             @NonNull List<String> impressionUrls,
                             @NonNull List<String> clickUrls) {
-    mApiClient = MaxAds.getApiManager();
+    this(MaxAds.getApiClient(), selectedUrls, impressionUrls, clickUrls);
+  }
+
+  @VisibleForTesting
+  AdTrackingDelegate(@NonNull ApiClient apiClient,
+                     @NonNull List<String> selectedUrls,
+                     @NonNull List<String> impressionUrls,
+                     @NonNull List<String> clickUrls) {
+    mApiClient = apiClient;
     mSelectedUrls = selectedUrls;
     mImpressionUrls = impressionUrls;
     mClickUrls = clickUrls;

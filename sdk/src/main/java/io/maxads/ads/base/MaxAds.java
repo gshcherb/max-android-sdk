@@ -47,7 +47,7 @@ public class MaxAds {
   }
 
   @NonNull
-  public static ApiClient getApiManager() {
+  public static ApiClient getApiClient() {
     return sApiClient;
   }
 
