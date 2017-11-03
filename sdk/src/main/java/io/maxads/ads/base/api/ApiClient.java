@@ -60,11 +60,11 @@ public class ApiClient {
       });
   }
 
-  public Observable<Response<Void>> trackUrl(@NonNull String url) {
-    return mApiService.trackUrl(url)
+  public void trackUrl(@NonNull String url) {
+    mApiService.trackUrl(url)
       .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100));
+      .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100))
+      .subscribe();
   }
 
   public Observable<Response<Void>> trackError(@NonNull String message) {
