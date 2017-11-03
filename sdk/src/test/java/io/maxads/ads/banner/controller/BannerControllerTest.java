@@ -105,13 +105,6 @@ public class BannerControllerTest {
   }
 
   @Test
-  public void destroy() {
-    mSubject.destroy();
-
-    verify(mMockRequestManager).destroy();
-  }
-
-  @Test
   public void showAd_withNullPresenter() {
     when(mMockInitializationHelper.isInitialized()).thenReturn(true);
     when(mMockBannerPresenterFactory.createBannerPresenter(mTestAd, mSubject))
@@ -136,6 +129,13 @@ public class BannerControllerTest {
     verify(mMockRequestManager, never()).startRefreshTimer(mTestAd.getRefreshTimeSeconds());
     verify(mMockListener, never()).onBannerError(mMockBannerAdView);
     verify(mMockBannerPresenter, never()).load();
+  }
+
+  @Test
+  public void destroy() {
+    mSubject.destroy();
+
+    verify(mMockRequestManager).destroy();
   }
 
   @Test

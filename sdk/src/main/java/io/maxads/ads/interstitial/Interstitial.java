@@ -3,11 +3,12 @@ package io.maxads.ads.interstitial;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
-import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.api.RequestManager;
 import io.maxads.ads.base.model.Ad;
 import io.maxads.ads.base.util.Checks;
+import io.maxads.ads.base.util.InitializationHelper;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenter;
 import io.maxads.ads.interstitial.presenter.InterstitialPresenterFactory;
 
@@ -23,14 +24,23 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
 
   @NonNull private final InterstitialPresenterFactory mInterstitialPresenterFactory;
   @NonNull private final RequestManager mRequestManager;
+  @NonNull private InitializationHelper mInitializationHelper;
   @Nullable private InterstitialPresenter mInterstitialPresenter;
   @Nullable private Listener mListener;
   private boolean mIsDestroyed;
 
   public Interstitial(@NonNull Activity activity) {
-    mInterstitialPresenterFactory = new InterstitialPresenterFactory(activity);
-    mRequestManager = new RequestManager();
+    this(new InterstitialPresenterFactory(activity), new RequestManager(), new InitializationHelper());
+  }
+
+  @VisibleForTesting
+  Interstitial(@NonNull InterstitialPresenterFactory interstitialPresenterFactory,
+               @NonNull RequestManager requestManager,
+               @NonNull InitializationHelper initializationHelper) {
+    mInterstitialPresenterFactory = interstitialPresenterFactory;
+    mRequestManager = requestManager;
     mRequestManager.setRequestListener(this);
+    mInitializationHelper = initializationHelper;
   }
 
   public void setListener(@Nullable Listener listener) {
@@ -38,7 +48,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
   }
 
   public void load(@NonNull String adUnitId) {
-    if (!Checks.NoThrow.checkArgument(MaxAds.isInitialized(), "MaxAds SDK has not been initialized. " +
+    if (!Checks.NoThrow.checkArgument(mInitializationHelper.isInitialized(), "MaxAds SDK has not been initialized. " +
       "Please call MaxAds#initialize in your application's onCreate method.")) {
       return;
     }
@@ -55,7 +65,8 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
     mRequestManager.requestAd();
   }
 
-  private void loadInterstitial(@NonNull Ad ad) {
+  @VisibleForTesting
+  void loadInterstitial(@NonNull Ad ad) {
     if (mIsDestroyed) {
       return;
     }
@@ -67,6 +78,7 @@ public class Interstitial implements RequestManager.RequestListener, Interstitia
       }
       return;
     }
+
     mInterstitialPresenter.load();
   }
 
