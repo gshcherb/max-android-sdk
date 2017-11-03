@@ -3,6 +3,7 @@ package io.maxads.ads.interstitial.presenter;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import io.maxads.ads.base.api.AdTrackingDelegate;
 import io.maxads.ads.base.model.Ad;
@@ -21,16 +22,27 @@ public class InterstitialPresenterFactory {
     @NonNull Ad ad,
     @NonNull InterstitialPresenter.Listener interstitialPresenterListener) {
 
-    InterstitialPresenter interstitialPresenter;
-    final Winner.CreativeType creativeType = ad.getWinner().getCreativeType();
+    final InterstitialPresenter interstitialPresenter = fromCreativeType(ad.getWinner().getCreativeType(), ad);
+    if (interstitialPresenter == null) {
+      return null;
+    }
+
+    final InterstitialPresenterDecorator interstitialPresenterDecorator =
+      new InterstitialPresenterDecorator(interstitialPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
+        ad.getImpressionUrls(), ad.getClickUrls()), interstitialPresenterListener);
+    interstitialPresenter.setListener(interstitialPresenterDecorator);
+    return interstitialPresenterDecorator;
+  }
+
+  @Nullable
+  @VisibleForTesting
+  InterstitialPresenter fromCreativeType(@NonNull Winner.CreativeType creativeType, @NonNull Ad ad) {
     switch (creativeType) {
       case HTML: {
-        interstitialPresenter = new MraidInterstitialPresenter(mActivity, ad);
-        break;
+        return new MraidInterstitialPresenter(mActivity, ad);
       }
       case VAST3: {
-        interstitialPresenter = new VastInterstitialPresenter(mActivity, ad);
-        break;
+        return new VastInterstitialPresenter(mActivity, ad);
       }
       case EMPTY: {
         MaxAdsLog.d("Interstitial creative type is empty");
@@ -41,11 +53,5 @@ public class InterstitialPresenterFactory {
         return null;
       }
     }
-
-    final InterstitialPresenterDecorator interstitialPresenterDecorator =
-      new InterstitialPresenterDecorator(interstitialPresenter, new AdTrackingDelegate(ad.getSelectedUrls(),
-        ad.getImpressionUrls(), ad.getClickUrls()), interstitialPresenterListener);
-    interstitialPresenter.setListener(interstitialPresenterDecorator);
-    return interstitialPresenterDecorator;
   }
 }

@@ -6,8 +6,6 @@ import java.util.List;
 
 import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.util.MaxAdsLog;
-import io.reactivex.functions.Consumer;
-import retrofit2.Response;
 
 public class AdTrackingDelegate {
   private enum Type {
