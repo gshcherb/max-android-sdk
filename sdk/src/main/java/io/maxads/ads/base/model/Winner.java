@@ -2,6 +2,7 @@ package io.maxads.ads.base.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import io.maxads.ads.base.api.WinnerResponse;
 
@@ -28,6 +29,7 @@ public class Winner {
     return new Winner(CreativeType.from(winnerResponse == null ? null : winnerResponse.creativeType));
   }
 
+  @VisibleForTesting
   public Winner(@NonNull CreativeType creativeType) {
     mCreativeType = creativeType;
   }
