@@ -10,6 +10,7 @@ import io.maxads.ads.base.MaxAds;
 import io.maxads.ads.base.model.Ad;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
@@ -67,14 +68,17 @@ public class ApiClient {
       .subscribe();
   }
 
-  public Observable<Response<Void>> trackError(@NonNull String message) {
-    return new ErrorRequestFactory()
-        .createErrorRequest(message)
-        .flatMap(new Function<ErrorRequest, Observable<Response<Void>>>() {
-          @Override
-          public Observable<Response<Void>> apply(ErrorRequest errorRequest) throws Exception {
-            return mApiService.trackError(errorRequest);
-          }
-        });
+  public void trackError(@NonNull String message) {
+    new ErrorRequestFactory()
+      .createErrorRequest(message)
+      .subscribe(new Consumer<ErrorRequest>() {
+        @Override
+        public void accept(ErrorRequest errorRequest) throws Exception {
+          mApiService.trackError(errorRequest)
+            .subscribeOn(Schedulers.io())
+            .retryWhen(new ExponentialBackoff(Jitter.DEFAULT, 2, 30, TimeUnit.SECONDS, 100))
+            .subscribe();
+        }
+      });
   }
 }
