@@ -51,6 +51,11 @@ public class VastInterstitialPresenter implements InterstitialPresenter, VASTPla
 
     if (mVastPlayer != null) {
       mVastPlayer.play();
+
+      // TODO (steffan): ideally we fire the impression url after we confirm the video successfully plays
+      if (mListener != null) {
+        mListener.onInterstitialShown(this);
+      }
     }
   }
 
