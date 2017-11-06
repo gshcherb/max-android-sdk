@@ -10,7 +10,6 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -19,6 +18,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            useProguard false
         }
     }
 }
@@ -29,14 +32,13 @@ dependencies {
 
     // Android
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // MoPub
-    compile('com.mopub:mopub-sdk-banner:4.15.0@aar') {
+    implementation('com.mopub:mopub-sdk-banner:4.15.0@aar') {
         transitive = true
     }
 
-    compile('com.mopub:mopub-sdk-interstitial:4.15.0@aar') {
+    implementation('com.mopub:mopub-sdk-interstitial:4.15.0@aar') {
         transitive = true
     }
 
