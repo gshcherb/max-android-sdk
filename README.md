@@ -1,7 +1,7 @@
 # max-android-sdk
 MAX Advertising Systems Android SDK
 
-[![Build Status](https://travis-ci.com/MAXAds/max-android-sdk.svg?token=TpV16HrJqGHqqWgsCvCc&branch=master)](https://travis-ci.com/MAXAds/max-android-sdk)
+[![Build Status](https://travis-ci.com/MAXAds/max-android-sdk-internal.svg?token=TpV16HrJqGHqqWgsCvCc&branch=master)](https://travis-ci.com/MAXAds/max-android-sdk-internal)
 
 ## Overview
 
