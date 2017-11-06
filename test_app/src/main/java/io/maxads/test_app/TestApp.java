@@ -1,8 +1,10 @@
 package io.maxads.test_app;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -19,7 +21,7 @@ import io.maxads.ads.interstitial.vast.util.VASTLog;
 import okhttp3.Interceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class TestApp extends Application {
+public class TestApp extends MultiDexApplication {
   @NonNull private static TestAdInterceptor sTestAdInterceptor;
 
   @SuppressLint("VisibleForTests")
@@ -35,6 +37,12 @@ public class TestApp extends Application {
     Checks.NoThrow.setStrictMode(BuildConfig.DEBUG);
     MRAIDLog.setLoggingLevel(MRAIDLog.LOG_LEVEL.verbose);
     VASTLog.setLoggingLevel(VASTLog.LOG_LEVEL.verbose);
+  }
+
+  @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
   }
 
   @NonNull
