@@ -38,6 +38,7 @@ import io.maxads.ads.base.mraid.internal.MRAIDNativeFeatureManager;
 import io.maxads.ads.base.mraid.internal.MRAIDParser;
 import io.maxads.ads.base.mraid.properties.MRAIDOrientationProperties;
 import io.maxads.ads.base.mraid.properties.MRAIDResizeProperties;
+import io.maxads.ads.base.view.MaxAdsWebView;
 
 import java.io.*;
 import java.lang.annotation.Retention;
@@ -283,7 +284,7 @@ public class MRAIDView extends RelativeLayout {
 
     @SuppressLint("SetJavaScriptEnabled")
     private WebView createWebView() {
-        WebView wv = new WebView(context) {
+        MaxAdsWebView wv = new MaxAdsWebView(context) {
 
             private static final String TAG = "MRAIDView-WebView";
 
@@ -343,7 +344,7 @@ public class MRAIDView extends RelativeLayout {
         wv.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
         // i think we want to be able to focus but i dont know?
-        wv.setFocusableInTouchMode(true);
+//        wv.setFocusableInTouchMode(true);
 
         // manually delegate view focus?
         wv.setOnTouchListener(new OnTouchListener() {
@@ -367,30 +368,32 @@ public class MRAIDView extends RelativeLayout {
         wv.getSettings().setJavaScriptEnabled(true);
 
         // store things somehow ?
-//        wv.getSettings().setDomStorageEnabled(true);
+        wv.getSettings().setDomStorageEnabled(true);
 
         // not sure what this does??
-        wv.getSettings().setAllowContentAccess(true);
+        wv.getSettings().setAllowContentAccess(false);
 
         // we don't want to block image requests
-        wv.getSettings().setBlockNetworkImage(false);
+//        wv.getSettings().setBlockNetworkImage(false);
 
         // don't use the zoom control gestures
-        wv.getSettings().setBuiltInZoomControls(false);
+//        wv.getSettings().setBuiltInZoomControls(false);
 
         // constrains the contents of banner to be within the webview, viewport is the size of the webview
-        wv.getSettings().setUseWideViewPort(false);
+//        wv.getSettings().setUseWideViewPort(false);
 
         // load all the images without asking
-        wv.getSettings().setLoadsImagesAutomatically(true);
+//        wv.getSettings().setLoadsImagesAutomatically(true);
 
         // our ads often have insecure images and stuff, newer android prevents loading these by default
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            wv.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            wv.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+//        }
 
         // not sure why the following says "no virtual method"
         // wv.getSettings().setOffscreenPreRaster(true);
+
+        wv.enablePlugins(true);
 
         // no zooming!
         wv.getSettings().setSupportZoom(false);
@@ -402,11 +405,11 @@ public class MRAIDView extends RelativeLayout {
             wv.getSettings().setMediaPlaybackRequiresUserGesture(false);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
-                WebView.setWebContentsDebuggingEnabled(true);
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            if ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+//                WebView.setWebContentsDebuggingEnabled(true);
+//            }
+//        }
 
         return wv;
     }
@@ -435,12 +438,12 @@ public class MRAIDView extends RelativeLayout {
     public void destroy() {
         if (webView != null) {
             MRAIDLog.i("Destroying Main WebView");
-            destroyWebView(webView);
+            webView.destroy();
         }
 
         if (webViewPart2 != null) {
             MRAIDLog.i("Destroying Secondary WebView");
-            destroyWebView(webViewPart2);
+            webViewPart2.destroy();
         }
 
         if (expandedView != null){
@@ -452,16 +455,6 @@ public class MRAIDView extends RelativeLayout {
         }
 
         currentWebView = null;
-    }
-
-    private static void destroyWebView(@NonNull WebView wv) {
-        wv.clearHistory();
-        wv.clearCache(true);
-        wv.loadUrl("about:blank");
-        wv.pauseTimers();
-        wv.setWebChromeClient(null);
-        wv.setWebViewClient(null);
-        wv.destroy();
     }
 
     /**************************************************************************
@@ -938,7 +931,7 @@ public class MRAIDView extends RelativeLayout {
             addView(webView, new LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         } else {
             // close from 2-part expansion
-            destroyWebView(webViewPart2);
+            webViewPart2.destroy();
             webView.setWebChromeClient(mraidWebChromeClient);
             webView.setWebViewClient(mraidWebViewClient);
             MRAIDLog.d("hz-m MRAIDView - closeFromExpanded - setting currentwebview to " + webView);
@@ -1361,8 +1354,8 @@ public class MRAIDView extends RelativeLayout {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            MRAIDLog.d(MRAID_LOG_TAG, "onPageFinished: " + url);
             super.onPageFinished(view, url);
+            MRAIDLog.d(MRAID_LOG_TAG, "onPageFinished: " + url);
             if (state == STATE_LOADING) {
                 isPageFinished = true;
                 injectJavaScript("mraid.setPlacementType('" + (isInterstitial ? "interstitial" : "inline") + "');");
