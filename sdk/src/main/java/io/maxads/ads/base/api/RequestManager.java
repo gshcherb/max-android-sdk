@@ -90,7 +90,7 @@ public class RequestManager {
           }
 
           MaxAdsLog.d(TAG, "Received ad response for ad unit id: " + adRequest.getAdUnitId());
-          mAdCache.put(adRequest.getAdUnitId(), ad);
+          mAdCache.put(adRequest.getAdUnitId() + "_" + String.valueOf(RequestManager.this.hashCode()), ad);
           if (mRequestListener != null) {
             mRequestListener.onRequestSuccess(ad);
           }
